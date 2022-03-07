@@ -1,5 +1,11 @@
 - hosts: localhost
   become: true
+  roles:
+  - role: visual-studio-code
   tasks:
-  - name: Install Firefox
-    apt: name=firefox
+  - name: Install packages needed for installation
+    apt: name={{item}}
+    with_items:
+      - software-properties-common
+      - apt-transport-https
+      - wget
