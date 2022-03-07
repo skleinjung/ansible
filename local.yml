@@ -5,8 +5,8 @@
   vars:
     zettlr_download_url: https://github.com/Zettlr/Zettlr/releases/download/v2.2.4/Zettlr-2.2.4-amd64.deb
   roles:
-  # from: https://github.com/gantsign/ansible-role-visual-studio-code
-  - role: visual-studio-code
+    # from: https://github.com/gantsign/ansible-role-visual-studio-code
+    - role: visual-studio-code
   tasks:
   - name: Install packages needed for installation
     apt: name={{item}}
@@ -19,4 +19,33 @@
   - name: Install a .deb package from the internet
     apt:
       deb: "{{ zettlr_download_url }}"
+
+  # add lockbox mounts
+  - name: Copy encrypted credentials
+    ansible.builtin.copy:
+      src: '{{ playbook_dir }}/files/lockbox_credentials'
+      dest: /root/.smbcredentials_lockbox
+      owner: root
+      group: root
+      mode: '0600'
+  - include: tasks/add-cifs-mount.yml
+    vars:
+      credentials_file: /root/.smbcredentials_lockbox
+      path: /mnt/lockbox/sean
+      src: //lockbox.local/sean
+  - include: tasks/add-cifs-mount.yml
+    vars:
+      credentials_file: /root/.smbcredentials_lockbox
+      path: /mnt/lockbox/shared
+      src: //lockbox.local/shared
+  - include: tasks/add-cifs-mount.yml
+    vars:
+      credentials_file: /root/.smbcredentials_lockbox
+      path: /mnt/lockbox/google-drive
+      src: //lockbox.local/google-drive
+  - include: tasks/add-cifs-mount.yml
+    vars:
+      credentials_file: /root/.smbcredentials_lockbox
+      path: /mnt/lockbox/usb-drive
+      src: //lockbox.local/usb-drive
   
