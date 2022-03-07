@@ -1,6 +1,11 @@
+# Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
+
 - hosts: localhost
   become: true
+  vars:
+    zettlr_download_url: https://github.com/Zettlr/Zettlr/releases/download/v2.2.4/Zettlr-2.2.4-amd64.deb
   roles:
+  # from: https://github.com/gantsign/ansible-role-visual-studio-code
   - role: visual-studio-code
   tasks:
   - name: Install packages needed for installation
@@ -9,3 +14,9 @@
       - software-properties-common
       - apt-transport-https
       - wget
+
+  # install Zettlr
+  - name: Install a .deb package from the internet
+    apt:
+      deb: "{{ zettlr_download_url }}"
+  
