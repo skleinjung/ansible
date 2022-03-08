@@ -1,0 +1,13 @@
+/* Enter your custom CSS here */
+
+#editor .cm-zkn-link:not(:hover),
+body.dark #editor .cm-zkn-link:not(:hover) {
+font-size: .01em;
+visibility: hidden;
+}
+#editor .cm-zkn-link:not(:hover)::after,
+body.dark #editor .cm-zkn-link:not(:hover)::after {
+font-size: 100em;
+content: '↗';
+visibility: visible;
+}

@@ -1,0 +1,14 @@
+# install Zettlr
+- name: Install the .deb package
+  apt:
+    deb: "{{ zettlr_download_url }}"
+# copy config
+- name: Copy config
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: /home/sean/.config/Zettlr/
+    owner: sean
+    group: sean
+    mode: '0664'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/files/config/*'
