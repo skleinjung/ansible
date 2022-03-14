@@ -12,3 +12,13 @@
     mode: '0664'
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/config/*'
+# copy snippets
+- name: Copy snippets
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: /home/sean/.config/Zettlr/snippets
+    owner: sean
+    group: sean
+    mode: '0664'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/files/snippets/*'
