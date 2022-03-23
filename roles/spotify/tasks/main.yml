@@ -1,0 +1,40 @@
+- name: Check mandatory variables are defined
+  assert:
+    that:
+      - desktop_username is defined
+      - spotify_username is defined
+
+- name: Install Spotify
+  community.general.snap:
+    name: spotify
+    state: present
+
+# copy Spotify config
+- name: Ensure '{{ spotify_config_dir }}' exists
+  file: 
+    mode: '0700'
+    owner: '{{ desktop_username }}'
+    group: '{{ desktop_username }}'
+    path: '{{ spotify_config_dir }}'
+    state: directory
+- name: Ensure '{{ spotify_config_dir }}/Users/{{ spotify_username }}-user' exists
+  file: 
+    mode: '0700'
+    owner: '{{ desktop_username }}'
+    group: '{{ desktop_username }}'
+    path: '{{ spotify_config_dir }}/Users/{{ spotify_username }}-user'
+    state: directory
+- name: Template shared Spotify config
+  ansible.builtin.template:
+    dest: '{{ spotify_config_dir }}/prefs'
+    group: '{{ desktop_username }}'
+    mode: '0664'
+    owner: '{{ desktop_username }}'
+    src: files/config/shared
+- name: Template user Spotify config
+  ansible.builtin.template:
+    dest: '{{ spotify_config_dir }}/Users/{{ spotify_username }}-user/prefs'
+    group: '{{ desktop_username }}'
+    mode: '0664'
+    owner: '{{ desktop_username }}'
+    src: files/config/user

@@ -1,0 +1,15 @@
+app.player.autoplay={{ spotify_autoplay | to_nice_json }}
+audio.allow_downgrade={{ spotify_auto_adjust_quality | to_nice_json }}
+audio.automix={{ spotify_automix | to_nice_json }}
+audio.crossfade_v2={{ spotify_crossfade | to_nice_json }}
+audio.crossfade.time_v2={{ spotify_crossfade_time }}
+audio.downmixer_v2={{ spotify_mono_audio | to_nice_json }}
+audio.loudness.environment={{ spotify_normalized_volume_level }}
+audio.normalize_v2={{ spotify_normalize_volume | to_nice_json }}
+audio.play_bitrate_enumeration={{ spotify_streaming_quality }}
+audio.play_bitrate_non_metered_enumeration={{ spotify_streaming_quality }}
+audio.play_bitrate_non_metered_migrated=true
+audio.sync_bitrate_enumeration={{ spotify_download_quality }}
+ui.hide_hpto={{ spotify_hide_new_release_announcements | to_nice_json }}
+ui.show_friend_feed={{ spotify_show_friend_feed | to_nice_json }}
+ui.track_notifications_enabled={{ spotify_show_desktop_notifications | to_nice_json }}

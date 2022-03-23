@@ -1,0 +1,48 @@
+# Spotify preferences 
+
+# Autoplay similar songs when your music ends in this app ('true', 'false')
+spotify_autoplay: false
+
+# Quality Settings (Low=1, Normal=2, High=3, Very High=4)
+# Download quality
+spotify_download_quality: 4
+# Streaming quality 
+spotify_streaming_quality: 4
+# Auto adjust quality (true, false)
+spotify_auto_adjust_quality: true 
+
+# Normalize Volume
+spotify_normalize_volume: true
+# Normalized volume level (Quiet=0, Normal=1, Loud=2)
+spotify_normalized_volume_level: 1
+
+# Crossfade songs (true, false)
+spotify_crossfade: false
+# Crossfade time (in ms, 0-12000)
+spotify_crossfade_time: 5000
+# Automix - Allow seamless transitions between songs on select playlist
+spotify_automix: true
+
+# Mono audio
+spotify_mono_audio: false
+
+# Hide 'announcements about new releases' (true, false)
+spotify_hide_new_release_announcements: true
+# Show desktop notifications when the song changes (true, false)
+spotify_show_desktop_notifications: true
+# Show 'Friend Feed' sidebar (true, false)
+spotify_show_friend_feed: false
+
+# Block all cookies (true, false)
+spotify_block_cookies: true
+
+# Open Spotify after you login ("normal", "off") -- must avoid bool conversion for 'off'!
+spotify_autostart_mode: 'off'
+
+spotify_username: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38646265313531366165373038653831383233616261613966303561656132633562376535366233
+          3434333336313263336233313637363761646531653632310a336237353231653434333631303661
+          39643931303039633938633136383066376438613961633361656130633464326336653434633762
+          3866643662663338630a393336393238653234326161306266636265333762646639326635636334
+          31393135323763636538323935343164333261383566643134393665346339373362

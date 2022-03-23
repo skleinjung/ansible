@@ -1,0 +1,6 @@
+autologin.username="{{ spotify_username }}"
+app.autostart-mode="{{ spotify_autostart_mode }}"
+autologin.canonical_username="{{ spotify_username }}"
+app.cookies-disabled={{ spotify_block_cookies | to_nice_json }}
+core.clock_delta=0
+app.autostart-configured=true
