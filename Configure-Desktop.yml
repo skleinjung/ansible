@@ -25,22 +25,22 @@
       owner: root
       group: root
       mode: '0600'
-  - include: tasks/add-cifs-mount.yml
+  - import_tasks: tasks/add-cifs-mount.yml
     vars:
       credentials_file: /root/.smbcredentials_lockbox
       path: /mnt/lockbox/sean
       src: //lockbox.local/sean
-  - include: tasks/add-cifs-mount.yml
+  - import_tasks: tasks/add-cifs-mount.yml
     vars:
       credentials_file: /root/.smbcredentials_lockbox
       path: /mnt/lockbox/shared
       src: //lockbox.local/shared
-  - include: tasks/add-cifs-mount.yml
+  - import_tasks: tasks/add-cifs-mount.yml
     vars:
       credentials_file: /root/.smbcredentials_lockbox
       path: /mnt/lockbox/google-drive
       src: //lockbox.local/google-drive
-  - include: tasks/add-cifs-mount.yml
+  - import_tasks: tasks/add-cifs-mount.yml
     vars:
       credentials_file: /root/.smbcredentials_lockbox
       path: /mnt/lockbox/usb-drive
