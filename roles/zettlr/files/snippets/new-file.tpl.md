@@ -8,3 +8,11 @@ tags:
 
 # ${1:Untitled Note}
 $0
+
+## Links
+
+### Previous
+- None.
+
+### Next
+- None.

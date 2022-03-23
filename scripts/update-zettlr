@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+cp -R ~/.config/Zettlr/snippets/. "${SCRIPT_DIR}/../roles/zettlr/files/snippets"
+cp ~/.config/Zettlr/custom.css "${SCRIPT_DIR}/../roles/zettlr/files/config"
+
+# copy our config, but omit any values that are session-specific and sorting 
+# the keys to avoid noise
+cat ~/.config/Zettlr/config.json \
+  | jq 'del(.activeFile)' \
+  | jq '.dialogPaths = {}' \
+  | jq 'del(.openDirectory)' \
+  | jq '.openFiles = []' \
+  | jq '.openPaths = []' \
+  | jq --sort-keys \
+  > "${SCRIPT_DIR}/../roles/zettlr/files/config/config.json"
