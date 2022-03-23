@@ -1,9 +1,12 @@
 # Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
+# Visual Studio Code role from: https://github.com/gantsign/ansible-role-visual-studio-code
 
 - hosts: localhost
   become: true
+  connection: local
   roles:
-    # from: https://github.com/gantsign/ansible-role-visual-studio-code
+    - role: insync
+    - role: spotify
     - role: visual-studio-code
     - role: zettlr
   tasks:
