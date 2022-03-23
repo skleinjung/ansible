@@ -1,0 +1,8 @@
+---
+- name: Install snapd package
+  become: true
+  apt: 
+    pkg: snapd
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
