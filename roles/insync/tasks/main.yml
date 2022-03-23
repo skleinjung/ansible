@@ -1,0 +1,13 @@
+# install insync
+- name: Add insync apt key
+  ansible.builtin.apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: ACCAF35C
+- name: Add insync apt repository
+  ansible.builtin.apt_repository:
+    repo: deb http://apt.insync.io/ubuntu focal non-free contrib
+    state: present
+- name: Update repositories cache and install "insync" package
+  apt:
+    name: insync
+    update_cache: yes
