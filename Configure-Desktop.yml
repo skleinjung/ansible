@@ -5,6 +5,7 @@
   become: true
   connection: local
   roles:
+    - role: dbeaver
     - role: insync
     - role: spotify
     - role: visual-studio-code
