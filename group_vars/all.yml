@@ -3,3 +3,11 @@ snapd_enabled: no
 
 aptcachetime: 3600
 desktop_username: sean
+
+# Local file system path to sync Google drive files to
+insync_google_drive_root: /home/{{ desktop_username }}/sync/google-drive
+# Cloud resource ID for "My Drive" in Google; retrieved from Insync database currently
+# TODO: document better way to get this
+insync_google_my_drive_id: 0ALBjjTQRGVQgUk9PVA
+# absolute path the insync settings.db containing account credentials
+insync_settings_db: '{{ playbook_dir }}/files/insync_settings.db'

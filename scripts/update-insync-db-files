@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -e
+
+insyncDataDirectory=~/.config/Insync
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+ORIGINAL_SETTINGS_DB_FILE="${insyncDataDirectory}/settings.db"
+NEW_SETTINGS_DB_FILE="${SCRIPT_DIR}/../files/insync_settings.db"
+
+# copy the settings DB into our role
+cp "${ORIGINAL_SETTINGS_DB_FILE}" "${NEW_SETTINGS_DB_FILE}"
+
+# prepare Settings db by deleting machine- or account-specific settings
+# we also delet all non-google drive accounts, since we haven't reverse engineered
+# their data model yet
+sqlite3 "${NEW_SETTINGS_DB_FILE}" \
+"PRAGMA journal_mode=DELETE;" \
+"DELETE FROM settings WHERE key IN (
+    'machine_fingerprint',
+    'analytics_client_id',
+    'app_window_position',
+    'app_window_size',
+    'activity_pref'
+);" \
+".exit"
+
+# assert only one gd account exists
+numberOfAccounts=$(sqlite3 "${NEW_SETTINGS_DB_FILE}" "SELECT COUNT(id) FROM accounts WHERE cloud = 'gd';" ".exit")
+if [ 1 != ${numberOfAccounts} ]; then
+    echo "Database must have exactly one Google Drive account to be used by this role. (Found: ${numberOfAccounts})"
+    exit -1
+fi
+
+# encrypt the DB, since it contains credentials
+ansible-vault encrypt --ask-vault-pass "${NEW_SETTINGS_DB_FILE}"

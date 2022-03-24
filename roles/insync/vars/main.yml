@@ -1,0 +1,9 @@
+---
+insync_config_directory: /home/{{ desktop_username }}/.config/Insync
+
+# The above directory is the cannonical path, as shown in the documentation:
+#   https://help.insynchq.com/en/articles/3817486-moving-to-a-new-computer-without-re-syncing
+# However, I've observed it being placed at an all-lowercase variant of it, and am unsure
+# why. We just create a symlink from this alternate path to the canonical one so it works
+# in both cases.
+insync_config_directory_alt: /home/{{ desktop_username }}/.config/insync

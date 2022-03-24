@@ -1,3 +1,12 @@
+---
+- name: Check mandatory variables are defined
+  assert:
+    that:
+      - desktop_username is defined
+      - insync_settings_db is defined
+      - insync_google_drive_root is defined
+      - insync_google_my_drive_id is defined
+
 # install insync
 - name: Add insync apt key
   ansible.builtin.apt_key:
@@ -11,3 +20,165 @@
   apt:
     name: insync
     update_cache: yes
+
+# initialize 'settings' database
+- name: Determine if settings.db exists
+  ansible.builtin.stat:
+    path: '{{ insync_config_directory }}/settings.db'
+  register: settings_db_file
+- name: Configure settings database
+  when: not settings_db_file.stat.exists
+  block:
+    - name: Ensure '{{ insync_config_directory }}' exists
+      file: 
+        mode: '0700'
+        owner: '{{ desktop_username }}'
+        group: '{{ desktop_username }}'
+        path: '{{ insync_config_directory }}'
+        state: directory
+    - name: Copy settings.db
+      ansible.builtin.copy:
+        dest: '{{ insync_config_directory }}/settings.db'
+        group: '{{ desktop_username }}'
+        mode: '0644'
+        owner: '{{ desktop_username }}'
+        src: '{{ insync_settings_db }}'
+    - name: Reset original journal mode
+      ansible.builtin.command:
+        argv:
+          - sqlite3
+          - '{{ insync_config_directory }}/settings.db'
+          - PRAGMA journal_mode=WAL;
+
+# initialize 'data' database
+- name: 'Ensure Google Drive sync root exists: {{ insync_google_drive_root }}'
+  file: 
+    mode: '0755'
+    owner: '{{ desktop_username }}'
+    group: '{{ desktop_username }}'
+    path: '{{ insync_google_drive_root }}'
+    state: directory
+
+- name: Determine if data db exists
+  ansible.builtin.stat:
+    path: '{{ insync_config_directory }}/data'
+  register: data_dir
+
+- name: Configure data database
+  when: not data_dir.stat.exists
+  block:
+    # extract needed account info
+    - name: Lookup number of Google Drive accounts in settings DB
+      ansible.builtin.command:
+        argv:
+          - sqlite3
+          - '{{ insync_config_directory }}/settings.db'
+          - SELECT count(id) FROM accounts WHERE cloud = 'gd';
+      register: account_count_query_output
+    - name: Verify we only have one Google Drive account
+      assert:
+        that:
+          - account_count_query_output.stdout | int == 1
+        fail_msg: "Invalid number of Google Drive accounts: {{ account_count_query_output.stdout }}"
+        success_msg: "Valid number of Google Drive accounts: {{ account_count_query_output.stdout }}"
+    - name: Lookup the Google Drive account ID
+      ansible.builtin.command:
+        argv:
+          - sqlite3
+          - '{{ insync_config_directory }}/settings.db'
+          - SELECT id FROM accounts WHERE cloud = 'gd' LIMIT 1;
+      register: account_id_query_output
+    - name: Ensure '{{ insync_config_directory }}/data' exists
+      file: 
+        mode: '0775'
+        owner: '{{ desktop_username }}'
+        group: '{{ desktop_username }}'
+        path: '{{ insync_config_directory }}/data'
+        state: directory
+    - name: Lookup Google Drive sync root inode
+      ansible.builtin.stat:
+        path: '{{ insync_google_drive_root }}'
+      register: st
+    - name: Create Data DB
+      ansible.builtin.command:
+        creates: '{{ insync_config_directory }}/data/gd-{{ account_id_query_output.stdout }}.db'
+        argv:
+          - sqlite3
+          - '{{ insync_config_directory }}/data/gd-{{ account_id_query_output.stdout }}.db'
+          - CREATE TABLE cl_items (node_id INTEGER PRIMARY KEY REFERENCES nodes(node_id) ON DELETE CASCADE, cl_id TEXT NOT NULL, cl_name TEXT NOT NULL, cl_type TEXT NOT NULL, cl_mtime REAL NOT NULL, cl_size INTEGER, cl_mime_type TEXT, cl_checksum TEXT, cl_flags INTEGER NOT NULL DEFAULT 0);
+          - CREATE INDEX cl_items_cl_id ON cl_items (cl_id);
+          - CREATE INDEX cl_items_cl_name ON cl_items (cl_name);
+          - CREATE INDEX cl_items_cl_type ON cl_items (cl_type);
+          - CREATE TABLE fs_items (node_id INTEGER PRIMARY KEY REFERENCES nodes(node_id) ON DELETE CASCADE, fs_name TEXT NOT NULL, fs_type TEXT NOT NULL, fs_mtime REAL NOT NULL, fs_size INTEGER NOT NULL, fs_ino TEXT NOT NULL, fs_flags INTEGER NOT NULL DEFAULT 0);
+          - CREATE INDEX fs_items_fs_name ON fs_items (fs_name);
+          - CREATE INDEX fs_items_fs_flags ON fs_items (fs_flags);
+          - CREATE TABLE nodes (node_id INTEGER PRIMARY KEY AUTOINCREMENT, parent_id INTEGER REFERENCES nodes(node_id) ON DELETE RESTRICT, sync_flags INT NOT NULL);
+          - CREATE INDEX nodes_parent_id ON nodes (parent_id);
+          - CREATE TABLE paused_backup_paths (storage_node_id TEXT NOT NULL, path TEXT NOT NULL);
+          - CREATE INDEX paused_backup_paths_storage_node_id ON paused_backup_paths (storage_node_id);
+          - CREATE TABLE pending_restores (storage_node_id TEXT NOT NULL, node_id INTEGER NOT NULL);
+          - CREATE INDEX pending_restores_storage_node_id ON pending_restores (storage_node_id);
+          - CREATE TABLE sync_choices (node_id INTEGER PRIMARY KEY REFERENCES nodes(node_id) ON DELETE CASCADE, chosen_sync_flags INT NOT NULL, chosen_location TEXT);
+          - CREATE INDEX sync_choices_is_ext ON sync_choices (chosen_sync_flags & 8);
+          - CREATE TABLE sync_prefs (key TEXT PRIMARY KEY, encoded_value BLOB);
+          - |
+            INSERT INTO cl_items (
+                node_id,
+                cl_id,
+                cl_name,
+                cl_type,
+                cl_mtime
+            ) VALUES
+              (-3, 'TEAM', 'Shared drives', 'S', 0),
+              (-2, 'SHARED', 'Shared with me', 'S', 0),
+              (-1, '{{ insync_google_my_drive_id }}', 'My Drive', 'F', 0);
+          - |
+            INSERT INTO nodes (
+                node_id, parent_id, sync_flags
+            ) VALUES
+              (-3, null, 0),
+              (-2, null, 0),
+              (-1, null, 7);
+          - |
+            INSERT INTO fs_items (
+              node_id,
+              fs_name,
+              fs_type,
+              fs_mtime,
+              fs_size,
+              fs_ino,
+              fs_flags
+            ) VALUES (
+              -1,
+              '{{ insync_google_drive_root }}',
+              'D',
+              0,
+              4096,
+              '{{ st.stat.dev }}/{{ st.stat.inode }}',
+              1
+            );
+          - |
+            INSERT INTO sync_prefs (key, encoded_value)
+            VALUES
+              ('IGNORE_RULES',X'225468756d62732e646222'),
+              ('EXPORT_OPTION',X'224f50454e5f444f43554d454e5422'),
+              ('CONFLICT_RESOLUTION_OPTION',X'7b224c4f43414c5f454449545f434c4f55445f45444954223a2022414c574159535f41534b222c20224c4f43414c5f454449545f434c4f55445f44454c455445223a2022414c574159535f41534b222c20224c4f43414c5f44454c4554455f434c4f55445f45444954223a2022414c574159535f41534b227d'),
+              ('AUTO_SYNC_PARTIAL',X'74727565');
+          - PRAGMA journal_mode = WAL;
+          - PRAGMA user_version = 7;
+    - name: Change DB owner and permissions
+      ansible.builtin.file:
+        group: '{{ desktop_username }}'
+        mode: '0644'
+        owner: '{{ desktop_username }}'
+        path: '{{ insync_config_directory }}/data/gd-{{ account_id_query_output.stdout }}.db'
+
+- name: Create symlink from alternate config location
+  when: insync_config_directory_alt is defined
+  ansible.builtin.file:
+    dest: '{{ insync_config_directory_alt }}'
+    follow: no
+    group: '{{ desktop_username }}'
+    owner: '{{ desktop_username }}'
+    state: link
+    src: '{{ insync_config_directory }}'
