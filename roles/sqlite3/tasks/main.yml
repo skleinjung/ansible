@@ -1,0 +1,8 @@
+---
+- name: Install sqlite3 package
+  become: true
+  apt: 
+    pkg: sqlite3
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
