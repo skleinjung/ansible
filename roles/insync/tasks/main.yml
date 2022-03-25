@@ -18,7 +18,8 @@
     state: present
 - name: Update repositories cache and install "insync" package
   apt:
-    name: insync
+    name: insync=3.7.3.50326-focal
+    state: present
     update_cache: yes
 
 # initialize 'settings' database
