@@ -16,5 +16,5 @@
 ## Next Steps
 
 1. Configure VS Code
-2. Configure InSync
-3. Run via Cron
+2. Run via Cron
+3. Install QEMU Agents
