@@ -1,0 +1,5 @@
+---
+# install Discord
+- name: Install the Discord .deb package
+  apt:
+    deb: "{{ discord_download_url }}"
