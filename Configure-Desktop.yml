@@ -11,6 +11,20 @@
     - role: nodejs
     - role: spotify
     - role: visual-studio-code
+      users:
+        - username: '{{ desktop_username }}'
+          visual_studio_code_extensions:
+            - johnpapa.vscode-peacock
+            - ryanolsonx.solarized
+          visual_studio_code_settings_overwrite: yes
+          visual_studio_code_settings: {
+            "diffEditor.ignoreTrimWhitespace": false,
+            "terminal.integrated.allowChords": false,
+            "workbench.colorTheme": "Solarized Dark+",
+            "editor.tabSize": 2,
+            "files.autoSave": "onFocusChange"
+          }
+
     - role: zettlr
   tasks:
   # add lockbox mounts
