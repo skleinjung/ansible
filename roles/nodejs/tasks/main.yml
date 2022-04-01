@@ -1,0 +1,8 @@
+---
+# install nvm
+- name: Install nvm
+  become: yes
+  become_user: '{{ desktop_username }}'
+  ansible.builtin.shell: curl -o- "{{ nvm_install_url }}" | bash
+  args:
+    creates: /home/{{ desktop_username }}/.nvm/nvm.sh
