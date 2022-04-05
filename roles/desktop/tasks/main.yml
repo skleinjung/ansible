@@ -8,7 +8,6 @@
     uid: 1000
 - name: Install desktop environment
   apt: 
-    install_recommends: no
     pkg: 
       - ubuntu-desktop
     state: latest
