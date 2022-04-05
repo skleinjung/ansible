@@ -1,6 +1,16 @@
+---
 - name: Add the desktop user
   ansible.builtin.user:
     append: yes
     groups: adm,cdrom,sudo,dip,plugdev,lxd
     name: '{{ desktop_username }}'
     uid: 1000
+- name: Install desktop environment
+  apt: 
+    install_recommends: no
+    pkg: 
+      - ubuntu-desktop
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
+

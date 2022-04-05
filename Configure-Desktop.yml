@@ -5,8 +5,8 @@
   become: true
   connection: local
   roles:
-    - role: desktop
     - role: qemu-agent
+    - role: desktop
     - role: dbeaver
     - role: discord
     - role: insync
