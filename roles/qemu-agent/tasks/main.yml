@@ -1,0 +1,10 @@
+---
+- name: Install qemu-guest-agent package
+  become: true
+  apt: 
+    pkg: qemu-guest-agent
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
+- name: Start guest agent
+  ansible.builtin.shell: systemctl start qemu-guest-agent
