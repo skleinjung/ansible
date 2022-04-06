@@ -5,6 +5,7 @@
   become: true
   connection: local
   roles:
+    - role: common
     - role: qemu-agent
     - role: desktop
     - role: dbeaver

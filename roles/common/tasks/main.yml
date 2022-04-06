@@ -1,11 +1,8 @@
 ---
-- name: Install common utilities
-  apt: 
-    pkg: 
-      - apt-transport-https
-      - curl      
-      - software-properties-common
-      - wget
-    state: latest
-    update_cache: yes
-    cache_valid_time: "{{ aptcachetime }}"
+- name: Re-run the configuration playbook every 5 minutes
+  ansible.builtin.cron:
+    job: ansible-pull --only-if-changed --vault-password-file /home/ansible/.vault-key --url https://github.com/skleinjung/ansible.git Configure-Desktop.yml >/dev/null 2>&1
+    minute: "*/5"
+    name: "run ansible"
+    state: present
+    user: ansible
