@@ -15,6 +15,12 @@
 
 ## Next Steps
 
-1. Configure VS Code
-2. Run via Cron
-3. Install QEMU Agents
+1. ~~Install QEMU Agents~~
+2. lockbox.local doesn't resolve. Or issue with missing lib?
+3. Set hostname based on vm, instead of 'ubuntu'
+3. ~~Run via cron~~
+4. Fix workspace paths for zettlr
+5. Do not overwrite Spotify logins
+6. ~~Better bootstrapping? Cloud init?~~
+7. Web API to spin up new desktop
+7. Pin correct items to task bar?
