@@ -31,31 +31,31 @@
     - role: zettlr
   tasks:
   # add lockbox mounts
-  - name: Copy encrypted credentials
-    ansible.builtin.copy:
-      src: '{{ playbook_dir }}/files/lockbox_credentials'
-      dest: /root/.smbcredentials_lockbox
-      owner: root
-      group: root
-      mode: '0600'
-  - import_tasks: tasks/add-cifs-mount.yml
-    vars:
-      credentials_file: /root/.smbcredentials_lockbox
-      path: /mnt/lockbox/sean
-      src: //lockbox.local/sean
-  - import_tasks: tasks/add-cifs-mount.yml
-    vars:
-      credentials_file: /root/.smbcredentials_lockbox
-      path: /mnt/lockbox/shared
-      src: //lockbox.local/shared
-  - import_tasks: tasks/add-cifs-mount.yml
-    vars:
-      credentials_file: /root/.smbcredentials_lockbox
-      path: /mnt/lockbox/google-drive
-      src: //lockbox.local/google-drive
-  - import_tasks: tasks/add-cifs-mount.yml
-    vars:
-      credentials_file: /root/.smbcredentials_lockbox
-      path: /mnt/lockbox/usb-drive
-      src: //lockbox.local/usb-drive
-  
+  #- name: Copy encrypted credentials
+  #  ansible.builtin.copy:
+  #    src: '{{ playbook_dir }}/files/lockbox_credentials'
+  #    dest: /root/.smbcredentials_lockbox
+  #    owner: root
+  #    group: root
+  #    mode: '0600'
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/sean
+  #    src: //lockbox.local/sean
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/shared
+  #    src: //lockbox.local/shared
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/google-drive
+  #    src: //lockbox.local/google-drive
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/usb-drive
+  #    src: //lockbox.local/usb-drive
+ 
