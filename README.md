@@ -11,7 +11,7 @@
 4. Store vault password in a file called `.vault-secret`
   - This cannot be specified interactively currently (by design...)
 5. Run the playbook (`ansible-pull --vault-password-file .vault-secret --ask-become-pass --purge --accept-host-key -i '<HOST_NAME>,' -U https://github.com/skleinjung/ansible.git Configure-Desktop.yml`)
-  - Remember to replace '<HOST_NAME>' in the above command
+  - Remember to replace '<HOST_NAME>' with the name of the localhost in the above command
 
 ## Next Steps
 
