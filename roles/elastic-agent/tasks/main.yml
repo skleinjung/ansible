@@ -1,0 +1,61 @@
+- name: Ensure {{ elastic_agent_certs_dir }} directory exists
+  file: 
+    mode: '0700'
+    owner: root
+    group: root
+    path: '{{ elastic_agent_certs_dir }}'
+    state: directory
+- name: Write elastic fleet server CA server
+  ansible.builtin.copy:
+    content: |
+      -----BEGIN CERTIFICATE-----
+      MIIDSjCCAjKgAwIBAgIVANTmKU0l2AoMPdZzFd7cFFUK3m3NMA0GCSqGSIb3DQEB
+      CwUAMDQxMjAwBgNVBAMTKUVsYXN0aWMgQ2VydGlmaWNhdGUgVG9vbCBBdXRvZ2Vu
+      ZXJhdGVkIENBMB4XDTIyMDUxMDE3MzEzNloXDTI1MDUwOTE3MzEzNlowNDEyMDAG
+      A1UEAxMpRWxhc3RpYyBDZXJ0aWZpY2F0ZSBUb29sIEF1dG9nZW5lcmF0ZWQgQ0Ew
+      ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8rb8KGzfVMCMW5jHRi53p
+      Fh8Udr86SAOUx2pt7UFHbCtXh+rFx3EotLR7uZCcPdIDDOC0aNkuBFIPZiCylF+e
+      vfjZTJNY+aLn+El8VhmAv87jlD05saiV8zPCrhKfuYlrmssFlTX33vXaKDVoQvNm
+      0TDcjQB3bIyDZvKcyXx65wNwYEqt2WePEQqbmPF3ucSzFfXINhbZylzG+Uu2vGkj
+      +CDvJq0L3eJzC6l88wAyG/VcuAHmyLRibE2zfs+2CspaZPDH5Ldx86inNZeXUdxo
+      rElCEbJQtgB3ii+n1gFW8brpMxQnevi6ZAtw5CsSbWwCf9A2PpL1AuyrwzQE1mn1
+      AgMBAAGjUzBRMB0GA1UdDgQWBBT+bovt1ZnXrgcWKMgOARvMJY3VjDAfBgNVHSME
+      GDAWgBT+bovt1ZnXrgcWKMgOARvMJY3VjDAPBgNVHRMBAf8EBTADAQH/MA0GCSqG
+      SIb3DQEBCwUAA4IBAQBmOIK9Pj6zYfly2jAGeMY3Y37TCrJqXx4IUoBWKKkNPeUe
+      nGw97XfoHkKMu2lY4HsS3fbnutWQrsjZmaq7amzgUm37+D4oQYNfcfyZu3utZKh9
+      5C5GhSVs6KNmXrOeHONPKJ4kDbC1Kje0c3UEBaIqMvRtbidcAx8F+iIjb/3hlwiF
+      Z89QAdErd8NNYmlC9Qv4G6GX87t70y3bQYkMnfYPWSdP4poZbzJOe9TtnqVK9sax
+      96BvA+fLh8jltw0WY8lFspyD1ngW+CzlAlel7Mw+wbRQPfz3ugBVlgsSDY2ij/lu
+      3MjnMJSr9TkNdwEYsVFda+Ri7QMK5COc+MWfxQLz
+      -----END CERTIFICATE-----
+    dest: '{{ elastic_agent_fleet_ca_crt }}'
+    group: root
+    mode: u=rw,g=r,o=r
+    owner: root
+
+- name: Download elastic agent
+  ansible.builtin.unarchive:
+    creates: /opt/{{ elastic_agent_file_name }}
+    dest: /opt
+    group: root
+    owner: root
+    src: '{{ elastic_agent_download_url }}'
+    remote_src: yes
+
+- name: Check for installed agent
+  stat:
+    path: /opt/Elastic/Agent
+  register: elastic_agent_dir
+
+- name: Install elastic agent
+  become: true
+  ansible.builtin.shell: |
+    cd /opt/{{ elastic_agent_file_name }}
+    ./elastic-agent install \
+      --url={{ elastic_agent_fleet_server }} \
+      --enrollment-token={{ elastic_agent_enrollment_token }} \
+      --certificate-authorities={{ elastic_agent_fleet_ca_crt }} \
+      -v \
+      --force \
+      --non-interactive
+  when: not elastic_agent_dir.stat.exists

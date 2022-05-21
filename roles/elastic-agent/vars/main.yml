@@ -1,0 +1,4 @@
+elastic_agent_file_name: elastic-agent-{{ elastic_agent_version }}-linux-x86_64
+elastic_agent_certs_dir: /etc/elasticsearch/certs
+elastic_agent_download_url: https://artifacts.elastic.co/downloads/beats/elastic-agent/{{ elastic_agent_file_name }}.tar.gz
+elastic_agent_fleet_ca_crt: '{{ elastic_agent_certs_dir }}/fleet-server-ca.crt'

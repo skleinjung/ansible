@@ -6,6 +6,7 @@
   connection: local
   roles:
     - role: common
+    - role: elastic-agent
     - role: qemu-agent
     - role: desktop
     - role: dbeaver
