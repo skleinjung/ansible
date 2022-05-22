@@ -1,0 +1,12 @@
+---
+# install Shopify CLI
+- name: Install shopify cli dependencies
+  apt:
+    pkg: 
+      - ruby-dev
+      - libltdl-dev
+    state: present
+    update_cache: yes
+- name: Install the Shopify .deb package
+  apt:
+    deb: "{{ shopify_cli_url }}"

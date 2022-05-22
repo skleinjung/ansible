@@ -1,0 +1,1 @@
+shopify_cli_url: https://github.com/Shopify/shopify-cli/releases/download/v{{ shopify_cli_version }}/shopify-cli-{{ shopify_cli_version }}.deb

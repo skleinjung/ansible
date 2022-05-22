@@ -1,0 +1,6 @@
+---
+- name: Update repositories cache and install "ruby" package
+  apt:
+    name: ruby
+    state: present
+    update_cache: yes
