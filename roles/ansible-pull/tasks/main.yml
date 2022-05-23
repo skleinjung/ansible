@@ -1,0 +1,11 @@
+---
+- name: Re-run the configuration playbook every 5 minutes
+  ansible.builtin.cron:
+    job: ansible-pull -d {{ ansible_pull_workdir }} --only-if-changed --vault-password-file /root/.vault-secret --url "{{ ansible_pull_repository }}" "{{ ansible_pull_playbook }}" -i "$(hostname)," >>{{ ansible_pull_logfile }} 2>&1
+    minute: '{{ ansible_pull_schedule }}'
+    name: "run ansible"
+    state: present
+    user: '{{ ansible_pull_user }}'
+
+- name: Create logrotate entry for ansible-pull.log
+  template: src=templates/etc/logrotate.d/ansible-pull.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644

@@ -5,7 +5,7 @@
   become: true
   connection: local
   roles:
-    - role: common
+    - role: ansible-pull
     - role: elastic-agent
     - role: qemu-agent
     - role: desktop
