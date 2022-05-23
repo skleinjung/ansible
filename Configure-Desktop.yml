@@ -15,6 +15,7 @@
     - role: nodejs
     - role: shopify-cli
     - role: spotify
+    - role: ssh-server
     - role: visual-studio-code
       users:
         - username: '{{ desktop_username }}'
