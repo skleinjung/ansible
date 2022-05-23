@@ -6,5 +6,4 @@
     state: latest
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"
-- name: Start guest agent
-  ansible.builtin.shell: systemctl start qemu-guest-agent
+  notify: Start qemu-guest-agent
