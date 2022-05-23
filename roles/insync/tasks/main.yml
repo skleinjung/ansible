@@ -18,9 +18,10 @@
     state: present
 - name: Update repositories cache and install "insync" package
   apt:
-    name: insync=3.7.6.50356-focal
+    name: insync
     state: present
     update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
 
 # initialize 'settings' database
 # - name: Determine if settings.db exists
