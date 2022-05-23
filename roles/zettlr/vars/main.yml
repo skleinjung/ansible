@@ -1,1 +1,1 @@
-zettlr_download_url: https://github.com/Zettlr/Zettlr/releases/download/v2.2.4/Zettlr-2.2.4-amd64.deb
+zettlr_download_url: https://github.com/Zettlr/Zettlr/releases/download/v{{ zettlr_version }}/Zettlr-{{ zettlr_version }}-amd64.deb
