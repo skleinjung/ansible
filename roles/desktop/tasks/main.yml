@@ -9,8 +9,44 @@
 - name: Install desktop environment
   apt: 
     pkg: 
+      - dbus-daemon
+      - dbus-tools
+      - dconf
+      - python3-psutil
       - ubuntu-desktop
     state: latest
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"
 
+# Configure desktop settings
+# For more examples: https://gist.github.com/carlwgeorge/c560a532b6929f49d9c0df52f75a68ae
+- name: Set desktop gtk theme
+  community.general.dconf:
+    key: /org/gnome/desktop/interface/gtk-theme
+    value: "'Yaru-green'"
+    state: present
+- name: Set desktop icon theme
+  community.general.dconf:
+    key: /org/gnome/desktop/interface/icon-theme
+    value: "'Yaru-green'"
+    state: present
+- name: Disable 'Character' results in desktop search
+  community.general.dconf:
+    key: /org/gnome/desktop/search-providers/disabled
+    value: "['org.gnome.Characters.desktop']"
+    state: present
+- name: Disable screen blanking
+  community.general.dconf:
+    key: /org/gnome/desktop/session/idle-delay
+    value: 'uint32 0'
+    state: present
+- name: Disable screen locking
+  community.general.dconf:
+    key: /org/gnome/desktop/screensaver/lock-enabled
+    value: 'false'
+    state: present
+- name: Set mouse sensitivity
+  community.general.dconf:
+    key: /org/gnome/desktop/peripherals/mouse/speed
+    value: '0.81617647058823528'
+    state: present
