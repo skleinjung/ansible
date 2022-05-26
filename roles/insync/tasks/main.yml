@@ -8,14 +8,14 @@
       - insync_google_my_drive_id is defined
 
 # install insync
-- name: Add insync apt key
-  ansible.builtin.apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: ACCAF35C
-- name: Add insync apt repository
-  ansible.builtin.apt_repository:
-    repo: deb http://apt.insync.io/ubuntu focal non-free contrib
-    state: present
+# - name: Add insync apt key
+#   ansible.builtin.apt_key:
+#     keyserver: keyserver.ubuntu.com
+#     id: ACCAF35C
+# - name: Add insync apt repository
+#   ansible.builtin.apt_repository:
+#     repo: deb http://apt.insync.io/ubuntu focal non-free contrib
+#     state: present
 #- name: Update repositories cache and install "insync" package
 #  apt:
 #    name: insync
@@ -25,7 +25,7 @@
 
 - name: Install the latest Insync .deb package
   apt:
-    deb: "https://d2t3ff60b2tol4.cloudfront.net/builds/insync_3.7.6.50356-jammy_amd64.deb"
+    deb: '{{ insync_download_url }}'
 
 # initialize 'settings' database
 # - name: Determine if settings.db exists
@@ -57,7 +57,7 @@
 #           - PRAGMA journal_mode=WAL;
 
 # initialize 'data' database
-- name: 'Ensure Google Drive sync root exists: {{ insync_google_drive_root }}'
+- name: 'Ensure Google Drive sync root exists: {{ c }}'
   file: 
     mode: '0755'
     owner: '{{ desktop_username }}'
@@ -178,13 +178,3 @@
 #         mode: '0644'
 #         owner: '{{ desktop_username }}'
 #         path: '{{ insync_config_directory }}/data/gd-{{ account_id_query_output.stdout }}.db'
-
-# - name: Create symlink from alternate config location
-#   when: insync_config_directory_alt is defined
-#   ansible.builtin.file:
-#     dest: '{{ insync_config_directory_alt }}'
-#     follow: no
-#     group: '{{ desktop_username }}'
-#     owner: '{{ desktop_username }}'
-#     state: link
-#     src: '{{ insync_config_directory }}'

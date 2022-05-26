@@ -15,8 +15,6 @@ desktop_password: !vault |
           33346538666436333766383333376639663536623663346430383063323639343330393636326531
           30373932633963643834323830646564636438653466363063383736353862656363
 
-# Local file system path to sync Google drive files to
-insync_google_drive_root: /home/{{ desktop_username }}/sync/google-drive
 # Cloud resource ID for "My Drive" in Google; retrieved from Insync database currently
 # TODO: document better way to get this
 insync_google_my_drive_id: 0ALBjjTQRGVQgUk9PVA

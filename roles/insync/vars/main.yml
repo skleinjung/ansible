@@ -1,9 +1,7 @@
 ---
 insync_config_directory: /home/{{ desktop_username }}/.config/Insync
 
-# The above directory is the cannonical path, as shown in the documentation:
-#   https://help.insynchq.com/en/articles/3817486-moving-to-a-new-computer-without-re-syncing
-# However, I've observed it being placed at an all-lowercase variant of it, and am unsure
-# why. We just create a symlink from this alternate path to the canonical one so it works
-# in both cases.
-insync_config_directory_alt: /home/{{ desktop_username }}/.config/insync
+insync_download_url: https://d2t3ff60b2tol4.cloudfront.net/builds/insync_{{ insync_version }}-jammy_amd64.deb
+
+# Local file system path to sync Google drive files to
+insync_google_drive_root: /home/{{ desktop_username }}/sync/google-drive
