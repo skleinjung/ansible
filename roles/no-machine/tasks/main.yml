@@ -1,0 +1,5 @@
+---
+# install NoMachine
+- name: Install the NoMachine .deb package
+  apt:
+    deb: "{{ no_machine_download_url }}"

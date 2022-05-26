@@ -1,0 +1,2 @@
+---
+no_machine_download_url: https://download.nomachine.com/download/{{ no_machine_minor_version }}/Linux/nomachine_{{ no_machine_version }}_amd64.deb

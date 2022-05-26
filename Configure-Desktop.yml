@@ -13,6 +13,7 @@
     - role: discord
     - role: insync
     - role: nodejs
+    - role: no-machine
     - role: shopify-cli
     - role: spotify
     - role: ssh-server
