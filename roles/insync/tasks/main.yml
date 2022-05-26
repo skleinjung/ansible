@@ -16,12 +16,16 @@
   ansible.builtin.apt_repository:
     repo: deb http://apt.insync.io/ubuntu focal non-free contrib
     state: present
-- name: Update repositories cache and install "insync" package
+#- name: Update repositories cache and install "insync" package
+#  apt:
+#    name: insync
+#    state: present
+#    update_cache: yes
+#    cache_valid_time: "{{ aptcachetime }}"
+
+- name: Install the latest Insync .deb package
   apt:
-    name: insync
-    state: present
-    update_cache: yes
-    cache_valid_time: "{{ aptcachetime }}"
+    deb: "https://d2t3ff60b2tol4.cloudfront.net/builds/insync_3.7.6.50356-jammy_amd64.deb"
 
 # initialize 'settings' database
 # - name: Determine if settings.db exists
