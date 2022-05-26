@@ -14,6 +14,7 @@
     - role: insync
     - role: nodejs
     - role: no-machine
+    - role: radeon-profile
     - role: shopify-cli
     - role: spotify
     - role: ssh-server
