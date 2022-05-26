@@ -270,7 +270,7 @@
     "rtlMoveVisually": true
   },
   "export": {
-    "cslLibrary": "/home/sean/drive/🧔 Personal/Notes/Reference/zotero-library.csl.json",
+    "cslLibrary": "/home/sean/sync/google-drive/🧔 Personal/Notes/Reference/zotero-library.csl.json",
     "cslStyle": "",
     "dir": "temp",
     "singleFileLastExporter": "html",
@@ -321,7 +321,7 @@
   "zkn": {
     "autoCreateLinkedFiles": false,
     "autoSearch": false,
-    "customDirectory": "/home/sean/drive/🧔 Personal/Notes/Zettelkasten",
+    "customDirectory": "/home/sean/sync/google-drive/🧔 Personal/Notes/Zettelkasten",
     "idGen": "%Y%M%D%h%m%s",
     "idRE": "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})",
     "linkEnd": "]]",

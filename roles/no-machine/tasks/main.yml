@@ -4,6 +4,9 @@
   apt:
     deb: "{{ no_machine_download_url }}"
 
+# TODO: to enable USB forwarding, the nxusb module must be signed... this requires a physical console
+# See: https://knowledgebase.nomachine.com/AR05O00929
+
 # configure NoMachine server
 - name: Template NoMachine server.cfg
   ansible.builtin.template:
