@@ -3,3 +3,12 @@
 - name: Install the NoMachine .deb package
   apt:
     deb: "{{ no_machine_download_url }}"
+
+# configure NoMachine server
+- name: Template NoMachine server.cfg
+  ansible.builtin.template:
+    dest: '{{ no_machine_config_dir }}/server.cfg'
+    group: nx
+    mode: '0664'
+    owner: nx
+    src: files/usr/NX/etc/server.cfg
