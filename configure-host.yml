@@ -66,3 +66,4 @@
   become: true
   roles:
     - role: wine
+    - role: vrising-server
