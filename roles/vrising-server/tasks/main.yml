@@ -74,3 +74,12 @@
     owner: root
     src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/etc/systemd/system/VRising.service.j2'
   notify: Restart VRising
+
+# create utility scripts
+- name: Copy update script
+  ansible.builtin.template:
+    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/~/server/update-server.sh.j2'
+    dest: '{{ vrising_server_dir }}/update-server.sh'
+    owner: '{{ vrising_server_username }}'
+    group: '{{ vrising_server_username }}'
+    mode: '0754'
