@@ -1,0 +1,24 @@
+#!/bin/bash
+# portable cronjob wrapper to ensure :
+#
+#   * only one process at the time (prevents process-overlap, handy for unique cron workers)
+#   * reverse cron's email behaviour (only emails on error)
+#   * ultraportable: only reliest on flock, not on debians 'start-stop-daemon' or centos 'daemon'
+#   * nicelevel to tame cpu usage 
+#
+# usage: cronjoblock <application> [args]
+# example: cronjoblock /home/foo/myscript &
+#          cronjoblock /home/foo/myscript &   <--- 'myscript' will only run when the previous run is finished
+#
+# there's is no output unless there are errors. This is handy in respect to cron's MAILTO variable:
+# the stdout/stderr output will be suppressed (so cron will not send mails) *unless* the given process
+# has an exitcode > 0
+#
+[[ ! -n $1 ]] && { head -n11 $0 | sed 's/^#/ /g' | grep -v 'bin\/bash'; exit; } 
+EXITCODE=0
+STDOUT="/tmp/.cronjoblock.$( echo "$*" | tr A-Z a-z | sed -e 's/[^a-zA-Z0-9\-]/-/g')"
+LOCKFILE="$STDOUT.lock"
+NICELEVEL=10
+exec nice -n $NICELEVEL /usr/bin/flock -w 0 "$LOCKFILE" "$@"
+EXITCODE=$$
+exit $EXITCODE                                                             # let cron know (trigger email)

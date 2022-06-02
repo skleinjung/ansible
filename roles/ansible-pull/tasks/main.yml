@@ -12,20 +12,22 @@
     dest: /etc/ansible
     owner: root
     group: root
-    mode: '0700'
+    mode: '0600'
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/etc/ansible/*'
-- name: Copy script to run Ansible
+- name: Copy scripts to run Ansible
   ansible.builtin.copy:
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/run-ansible'
+    src: '{{ item }}'
     dest: /usr/local/bin
     owner: root
     group: root
     mode: '0744'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/*'
 
 - name: Re-run Ansible {{ ansible_pull_schedule }} minutes
   ansible.builtin.cron:
-    job: /usr/local/bin/run-ansible >>{{ ansible_pull_logfile }} 2>&1
+    job: /usr/local/bin/cronjob-lock /usr/local/bin/run-ansible >>{{ ansible_pull_logfile }} 2>&1
     minute: '{{ ansible_pull_schedule }}'
     name: "run ansible"
     state: present

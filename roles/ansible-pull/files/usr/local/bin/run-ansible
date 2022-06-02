@@ -7,7 +7,6 @@ WORKDIR=/var/lib/ansible/local
 ansible-pull \
   --directory "${WORKDIR}" \
   --inventory "$(hostname)," \
-  --limit "$(hostname)" \
   --sleep 3 \
   --tags bootstrap \
   --url "${REPOSITORY}" \
