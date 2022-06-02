@@ -1,0 +1,19 @@
+---
+- name: Add multiverse (non-FOSS) repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: '{{ item }}'
+    state: present
+  loop:
+    - "deb http://archive.ubuntu.com/ubuntu/ focal multiverse"
+    - "deb http://archive.ubuntu.com/ubuntu/ focal-updates multiverse"
+    - "deb http://security.ubuntu.com/ubuntu/ focal-security multiverse"
+- name: Install SteamCMD
+  become: true
+  apt: 
+    pkg:
+      - lib32gcc-s1
+      - steamcmd
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
