@@ -1,0 +1,6 @@
+all:
+  children:
+    workstations:
+      hosts:
+        patchwork-blue:
+        patchwork-green:
