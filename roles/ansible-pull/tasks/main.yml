@@ -1,7 +1,31 @@
 ---
-- name: Re-run the configuration playbook every {{ ansible_pull_schedule }} minutes
+- name: Ensure /etc/ansible directory exists
+  file: 
+    mode: '0700'
+    owner: root
+    group: root
+    path: /etc/ansible
+    state: directory
+- name: Copy Ansible configuration files to host
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: /etc/ansible
+    owner: root
+    group: root
+    mode: '0700'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/files/etc/ansible/*'
+- name: Copy script to run Ansible
+  ansible.builtin.copy:
+    src: '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/run-ansible'
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: '0744'
+
+- name: Re-run Ansible {{ ansible_pull_schedule }} minutes
   ansible.builtin.cron:
-    job: ansible-pull -d {{ ansible_pull_workdir }} --only-if-changed --vault-password-file /root/.vault-secret --url "{{ ansible_pull_repository }}" "{{ ansible_pull_playbook }}" -i inventory.yml >>{{ ansible_pull_logfile }} 2>&1
+    job: /usr/local/bin/run-ansible >>{{ ansible_pull_logfile }} 2>&1
     minute: '{{ ansible_pull_schedule }}'
     name: "run ansible"
     state: present

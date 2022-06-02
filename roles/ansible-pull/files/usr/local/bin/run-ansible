@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+REPOSITORY=https://github.com/skleinjung/ansible.git
+WORKDIR=/var/lib/ansible/local
+
+# run plays that configures Ansible (inventory, etc.)
+ansible-pull \
+  --directory "${WORKDIR}" \
+  --inventory "$(hostname)," \
+  --limit "$(hostname)" \
+  --sleep 3 \
+  --tags bootstrap \
+  --url "${REPOSITORY}" \
+  configure-host.yml
+
+# run the main Ansible plays, with the config we just created
+ansible-pull \
+  --directory "${WORKDIR}" \
+  --limit "$(hostname)" \
+  --skip-tags bootstrap \
+  --sleep 3 \
+  --url "${REPOSITORY}" \
+  --vault-password-file /root/.vault-secret \
+  configure-host.yml

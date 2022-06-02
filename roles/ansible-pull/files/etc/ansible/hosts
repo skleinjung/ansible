@@ -4,3 +4,5 @@ all:
       hosts:
         patchwork-blue:
         patchwork-green:
+  vars:
+    ansible_connection: local

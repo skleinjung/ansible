@@ -1,6 +1,3 @@
 ansible_pull_logfile: /var/log/ansible.log
-ansible_pull_playbook: Configure-Desktop.yml
-ansible_pull_repository: https://github.com/skleinjung/ansible.git
 ansible_pull_schedule: '*/1'
 ansible_pull_user: root
-ansible_pull_workdir: /var/lib/ansible/local
