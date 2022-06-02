@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
+
+set -x
+
 systemctl stop VRising
-
-su {{ vrising_server_username }}
-/usr/games/steamcmd +force_install_dir "{{ vrising_server_dir }}" +login anonymous +app_update {{ vrising_server_appid }} +quit
-
+runuser -l {{ vrising_server_username }} -c '/usr/games/steamcmd +force_install_dir "{{ vrising_server_dir }}" +login anonymous +app_update {{ vrising_server_appid }} +quit'
 systemctl start VRising
