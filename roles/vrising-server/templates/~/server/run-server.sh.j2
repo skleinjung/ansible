@@ -6,4 +6,4 @@ export WINEARCH=win64
   /usr/bin/wine \
     VRisingServer.exe \
     -persistentDataPath {{ vrising_server_persistent_data_path }} \
-    -logFile server.log
+    -logFile {{ vrising_server_logfile }}

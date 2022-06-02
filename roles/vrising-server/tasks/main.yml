@@ -1,4 +1,5 @@
 ---
+# install server
 - name: Install xvfb package
   become: true
   apt: 
@@ -25,6 +26,19 @@
     /usr/games/steamcmd +force_install_dir "{{ vrising_server_dir }}" +login anonymous +app_update {{ vrising_server_appid }} +quit
   args:
     creates: '{{ vrising_server_dir }}/VRisingServer.exe'
+
+# create log destination
+- name: Ensure '{{ vrising_server_log_dir }}' exists
+  file: 
+    group: '{{ vrising_server_username }}'
+    mode: '0755'
+    owner: '{{ vrising_server_username }}'
+    path: '{{ vrising_server_log_dir }}'
+    state: directory
+- name: Create logrotate entry for VRising server.log
+  template: src=templates/etc/logrotate.d/VRising.j2 dest=/etc/logrotate.d/VRising owner=root group=root mode=0644
+
+# configure server
 - name: Ensure '{{ vrising_server_settings_dir }}' exists
   file: 
     group: '{{ vrising_server_username }}'
@@ -42,6 +56,8 @@
   notify: Restart VRising
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/Settings/*'
+
+# configure server startup
 - name: Copy startup script
   ansible.builtin.template:
     src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/~/server/run-server.sh.j2'

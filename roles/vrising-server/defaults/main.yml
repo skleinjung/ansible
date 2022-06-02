@@ -1,3 +1,4 @@
 vrising_server_appid: 1829350
+vrising_server_log_dir: /var/log/VRising
 vrising_server_username: vrising
 vrising_server_world_name: default
