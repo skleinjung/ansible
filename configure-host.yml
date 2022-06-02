@@ -11,6 +11,13 @@
   become: true
   roles:
     - role: elastic-agent
+  tasks:
+    - name: Upgrade all packages
+      apt:
+        cache_valid_time: 3600
+        name: "*"
+        state: latest
+        update_cache: yes
 
 - hosts: qemu
   become: true
