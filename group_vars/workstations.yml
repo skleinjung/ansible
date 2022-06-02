@@ -1,7 +1,5 @@
 ---
 snapd_enabled: no
-
-aptcachetime: 3600
 desktop_username: sean
 desktop_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
