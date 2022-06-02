@@ -1,0 +1,18 @@
+---
+- name: Add i386 architecture
+  become: true
+  ansible.builtin.shell: |
+    dpkg --print-foreign-architectures | grep -q i386 \
+      && echo -n "Already present."
+      || { dpkg --add-architecture i386; apt update; }
+  register: add_i386
+  changed_when: add_i386.stdout != 'Already present.'
+- name: Install wine packages
+  become: true
+  apt: 
+    pkg:
+      - wine32
+      - wine64
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
