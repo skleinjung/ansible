@@ -1,5 +1,12 @@
 all:
   children:
+    qemu:
+      hosts:
+        patchwork-blue:
+        patchwork-green:
+    vrising-servers:
+      hosts:
+        vrising-[00:99]:
     workstations:
       hosts:
         patchwork-blue:

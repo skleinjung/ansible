@@ -1,7 +1,7 @@
 # Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
 # Visual Studio Code role from: https://github.com/gantsign/ansible-role-visual-studio-code
 
-- hosts: all
+- hosts: localhost
   become: true
   tags: bootstrap
   roles:
@@ -31,20 +31,6 @@
     - role: spotify
     - role: ssh-server
     - role: visual-studio-code
-      users:
-        - username: '{{ desktop_username }}'
-          # visual_studio_code_extensions:
-          #   - johnpapa.vscode-peacock
-          #   - ryanolsonx.solarized
-          # visual_studio_code_settings_overwrite: yes
-          # visual_studio_code_settings: {
-          #   "diffEditor.ignoreTrimWhitespace": false,
-          #   "terminal.integrated.allowChords": false,
-          #   "workbench.colorTheme": "Solarized Dark+",
-          #   "editor.tabSize": 2,
-          #   "files.autoSave": "onFocusChange"
-          # }
-
     - role: zettlr
   tasks:
   # add lockbox mounts
@@ -76,3 +62,7 @@
   #    path: /mnt/lockbox/usb-drive
   #    src: //lockbox.local/usb-drive
  
+- hosts: vrising-servers
+  become: true
+  roles:
+    - role: wine
