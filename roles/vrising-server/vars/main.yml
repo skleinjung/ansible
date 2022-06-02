@@ -1,1 +1,2 @@
 vrising_server_dir: /home/{{ vrising_server_username }}/server
+vrising_settings_dir: '{{ vrising_server_dir }}/save-data/Settings'

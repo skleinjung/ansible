@@ -25,3 +25,26 @@
     /usr/games/steamcmd +force_install_dir "{{ vrising_server_dir }}" +login anonymous +app_update {{ vrising_server_appid }} +quit
   args:
     creates: '{{ vrising_server_dir }}/VRisingServer.exe'
+- name: Ensure '{{ vrising_settings_dir }}' exists
+  file: 
+    group: '{{ vrising_server_username }}'
+    mode: '0700'
+    owner: '{{ vrising_server_username }}'
+    path: '{{ vrising_settings_dir }}'
+    state: directory
+- name: Copy server configuration
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '{{ vrising_settings_dir }}'
+    owner: '{{ vrising_server_username }}'
+    group: '{{ vrising_server_username }}'
+    mode: '0644'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/files/~/server/save-data/Settings/*'
+- name: Copy startup script
+  ansible.builtin.copy:
+    src: '{{ playbook_dir }}/roles/{{ role_name }}/files/~/server/run-server.sh'
+    dest: '{{ vrising_server_dir }}'
+    owner: '{{ vrising_server_username }}'
+    group: '{{ vrising_server_username }}'
+    mode: '0754'
