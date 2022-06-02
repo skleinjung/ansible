@@ -1,4 +1,12 @@
 ---
+- name: Install xvfb package
+  become: true
+  apt: 
+    pkg:
+      - xvfb
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
 - name: Add the server user
   ansible.builtin.user:
     name: '{{ vrising_server_username }}'
@@ -10,3 +18,10 @@
     owner: '{{ vrising_server_username }}'
     path: '{{ vrising_server_dir }}'
     state: directory
+- name: Install v-rising server
+  become: true
+  become_user: '{{ vrising_server_username }}'
+  ansible.builtin.shell: |
+    /usr/games/steamcmd +force_install_dir "{{ vrising_server_dir }}" +login anonymous +app_update {{ vrising_server_appid }} +quit
+  args:
+    creates: '{{ vrising_server_dir }}/VRisingServer.exe'
