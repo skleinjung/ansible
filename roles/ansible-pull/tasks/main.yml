@@ -42,7 +42,7 @@
 - name: Re-run Ansible daily tasks
   ansible.builtin.cron:
     job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --sleep 30 --url https://github.com/skleinjung/ansible.git --vault-password-file /root/.vault-secret --tags daily configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
-    minute: '*/5'
+    hour: '3'
     name: "run ansible daily"
     state: present
     user: '{{ ansible_pull_user }}'
