@@ -3,15 +3,9 @@
 ## Quick Start
 
 1. Install Ubuntu
-2. Install git (`sudo apt install git`)
-3. Install Ansible (`sudo apt install ansible`)
-4. Install dependencies:
-  - `ansible-galaxy collection install community.general`
-  - `ansible-galaxy collection install ansible.posix`
-4. Store vault password in a file called `.vault-secret`
+2. Store vault password in a file called `.vault-secret`, set permissions to '0600'
   - This cannot be specified interactively currently (by design...)
-5. Run the playbook (`ansible-pull --vault-password-file .vault-secret --ask-become-pass --purge --accept-host-key -i '<HOST_NAME>,' -U https://github.com/skleinjung/ansible.git Configure-Desktop.yml`)
-  - Remember to replace '<HOST_NAME>' with the name of the localhost in the above command
+3. Bootstrap ansible: `wget -O - -o /dev/null https://raw.githubusercontent.com/skleinjung/ansible/main/scripts/bootstrap | sudo bash`
 
 ## Next Steps
 

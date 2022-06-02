@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+apt-get update
+apt-get install --no-install-recommends -y \
+  software-properties-common
+
+apt-add-repository --yes ppa:ansible/ansible
+apt-get update
+
+apt-get install --no-install-recommends -y \
+  ansible \
+  git
+
+ansible-galaxy collection install ansible.posix
+ansible-galaxy collection install community.general
+
+ansible-pull \
+  --accept-host-key \
+  --inventory "$(hostname)," \
+  --purge \
+  --tags bootstrap \
+  --vault-password-file ~/.vault-secret \
+  -U https://github.com/skleinjung/ansible.git \
+  configure-host.yml
