@@ -61,10 +61,11 @@
 - name: Copy startup script
   ansible.builtin.template:
     src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/~/server/run-server.sh.j2'
-    dest: '{{ vrising_server_dir }}'
+    dest: '{{ vrising_server_dir }}/run-server.sh'
     owner: '{{ vrising_server_username }}'
     group: '{{ vrising_server_username }}'
     mode: '0754'
+  notify: Restart VRising
 - name: Create system service
   ansible.builtin.template:
     dest: /etc/systemd/system/VRising.service
