@@ -15,7 +15,6 @@ ansible-pull \
 # run the main Ansible plays, with the config we just created
 ansible-pull \
   --directory "${WORKDIR}" \
-  --limit "$(hostname)" \
   --skip-tags bootstrap \
   --sleep 3 \
   --url "${REPOSITORY}" \

@@ -13,11 +13,21 @@ apt-get install --no-install-recommends -y \
 ansible-galaxy collection install ansible.posix
 ansible-galaxy collection install community.general
 
+# install cronjob
 ansible-pull \
   --accept-host-key \
   --inventory "$(hostname)," \
   --purge \
   --tags bootstrap \
+  --url https://github.com/skleinjung/ansible.git \
   --vault-password-file ~/.vault-secret \
-  -U https://github.com/skleinjung/ansible.git \
+  configure-host.yml
+
+# perform initial run
+ansible-pull \
+  --limit "$(hostname)" \
+  --purge \
+  --skip-tags bootstrap \
+  --url https://github.com/skleinjung/ansible.git \
+  --vault-password-file ~/.vault-secret \
   configure-host.yml
