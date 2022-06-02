@@ -25,11 +25,25 @@
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/*'
 
-- name: Re-run Ansible {{ ansible_pull_schedule }} minutes
+- name: Re-run Ansible bootstrap periodically
   ansible.builtin.cron:
-    job: /usr/local/bin/cronjob-lock /usr/local/bin/run-ansible >>{{ ansible_pull_logfile }} 2>&1
+    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --inventory "$(hostname)," --sleep 30 --url https://github.com/skleinjung/ansible.git --tags bootstrap configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
+    minute: '*/10'
+    name: "run ansible bootstrap"
+    state: present
+    user: '{{ ansible_pull_user }}'
+- name: Re-run Ansible every {{ ansible_pull_schedule }} minutes
+  ansible.builtin.cron:
+    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --sleep 5 --url https://github.com/skleinjung/ansible.git --vault-password-file /root/.vault-secret --skip-tags bootstrap,daily configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
     minute: '{{ ansible_pull_schedule }}'
     name: "run ansible"
+    state: present
+    user: '{{ ansible_pull_user }}'
+- name: Re-run Ansible daily tasks
+  ansible.builtin.cron:
+    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --sleep 30 --url https://github.com/skleinjung/ansible.git --vault-password-file /root/.vault-secret --tags daily configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
+    minute: '*/5'
+    name: "run ansible daily"
     state: present
     user: '{{ ansible_pull_user }}'
 

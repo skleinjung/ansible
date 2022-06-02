@@ -13,6 +13,7 @@
     - role: elastic-agent
   tasks:
     - name: Upgrade all packages
+      tags: daily
       apt:
         cache_valid_time: 3600
         name: "*"
