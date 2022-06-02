@@ -5,5 +5,5 @@ export WINEARCH=win64
   --server-args='-screen 0 640x480x24:32' \
   /usr/bin/wine \
     VRisingServer.exe \
-    -persistentDataPath server1_saves/ \
+    -persistentDataPath {{ vrising_server_persistent_data_path }} \
     -logFile server.log
