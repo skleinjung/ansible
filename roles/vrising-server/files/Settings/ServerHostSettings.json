@@ -1,6 +1,6 @@
 {
-  "Name": "V Rising Server",
-  "Description": "",
+  "Name": "Test V-Rising Server",
+  "Description": "Unstable test server.",
   "Port": 9876,
   "QueryPort": 9877,
   "MaxConnectedUsers": 40,
