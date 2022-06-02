@@ -1,0 +1,11 @@
+[Unit]
+After=network.target
+
+[Service]
+User={{ vrising_server_username }}
+Group={{ vrising_server_username }}
+WorkingDirectory={{ vrising_server_dir }}
+ExecStart={{ vrising_server_dir }}/run-server.sh
+
+[Install]
+WantedBy=multi-user.target

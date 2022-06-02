@@ -48,3 +48,11 @@
     owner: '{{ vrising_server_username }}'
     group: '{{ vrising_server_username }}'
     mode: '0754'
+- name: Create system service
+  ansible.builtin.template:
+    dest: /etc/systemd/system/VRising.service
+    group: root
+    mode: '0644'
+    owner: root
+    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/etc/systemd/system/VRising.service.j2'
+  notify: Restart VRising
