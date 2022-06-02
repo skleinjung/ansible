@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: steamcmd }
+  - { role: wine }

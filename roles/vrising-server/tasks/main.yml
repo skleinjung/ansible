@@ -3,7 +3,6 @@
   ansible.builtin.user:
     name: '{{ vrising_server_username }}'
     password_lock: yes
-
 - name: Ensure '{{ vrising_server_dir }}' exists
   file: 
     group: '{{ vrising_server_username }}'
@@ -11,11 +10,3 @@
     owner: '{{ vrising_server_username }}'
     path: '{{ vrising_server_dir }}'
     state: directory
-- name: Download and unarchive steam console client
-  ansible.builtin.unarchive:
-    dest: '{{ steamcmd_dir }}'
-    group: '{{ vrising_server_username }}'
-    mode: '0700'
-    owner: '{{ vrising_server_username }}'
-    remote_src: yes
-    src: '{{ steamcmd_url }}'

@@ -65,5 +65,4 @@
 - hosts: vrising_servers
   become: true
   roles:
-    - role: wine
     - role: vrising-server

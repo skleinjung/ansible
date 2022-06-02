@@ -1,3 +1,1 @@
-steamcmd_dir: /home/{{ vrising_server_username }}/steamcmd
-steamcmd_url: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
 vrising_server_dir: /home/{{ vrising_server_username }}/steamcmd/VRising
