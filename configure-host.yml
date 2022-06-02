@@ -62,7 +62,7 @@
   #    path: /mnt/lockbox/usb-drive
   #    src: //lockbox.local/usb-drive
  
-- hosts: vrising-servers
+- hosts: vrising_servers
   become: true
   roles:
     - role: wine
