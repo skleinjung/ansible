@@ -8,6 +8,12 @@
     - "deb http://archive.ubuntu.com/ubuntu/ focal multiverse"
     - "deb http://archive.ubuntu.com/ubuntu/ focal-updates multiverse"
     - "deb http://security.ubuntu.com/ubuntu/ focal-security multiverse"
+- name: Accept steam license
+  debconf:
+    name: "steam"
+    question: "steam/question"
+    value: "I AGREE"
+    vtype: "select"
 - name: Install SteamCMD
   become: true
   apt: 
