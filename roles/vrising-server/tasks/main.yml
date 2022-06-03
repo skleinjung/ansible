@@ -56,6 +56,14 @@
   notify: Restart VRising
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/Settings/*'
+- name: Copy templated server configuration
+  ansible.builtin.template:
+    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/Settings/ServerHostSettings.json.j2'
+    dest: '{{ vrising_server_settings_dir }}/ServerHostSettings.json'
+    owner: '{{ vrising_server_username }}'
+    group: '{{ vrising_server_username }}'
+    mode: '0644'
+  notify: Restart VRising
 
 # configure server startup
 - name: Copy startup script
