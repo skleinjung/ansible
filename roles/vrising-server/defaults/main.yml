@@ -1,6 +1,7 @@
 vrising_server_appid: 1829350
+vrising_server_description: This test server has not been customized.
 vrising_server_log_dir: /var/log/VRising
-vrising_server_username: vrising
+vrising_server_name: Worldbinder's Test Server
 vrising_server_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35373433336432396337373035316235643464626433633961376161373533613766613362316234
@@ -8,4 +9,8 @@ vrising_server_password: !vault |
           65626137643137663538343932646138616265343532376563623030343632366438636631383931
           3937633933626631610a353766663730396366656163353562646362333634393264333164363562
           3261
+vrising_server_port: 9876
+vrising_server_queryPort: 9877
+vrising_server_saveName: world1
+vrising_server_username: vrising
 vrising_server_world_name: default
