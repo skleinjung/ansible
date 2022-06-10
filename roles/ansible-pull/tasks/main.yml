@@ -1,7 +1,7 @@
 ---
 - name: Ensure /etc/ansible directory exists
   file: 
-    mode: '0700'
+    mode: '0755'
     owner: root
     group: root
     path: /etc/ansible
@@ -12,7 +12,7 @@
     dest: /etc/ansible
     owner: root
     group: root
-    mode: '0600'
+    mode: '0644'
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/etc/ansible/*'
 - name: Copy scripts to run Ansible
