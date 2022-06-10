@@ -23,9 +23,16 @@
 #    update_cache: yes
 #    cache_valid_time: "{{ aptcachetime }}"
 
+- name: Check if insync binary exists
+  stat: path=/usr/bin/insync
+  register: insync
+
+# we install the fixed version from download URL only if insync is not already installed
+# this avoids an error if a later upgrade process installs a newer version
 - name: Install the latest Insync .deb package
   apt:
     deb: '{{ insync_download_url }}'
+  when: not insync.stat.exists
 
 # initialize 'settings' database
 # - name: Determine if settings.db exists
