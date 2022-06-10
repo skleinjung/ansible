@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+set -x
+
+# run the specified playbook for the local host only
+
+ansible-playbook \
+  --ask-become-pass \
+  --ask-vault-pass \
+  --skip-tags bootstrap,daily \
+  --limit "$(hostname)" \
+  "$1"
