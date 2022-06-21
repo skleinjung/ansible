@@ -9,7 +9,7 @@
   "RelicSpawnType": "Plentiful",
   "CanLootEnemyContainers": false,
   "BloodBoundEquipment": true,
-  "TeleportBoundItems": true,
+  "TeleportBoundItems": false,
   "AllowGlobalChat": true,
   "AllWaypointsUnlocked": false,
   "FreeCastleClaim": false,
