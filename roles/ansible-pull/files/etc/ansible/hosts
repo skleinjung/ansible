@@ -1,5 +1,10 @@
 all:
   children:
+    nas_servers:
+      hosts:
+        nfs:
+        nfs-[00:99]:
+        nas-[00:99]:
     qemu:
       hosts:
         patchwork-blue:

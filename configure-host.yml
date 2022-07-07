@@ -21,6 +21,11 @@
         state: latest
         update_cache: yes
 
+- hosts: nas_servers
+  become: true
+  roles:
+    - nfs-server
+
 - hosts: qemu
   become: true
   roles:

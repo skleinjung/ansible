@@ -1,0 +1,4 @@
+---
+nfs_exports:
+  - /srv/nfs/storage                192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
+  - /srv/nfs/usb                    192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
