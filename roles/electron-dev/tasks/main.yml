@@ -1,0 +1,9 @@
+---
+- name: Ensure dependencies needed to build .deb packages are installed
+  apt:
+    cache_valid_time: "{{ aptcachetime }}"
+    name:
+      - dpkg
+      - fakeroot
+    state: present
+    update_cache: yes

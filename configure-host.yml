@@ -37,6 +37,7 @@
     - role: desktop
     - role: dbeaver
     - role: discord
+    - role: electron-dev
     - role: insync
     - role: nodejs
     - role: no-machine
