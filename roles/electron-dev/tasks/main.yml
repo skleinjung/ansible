@@ -7,3 +7,11 @@
       - fakeroot
     state: present
     update_cache: yes
+
+- name: Ensure dependencies needed to build RPM packages are installed
+  apt:
+    cache_valid_time: "{{ aptcachetime }}"
+    name:
+      - rpm
+    state: present
+    update_cache: yes
