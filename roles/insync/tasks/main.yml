@@ -8,31 +8,31 @@
       - insync_google_my_drive_id is defined
 
 # install insync
-# - name: Add insync apt key
-#   ansible.builtin.apt_key:
-#     keyserver: keyserver.ubuntu.com
-#     id: ACCAF35C
-# - name: Add insync apt repository
-#   ansible.builtin.apt_repository:
-#     repo: deb http://apt.insync.io/ubuntu focal non-free contrib
-#     state: present
-#- name: Update repositories cache and install "insync" package
-#  apt:
-#    name: insync
-#    state: present
-#    update_cache: yes
-#    cache_valid_time: "{{ aptcachetime }}"
+- name: Add insync apt key
+  ansible.builtin.apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: ACCAF35C
+- name: Add insync apt repository
+  ansible.builtin.apt_repository:
+    repo: deb http://apt.insync.io/ubuntu jammy non-free contrib
+    state: present
+- name: Update repositories cache and install "insync" package
+  apt:
+    name: insync
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
 
-- name: Check if insync binary exists
-  stat: path=/usr/bin/insync
-  register: insync
-
+# install using .deb download.. this breaks with updating from apt on jammy
+# - name: Check if insync binary exists
+#   stat: path=/usr/bin/insync
+#   register: insync
 # we install the fixed version from download URL only if insync is not already installed
 # this avoids an error if a later upgrade process installs a newer version
-- name: Install the latest Insync .deb package
-  apt:
-    deb: '{{ insync_download_url }}'
-  when: not insync.stat.exists
+# - name: Install the latest Insync .deb package
+#   apt:
+#     deb: '{{ insync_download_url }}'
+#   when: not insync.stat.exists
 
 # initialize 'settings' database
 # - name: Determine if settings.db exists
