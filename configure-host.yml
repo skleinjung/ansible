@@ -36,6 +36,7 @@
   roles:
     - role: server
     - role: ssh-server
+      when: sshd_enabled | bool
 
 - hosts: workstations
   become: true
