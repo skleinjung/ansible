@@ -4,10 +4,17 @@ set -ex
 
 sleepTime="${ANSIBLE_PULL_SLEEP_TIME:-0}"
 
-/usr/bin/ansible-pull \
-  --directory "/var/lib/ansible/local" \
+if [ -f /var/ansible/git-ref ]; then
+  gitRef=$(cat /var/ansible/git-ref)
+else
+  gitRef=main
+fi
 
+/usr/bin/ansible-pull \
+  --checkout "${gitRef}" \
+  --directory "/var/lib/ansible/local" \
+  --sleep "${sleepTime}" \
   --url https://github.com/skleinjung/ansible.git \
-  --vault-password-file {{ ansible_secret_path }}/.vault-secret \
+  --vault-password-file "{{ ansible_secret_path }}" \
   --skip-tags bootstrap,daily \
   configure-host.yml

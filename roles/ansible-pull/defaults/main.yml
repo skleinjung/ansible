@@ -2,4 +2,4 @@ ansible_pull_logfile: /var/log/ansible.log
 ansible_pull_schedule_hour: '*'
 ansible_pull_schedule_minute: '11'
 ansible_pull_user: root
-ansible_secret_path: /root
+ansible_secret_path: /var/ansible/vault-secret
