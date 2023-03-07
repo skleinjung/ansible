@@ -2,14 +2,14 @@
 - name: Check mandatory variables are defined
   assert:
     that:
-      - desktop_username is defined
+      - username is defined
 
-- name: Ensure /home/{{ desktop_username }}/.ssh directory exists
+- name: Ensure /home/{{ username }}/.ssh directory exists
   file: 
-    group: '{{ desktop_username }}'
+    group: '{{ username }}'
     mode: '0700'
-    owner: '{{ desktop_username }}'
-    path: /home/{{ desktop_username }}/.ssh
+    owner: '{{ username }}'
+    path: /home/{{ username }}/.ssh
     state: directory
 
 - name: Update repositories cache and install "openssh-server" package
@@ -20,10 +20,10 @@
     cache_valid_time: "{{ aptcachetime }}"
 - name: Add authorized ssh keys
   ansible.builtin.copy:
-    dest: /home/{{ desktop_username }}/.ssh/authorized_keys
-    group: '{{ desktop_username }}'
+    dest: /home/{{ username }}/.ssh/authorized_keys
+    group: '{{ username }}'
     mode: '0644'
-    owner: '{{ desktop_username }}'
+    owner: '{{ username }}'
     src: '{{ playbook_dir }}/roles/{{ role_name }}/files/authorized_keys'
 
 - name: Configure sshd

@@ -3,8 +3,8 @@
   ansible.builtin.user:
     append: yes
     groups: adm,cdrom,sudo,dip,plugdev,lxd
-    name: '{{ desktop_username }}'
-    password: '{{ desktop_password }}'
+    name: '{{ username }}'
+    password: '{{ password }}'
     uid: 1000
 - name: Install desktop environment
   apt: 
@@ -19,42 +19,42 @@
 # For more examples: https://gist.github.com/carlwgeorge/c560a532b6929f49d9c0df52f75a68ae
 - name: Set desktop gtk theme
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/interface/gtk-theme
     value: "'Yaru-blue'"
     state: present
 - name: Set desktop icon theme
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/interface/icon-theme
     value: "'Yaru-blue'"
     state: present
 - name: Disable 'Character' results in desktop search
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/search-providers/disabled
     value: "['org.gnome.Characters.desktop']"
     state: present
 - name: Disable screen blanking
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/session/idle-delay
     value: 'uint32 0'
     state: present
 - name: Disable screen locking
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/screensaver/lock-enabled
     value: 'false'
     state: present
 - name: Set mouse sensitivity
   become: true
-  become_user: '{{ desktop_username }}'
+  become_user: '{{ username }}'
   community.general.dconf:
     key: /org/gnome/desktop/peripherals/mouse/speed
     value: '0.81617647058823528'

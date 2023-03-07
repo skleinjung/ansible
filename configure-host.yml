@@ -31,6 +31,12 @@
   roles:
     - role: qemu-agent
 
+- hosts: servers
+  become: true
+  roles:
+    - role: server
+    - role: ssh-server
+
 - hosts: workstations
   become: true
   roles:

@@ -1,1 +1,1 @@
-spotify_config_dir: /home/{{ desktop_username }}/snap/spotify/current/.config/spotify
+spotify_config_dir: /home/{{ username }}/snap/spotify/current/.config/spotify

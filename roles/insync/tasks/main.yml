@@ -2,7 +2,7 @@
 - name: Check mandatory variables are defined
   assert:
     that:
-      - desktop_username is defined
+      - username is defined
       - insync_settings_db is defined
       - insync_google_drive_root is defined
       - insync_google_my_drive_id is defined
@@ -45,16 +45,16 @@
 #     - name: Ensure '{{ insync_config_directory }}' exists
 #       file: 
 #         mode: '0700'
-#         owner: '{{ desktop_username }}'
-#         group: '{{ desktop_username }}'
+#         owner: '{{ username }}'
+#         group: '{{ username }}'
 #         path: '{{ insync_config_directory }}'
 #         state: directory
 #     - name: Copy settings.db
 #       ansible.builtin.copy:
 #         dest: '{{ insync_config_directory }}/settings.db'
-#         group: '{{ desktop_username }}'
+#         group: '{{ username }}'
 #         mode: '0644'
-#         owner: '{{ desktop_username }}'
+#         owner: '{{ username }}'
 #         src: '{{ insync_settings_db }}'
 #     - name: Reset original journal mode
 #       ansible.builtin.command:
@@ -67,8 +67,8 @@
 - name: 'Ensure Google Drive sync root exists: {{ c }}'
   file: 
     mode: '0755'
-    owner: '{{ desktop_username }}'
-    group: '{{ desktop_username }}'
+    owner: '{{ username }}'
+    group: '{{ username }}'
     path: '{{ insync_google_drive_root }}'
     state: directory
 
@@ -104,8 +104,8 @@
 #     - name: Ensure '{{ insync_config_directory }}/data' exists
 #       file: 
 #         mode: '0775'
-#         owner: '{{ desktop_username }}'
-#         group: '{{ desktop_username }}'
+#         owner: '{{ username }}'
+#         group: '{{ username }}'
 #         path: '{{ insync_config_directory }}/data'
 #         state: directory
 #     - name: Lookup Google Drive sync root inode
@@ -181,7 +181,7 @@
 #           - PRAGMA user_version = 7;
 #     - name: Change DB owner and permissions
 #       ansible.builtin.file:
-#         group: '{{ desktop_username }}'
+#         group: '{{ username }}'
 #         mode: '0644'
-#         owner: '{{ desktop_username }}'
+#         owner: '{{ username }}'
 #         path: '{{ insync_config_directory }}/data/gd-{{ account_id_query_output.stdout }}.db'

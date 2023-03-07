@@ -1,1 +1,1 @@
-radeon_profile_config_dir: /home/{{ desktop_username }}/.config/radeon-profile
+radeon_profile_config_dir: /home/{{ username }}/.config/radeon-profile

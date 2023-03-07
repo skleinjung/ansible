@@ -1,0 +1,17 @@
+---
+- name: Add the server operator user account
+  ansible.builtin.user:
+    append: yes
+    groups: sudo
+    name: '{{ username }}'
+    password: '!'
+    shell: /bin/bash
+    uid: 1000
+
+- name: Allow 'sudo' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s
