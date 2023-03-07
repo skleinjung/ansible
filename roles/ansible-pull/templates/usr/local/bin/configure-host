@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -ex
+
+sleepTime="${ANSIBLE_PULL_SLEEP_TIME:-0}"
+
+/usr/bin/ansible-pull \
+  --directory "/var/lib/ansible/local" \
+
+  --url https://github.com/skleinjung/ansible.git \
+  --vault-password-file {{ ansible_secret_path }}/.vault-secret \
+  --skip-tags bootstrap,daily \
+  configure-host.yml

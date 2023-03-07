@@ -15,7 +15,7 @@
     mode: '0644'
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/etc/ansible/*'
-- name: Copy scripts to run Ansible
+- name: Copy cronjob-lock script
   ansible.builtin.copy:
     src: '{{ item }}'
     dest: /usr/local/bin
@@ -24,24 +24,39 @@
     mode: '0744'
   with_fileglob:
     - '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/*'
+- name: Copy scripts to run Ansible
+  template: 
+    src: '{{ item }}'
+    dest: /usr/local/bin
+    owner: root 
+    group: root 
+    mode: '0744'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/{{ role_name }}/templates/usr/local/bin/*'
 
+- name: Set sleep time environment variable
+  ansible.builtin.cron:
+    env: true
+    job: '15'
+    name: SLEEP_TIME_BEFORE_PULL
 - name: Re-run Ansible bootstrap periodically
   ansible.builtin.cron:
-    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --inventory "$(hostname)," --sleep 30 --url https://github.com/skleinjung/ansible.git --tags bootstrap configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
+    job: /usr/local/bin/cronjob-lock /usr/local/bin/bootstrap-ansible >>{{ ansible_pull_logfile }} 2>&1
     minute: '*/10'
     name: "run ansible bootstrap"
     state: present
     user: '{{ ansible_pull_user }}'
 - name: Re-run Ansible every {{ ansible_pull_schedule }} minutes
   ansible.builtin.cron:
-    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --sleep 5 --url https://github.com/skleinjung/ansible.git --vault-password-file /root/.vault-secret --skip-tags bootstrap,daily configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
-    minute: '{{ ansible_pull_schedule }}'
+    hour: '{{ ansible_pull_schedule_hour }}'
+    job: /usr/local/bin/cronjob-lock /usr/local/bin/configure-host >>{{ ansible_pull_logfile }} 2>&1
+    minute: '{{ ansible_pull_schedule_minute }}'
     name: "run ansible"
     state: present
     user: '{{ ansible_pull_user }}'
 - name: Re-run Ansible daily tasks
   ansible.builtin.cron:
-    job: /usr/local/bin/cronjob-lock /usr/bin/ansible-pull --directory "/var/lib/ansible/local" --sleep 30 --url https://github.com/skleinjung/ansible.git --vault-password-file /root/.vault-secret --tags daily configure-host.yml >>{{ ansible_pull_logfile }} 2>&1
+    job: /usr/local/bin/cronjob-lock /usr/local/bin/daily-updates >>{{ ansible_pull_logfile }} 2>&1
     hour: '3'
     name: "run ansible daily"
     state: present
