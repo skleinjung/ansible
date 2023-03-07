@@ -5,10 +5,20 @@ all:
         nfs:
         nfs-[00:99]:
         nas-[00:99]:
+    nextcloud_servers:
+      hosts:
+        nextcloud-blue:
+        nextcloud-green:
+        nextcloud-[00:99]:
     qemu:
       hosts:
         patchwork-blue:
         patchwork-green:
+    servers:
+      children:
+        nas_servers:
+        nextcloud_servers:
+        vrising_servers:
     vrising_servers:
       hosts:
         vrising-[00:99]:

@@ -13,6 +13,7 @@ fi
 /usr/bin/ansible-pull \
   --checkout "${gitRef}" \
   --directory "/var/lib/ansible/local" \
+  --inventory "$(hostname)," \
   --sleep "${sleepTime}" \
   --url https://github.com/skleinjung/ansible.git \
   --vault-password-file "{{ ansible_secret_path }}" \
