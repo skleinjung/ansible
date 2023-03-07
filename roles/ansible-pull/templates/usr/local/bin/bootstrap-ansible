@@ -18,4 +18,5 @@ fi
   --url https://github.com/skleinjung/ansible.git \
   --vault-password-file "{{ ansible_secret_path }}" \
   --tags bootstrap \
+  install-dependencies.yml \
   configure-host.yml

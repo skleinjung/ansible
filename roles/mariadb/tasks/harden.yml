@@ -1,0 +1,10 @@
+---
+- name: Install python prereqs for mysql hardening role
+  ansible.builtin.pip:
+    name: jmespath
+
+- name: Apply hardened mysql configuration
+  ansible.builtin.import_role:
+    name: devsec.hardening.mysql_hardening
+  vars:
+    mysql_root_password: '{{ mariadb_root_password }}'

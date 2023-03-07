@@ -1,0 +1,21 @@
+---
+# - name: Check mandatory variables are defined
+#   assert:
+#     that:
+#       - mariadb_root_password is defined
+#       - radeon_profile_config_dir is defined
+
+- name: Install mariadb-server package
+  become: true
+  apt: 
+    pkg: mariadb-server
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ aptcachetime }}"
+  notify: restart mysql
+
+- name: Configure mariadb-server
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Harden mariadb-server
+  ansible.builtin.import_tasks: harden.yml

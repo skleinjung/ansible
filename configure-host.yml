@@ -26,6 +26,11 @@
   roles:
     - nfs-server
 
+- hosts: nextcloud_servers
+  become: true
+  roles:
+    - role: nextcloud
+
 - hosts: qemu
   become: true
   roles:
