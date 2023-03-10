@@ -11,7 +11,7 @@
     pkg: 
       - python3-psutil
       - ubuntu-desktop
-    state: latest
+    state: present
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"
 

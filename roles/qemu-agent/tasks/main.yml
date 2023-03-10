@@ -3,7 +3,7 @@
   become: true
   apt: 
     pkg: qemu-guest-agent
-    state: latest
+    state: present
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"
   notify: Start qemu-guest-agent
