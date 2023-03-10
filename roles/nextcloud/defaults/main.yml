@@ -34,3 +34,16 @@ nextcloud_db_password: !vault |
 # backup configuration
 # root directory for backups
 nextcloud_backup_root: /mnt/backups
+
+php_bcmath_version: "{{ php_version }}"
+php_bz2_version: "{{ php_version }}"
+php_cli_version: "{{ php_version }}"
+php_curl_version: "{{ php_version }}"
+php_gd_version: "{{ php_version }}"
+php_gmp_version: "{{ php_version }}"
+php_imagick_version: 3.6*
+php_intl_version: "{{ php_version }}"
+php_mbstring_version: "{{ php_version }}"
+php_mysql_version: "{{ php_version }}"
+php_xml_version: "{{ php_version }}"
+php_zip_version: "{{ php_version }}"

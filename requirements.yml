@@ -7,3 +7,7 @@ collections:
   version: '>=3.6.0'
 - name: devsec.hardening
   version: '>=8.6.0'
+
+roles:
+- name: geerlingguy.apache
+  version: v3.3.0

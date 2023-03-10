@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: geerlingguy.apache
+    vars:
+      apache_remove_default_vhost: false

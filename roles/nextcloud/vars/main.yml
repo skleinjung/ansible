@@ -1,2 +1,16 @@
 nextcloud_db_collation: utf8mb4_general_ci
 nextcloud_db_encoding: utf8mb4
+
+php_packages:
+  - php-bcmath={{ php_bcmath_version }}
+  - php-bz2={{ php_bz2_version }}
+  - php-cli={{ php_cli_version }}
+  - php-curl={{ php_curl_version }}
+  - php-gd={{ php_gd_version }}
+  - php-gmp={{ php_gmp_version }}
+  - php-imagick={{ php_imagick_version }}
+  - php-intl={{ php_intl_version }}
+  - php-mbstring={{ php_mbstring_version }}
+  - php-mysql={{ php_mysql_version }}
+  - php-xml={{ php_xml_version }}
+  - php-zip={{ php_zip_version }}

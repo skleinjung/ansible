@@ -2,5 +2,5 @@
 - name: Configure mariadb database
   ansible.builtin.import_tasks: database.yml
 
-- name: backup testing
+- name: Manage backup and restore functions
   ansible.builtin.import_tasks: backup.yml
