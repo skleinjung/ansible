@@ -1,4 +1,11 @@
 ---
+# this only works if user is root and shell is bash...
+- name: Add vault password location to ansible user's environment
+  ansible.builtin.lineinfile:
+    path: /root/.bashrc
+    regexp: '^export ANSIBLE_VAULT_PASSWORD_FILE='
+    line: 'export ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_secret_path }}'
+
 - name: Copy cronjob-lock script
   ansible.builtin.copy:
     src: '{{ item }}'

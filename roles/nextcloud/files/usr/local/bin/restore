@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: restore <path_to_backup>"
+  exit 1
+fi
+
+/usr/local/bin/run-playbooks \
+  --extra-vars "nextcloud_db_backup_path=${1}" \
+  --tags restore_backup \
+  playbooks/nextcloud-server.yml

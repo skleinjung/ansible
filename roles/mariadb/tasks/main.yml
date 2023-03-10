@@ -6,13 +6,17 @@
 #       - radeon_profile_config_dir is defined
 
 - name: Install mariadb-server package
-  become: true
   apt: 
-    pkg: mariadb-server
-    state: latest
+    pkg: mariadb-server={{ mariadb_version }}
+    state: present
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"
   notify: restart mysql
+
+- name: Hold mariadb-server package from automatic upgrades
+  ansible.builtin.dpkg_selections:
+    name: mariadb-server
+    selection: hold
 
 - name: Configure mariadb-server
   ansible.builtin.import_tasks: configure.yml

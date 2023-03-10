@@ -1,0 +1,48 @@
+# Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
+# Visual Studio Code role from: https://github.com/gantsign/ansible-role-visual-studio-code
+
+- hosts: workstations
+  name: Configure user workstation
+  roles:
+    - role: desktop
+    - role: dbeaver
+    - role: discord
+    - role: electron-dev
+    - role: insync
+    - role: nodejs
+    - role: no-machine
+    - role: radeon-profile
+    - role: shopify-cli
+    - role: spotify
+    - role: ssh-server
+    - role: visual-studio-code
+    - role: zettlr
+  tasks:
+  # add lockbox mounts
+  #- name: Copy encrypted credentials
+  #  ansible.builtin.copy:
+  #    src: 'lockbox_credentials'
+  #    dest: /root/.smbcredentials_lockbox
+  #    owner: root
+  #    group: root
+  #    mode: '0600'
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/sean
+  #    src: //lockbox.local/sean
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/shared
+  #    src: //lockbox.local/shared
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/google-drive
+  #    src: //lockbox.local/google-drive
+  #- import_tasks: tasks/add-cifs-mount.yml
+  #  vars:
+  #    credentials_file: /root/.smbcredentials_lockbox
+  #    path: /mnt/lockbox/usb-drive
+  #    src: //lockbox.local/usb-drive

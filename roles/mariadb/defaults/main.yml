@@ -1,1 +1,2 @@
 mariadb_data_directory: /var/lib/mysql
+mariadb_version: 1:10.6*

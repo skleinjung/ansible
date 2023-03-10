@@ -1,3 +1,5 @@
 ---
-mariadb_data_directory: /mnt/data/mysql
+mariadb_data_directory: /var/lib/nextcloud/db/data
+mariadb_version: 1:10.6*
+
 sshd_enabled: 'true'

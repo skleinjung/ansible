@@ -1,0 +1,2 @@
+nextcloud_db_collation: utf8mb4_general_ci
+nextcloud_db_encoding: utf8mb4

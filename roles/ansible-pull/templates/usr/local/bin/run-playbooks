@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+sleepTime="${ANSIBLE_PULL_SLEEP_TIME:-0}"
+
+if [ -f /var/ansible/git-ref ]; then
+  gitRef=$(cat /var/ansible/git-ref)
+else
+  gitRef=main
+fi
+
+set -x
+
+/usr/bin/ansible-pull \
+  --checkout "${gitRef}" \
+  --inventory inventory \
+  --sleep "${sleepTime}" \
+  --url https://github.com/skleinjung/ansible.git \
+  --vault-password-file "{{ ansible_secret_path }}" \
+  "$@"

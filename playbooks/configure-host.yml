@@ -27,11 +27,6 @@
   roles:
     - nfs-server
 
-- hosts: nextcloud_servers
-  become: true
-  roles:
-    - role: nextcloud
-
 - hosts: qemu
   become: true
   roles:
@@ -44,53 +39,13 @@
     - role: ssh-server
       when: sshd_enabled | bool
 
-- hosts: workstations
-  become: true
-  roles:
-    - role: desktop
-    - role: dbeaver
-    - role: discord
-    - role: electron-dev
-    - role: insync
-    - role: nodejs
-    - role: no-machine
-    - role: radeon-profile
-    - role: shopify-cli
-    - role: spotify
-    - role: ssh-server
-    - role: visual-studio-code
-    - role: zettlr
-  tasks:
-  # add lockbox mounts
-  #- name: Copy encrypted credentials
-  #  ansible.builtin.copy:
-  #    src: 'lockbox_credentials'
-  #    dest: /root/.smbcredentials_lockbox
-  #    owner: root
-  #    group: root
-  #    mode: '0600'
-  #- import_tasks: tasks/add-cifs-mount.yml
-  #  vars:
-  #    credentials_file: /root/.smbcredentials_lockbox
-  #    path: /mnt/lockbox/sean
-  #    src: //lockbox.local/sean
-  #- import_tasks: tasks/add-cifs-mount.yml
-  #  vars:
-  #    credentials_file: /root/.smbcredentials_lockbox
-  #    path: /mnt/lockbox/shared
-  #    src: //lockbox.local/shared
-  #- import_tasks: tasks/add-cifs-mount.yml
-  #  vars:
-  #    credentials_file: /root/.smbcredentials_lockbox
-  #    path: /mnt/lockbox/google-drive
-  #    src: //lockbox.local/google-drive
-  #- import_tasks: tasks/add-cifs-mount.yml
-  #  vars:
-  #    credentials_file: /root/.smbcredentials_lockbox
-  #    path: /mnt/lockbox/usb-drive
-  #    src: //lockbox.local/usb-drive
-
 - hosts: vrising_servers
   become: true
   roles:
     - role: vrising-server
+
+- name: Include plays for user workstations
+  ansible.builtin.import_playbook: workstation.yml
+
+- name: Include plays for nextcloud servers
+  ansible.builtin.import_playbook: nextcloud-server.yml

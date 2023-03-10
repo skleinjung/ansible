@@ -1,0 +1,48 @@
+---
+- name: Install backup and restore scripts
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: '0744'
+  with_fileglob:
+    - 'usr/local/bin/*'
+
+- name: Execute backup
+  # invoke daily, and allow adhoc backups via 'backup' script
+  tags:
+    - backup
+    - daily
+  block:
+    - name: Generate timestamp (YYYYMMDDTHHMMSS)
+      ansible.builtin.set_fact:
+        timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+    - name: Ensure backup directory exists
+      ansible.builtin.file:
+        mode: "0700"
+        owner: root
+        group: root
+        path: "{{ nextcloud_backup_root }}/{{ timestamp }}"
+        state: directory
+    - name: Create database backup
+      community.mysql.mysql_db:
+        state: dump
+        name: "{{ nextcloud_db_name }}"
+        target: "{{ nextcloud_backup_root }}/{{ timestamp }}/db.sql.gz"
+
+- name: Execute restore from backup
+  tags:
+    - restore_backup
+  block:
+    - name: Assert backup path is specified
+      assert:
+        that:
+          - nextcloud_db_backup_path is defined
+    - name: Restore database backup
+      community.mysql.mysql_db:
+        collation: '{{ nextcloud_db_collation }}'
+        encoding: '{{ nextcloud_db_encoding }}'
+        name: "{{ nextcloud_db_name }}"
+        state: import
+        target: '{{ nextcloud_db_backup_path }}/db.sql.gz'
