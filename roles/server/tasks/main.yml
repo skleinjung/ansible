@@ -2,7 +2,7 @@
 - name: Add the server operator user account
   ansible.builtin.user:
     append: yes
-    groups: sudo
+    groups: adm,sudo
     name: '{{ username }}'
     password: '!'
     shell: /bin/bash

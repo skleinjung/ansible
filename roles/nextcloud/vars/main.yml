@@ -1,5 +1,22 @@
+# data directories
+nextcloud_apps_path: "{{ nextcloud_current_version_path }}/apps"
+nextcloud_config_path: "{{ nextcloud_data_path }}/config"
+nextcloud_files_path: "{{ nextcloud_data_path }}/files"
+
+nextcloud_config_file: "{{ nextcloud_config_path }}/config.php"
+nextcloud_autoconfig_file: "{{ nextcloud_config_path }}/autoconfig.php"
+
 nextcloud_db_collation: utf8mb4_general_ci
 nextcloud_db_encoding: utf8mb4
+
+# nextcloud_download_path: path to download nextcloud artifacts
+nextcloud_download_path: "{{ nextcloud_path }}/.work"
+# nextcloud_current_version_path: directory containing the unzipped nextcloud archive for the installed version
+nextcloud_current_version_path: "{{ nextcloud_path }}/versions/{{ nextcloud_version }}"
+# nextcloud_download_url: url of the nextcloud archive
+nextcloud_download_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2
+# nextcloud_hash_url: url of the nextcloud archive hash
+nextcloud_digest_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.sha256
 
 php_packages:
   - php-bcmath={{ php_bcmath_version }}
@@ -14,3 +31,6 @@ php_packages:
   - php-mysql={{ php_mysql_version }}
   - php-xml={{ php_xml_version }}
   - php-zip={{ php_zip_version }}
+
+# todo: update this to work even if we change php versions...
+__php_ini_path: /etc/php/8.1/apache2/php.ini

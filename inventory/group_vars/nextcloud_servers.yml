@@ -3,7 +3,7 @@
 apache2_version: 2.4*
 
 # mariadb options
-mariadb_data_directory: /var/lib/nextcloud/db/data
+mariadb_data_directory: /var/lib/db/mysql
 mariadb_version: 1:10.6*
 
 # php options
