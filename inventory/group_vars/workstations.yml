@@ -17,4 +17,4 @@ password: !vault |
 # TODO: document better way to get this
 insync_google_my_drive_id: 0ALBjjTQRGVQgUk9PVA
 # absolute path the insync settings.db containing account credentials
-insync_settings_db: "{{ playbook_dir }}/files/insync_settings.db"
+insync_settings_db: "insync_settings.db"

@@ -24,7 +24,7 @@
     group: '{{ username }}'
     mode: '0644'
     owner: '{{ username }}'
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/files/authorized_keys'
+    src: 'authorized_keys'
 
 - name: Configure sshd
   ansible.builtin.copy:
@@ -32,5 +32,5 @@
     group: root
     mode: '0644'
     owner: root
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/files/sshd_config'
+    src: 'sshd_config'
   notify: Restart sshd

@@ -12,10 +12,10 @@ fi
 
 /usr/bin/ansible-pull \
   --checkout "${gitRef}" \
-  --directory "/var/lib/ansible/local" \
+  --inventory inventory \
   --sleep "${sleepTime}" \
   --url https://github.com/skleinjung/ansible.git \
   --vault-password-file "{{ ansible_secret_path }}" \
   --skip-tags bootstrap,daily \
-  install-dependencies.yml \
-  configure-host.yml
+  playbooks/install-dependencies.yml \
+  playbooks/configure-host.yml

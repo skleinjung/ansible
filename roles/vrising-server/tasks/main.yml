@@ -55,10 +55,10 @@
     mode: '0644'
   notify: Restart VRising
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/Settings/*'
+    - 'Settings/*'
 - name: Copy templated server configuration
   ansible.builtin.template:
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/Settings/ServerHostSettings.json.j2'
+    src: 'Settings/ServerHostSettings.json.j2'
     dest: '{{ vrising_server_settings_dir }}/ServerHostSettings.json'
     owner: '{{ vrising_server_username }}'
     group: '{{ vrising_server_username }}'
@@ -68,7 +68,7 @@
 # configure server startup
 - name: Copy startup script
   ansible.builtin.template:
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/~/server/run-server.sh.j2'
+    src: '~/server/run-server.sh.j2'
     dest: '{{ vrising_server_dir }}/run-server.sh'
     owner: '{{ vrising_server_username }}'
     group: '{{ vrising_server_username }}'
@@ -80,13 +80,13 @@
     group: root
     mode: '0644'
     owner: root
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/etc/systemd/system/VRising.service.j2'
+    src: 'etc/systemd/system/VRising.service.j2'
   notify: Restart VRising
 
 # create utility scripts
 - name: Copy update script
   ansible.builtin.template:
-    src: '{{ playbook_dir }}/roles/{{ role_name }}/templates/~/server/update-server.sh.j2'
+    src: '~/server/update-server.sh.j2'
     dest: '{{ vrising_server_dir }}/update-server.sh'
     owner: '{{ vrising_server_username }}'
     group: '{{ vrising_server_username }}'

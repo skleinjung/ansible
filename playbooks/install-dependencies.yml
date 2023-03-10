@@ -1,0 +1,6 @@
+---
+- hosts: all
+  name: Install requirements from ansible-galaxy
+  tasks:
+    - name: Install requirements
+      ansible.builtin.command: ansible-galaxy install -r '{{ playbook_dir }}/../requirements.yml'

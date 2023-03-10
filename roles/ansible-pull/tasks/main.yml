@@ -1,20 +1,4 @@
 ---
-- name: Ensure /etc/ansible directory exists
-  file: 
-    mode: '0755'
-    owner: root
-    group: root
-    path: /etc/ansible
-    state: directory
-- name: Copy Ansible configuration files to host
-  ansible.builtin.copy:
-    src: '{{ item }}'
-    dest: /etc/ansible
-    owner: root
-    group: root
-    mode: '0644'
-  with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/etc/ansible/*'
 - name: Copy cronjob-lock script
   ansible.builtin.copy:
     src: '{{ item }}'
@@ -23,7 +7,7 @@
     group: root
     mode: '0744'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/usr/local/bin/*'
+    - 'usr/local/bin/*'
 - name: Copy scripts to run Ansible
   template: 
     src: '{{ item }}'
@@ -32,7 +16,7 @@
     group: root 
     mode: '0744'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/templates/usr/local/bin/*'
+    - '../templates/usr/local/bin/*'
 
 - name: Set sleep time environment variable
   ansible.builtin.cron:
@@ -41,8 +25,9 @@
     name: SLEEP_TIME_BEFORE_PULL
 - name: Re-run Ansible bootstrap periodically
   ansible.builtin.cron:
+    hour: '2'
     job: /usr/local/bin/cronjob-lock /usr/local/bin/bootstrap-ansible >>{{ ansible_pull_logfile }} 2>&1
-    minute: '*/10'
+    minute: '13'
     name: "run ansible bootstrap"
     state: present
     user: '{{ ansible_pull_user }}'
@@ -50,14 +35,15 @@
   ansible.builtin.cron:
     hour: '{{ ansible_pull_schedule_hour }}'
     job: /usr/local/bin/cronjob-lock /usr/local/bin/configure-host >>{{ ansible_pull_logfile }} 2>&1
-    minute: '{{ ansible_pull_schedule_minute }}'
+    minute: '*/10'
     name: "run ansible"
     state: present
     user: '{{ ansible_pull_user }}'
 - name: Re-run Ansible daily tasks
   ansible.builtin.cron:
-    job: /usr/local/bin/cronjob-lock /usr/local/bin/daily-updates >>{{ ansible_pull_logfile }} 2>&1
     hour: '3'
+    job: /usr/local/bin/cronjob-lock /usr/local/bin/daily-updates >>{{ ansible_pull_logfile }} 2>&1
+    minute: '13'
     name: "run ansible daily"
     state: present
     user: '{{ ansible_pull_user }}'

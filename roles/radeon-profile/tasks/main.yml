@@ -31,4 +31,4 @@
     group: '{{ username }}'
     mode: '0664'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/~/.config/radeon-profile/*'
+    - '~/.config/radeon-profile/*'
