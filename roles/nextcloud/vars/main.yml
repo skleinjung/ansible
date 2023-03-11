@@ -19,6 +19,8 @@ nextcloud_download_url: https://download.nextcloud.com/server/releases/nextcloud
 nextcloud_digest_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.sha256
 
 php_packages:
+  # needed for proper svg support
+  - libmagickcore-6.q16-6-extra={{ libmagickcore_extra_version }}
   - php-bcmath={{ php_bcmath_version }}
   - php-bz2={{ php_bz2_version }}
   - php-cli={{ php_cli_version }}

@@ -46,7 +46,7 @@
 - name: Create 'CAN_INSTALL' marker if needed
   ansible.builtin.file:
     group: www-data
-    mode: "0775"
+    mode: "0770"
     owner: root
     path: "{{ nextcloud_config_path }}/CAN_INSTALL"
     state: touch
@@ -56,12 +56,19 @@
     src: autoconfig.php.j2
     dest: "{{ nextcloud_autoconfig_file }}"
     group: www-data
-    mode: "0775"
+    mode: "0770"
     owner: root
   when: not nextcloud_config_stat.stat.exists
 
-# update php settings
+- name: Copy additional nextcloud settings
+  ansible.builtin.template:
+    src: custom.config.php.j2
+    dest: "{{ nextcloud_config_path }}/custom.config.php"
+    group: www-data
+    mode: "0770"
+    owner: root
 
+# update php settings
 - name: Set php memory limit to recommendation of 512M
   ansible.builtin.lineinfile:
     path: "{{ __php_ini_path }}"

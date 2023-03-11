@@ -11,3 +11,7 @@ php_version: 2:8.1*
 
 # ssh options
 sshd_enabled: 'true'
+
+# network options
+nextcloud_host_name: files.pegasuspad.com
+nextcloud_proxy_host: 192.168.68.64

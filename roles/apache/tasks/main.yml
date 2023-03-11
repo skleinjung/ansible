@@ -6,7 +6,7 @@
     apache_packages:
       - apache2={{ apache2_version }}
       - apache2-utils={{ apache2_version }}
-    apache_remove_default_vhost: false
+    apache_remove_default_vhost: true
 
 - name: Hold apache packages from automatic upgrades
   ansible.builtin.dpkg_selections:
