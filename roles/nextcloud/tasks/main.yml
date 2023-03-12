@@ -1,0 +1,15 @@
+---
+- name: Configure mariadb database
+  ansible.builtin.import_tasks: database.yml
+
+- name: Download and unpack nextcloud
+  ansible.builtin.import_tasks: download.yml
+
+- name: Configure nextcloud application
+  ansible.builtin.import_tasks: application.yml
+
+- name: Configure web server
+  ansible.builtin.import_tasks: webserver.yml
+
+- name: Manage backup and restore functions
+  ansible.builtin.import_tasks: backup.yml

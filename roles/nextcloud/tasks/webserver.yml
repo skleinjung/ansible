@@ -1,0 +1,25 @@
+---
+- name: Copy nextcloud configuration for Apache
+  ansible.builtin.template:
+    src: nextcloud.conf.j2
+    dest: /etc/apache2/sites-available/nextcloud.conf
+    group: root
+    mode: "0644"
+    owner: root
+  notify: restart apache
+
+- name: Enable nextcloud site
+  ansible.builtin.command: a2ensite nextcloud
+  args:
+    creates: /etc/apache2/sites-enabled/nextcloud.conf
+
+- name: Enable required Apache modules
+  community.general.apache2_module:
+    state: present
+    name: "{{ item }}"
+  loop:
+    - dir
+    - env
+    - headers
+    - mime
+    - rewrite

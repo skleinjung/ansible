@@ -1,0 +1,18 @@
+<?php
+$CONFIG = array (
+  'default_phone_region' => 'US',
+  'mail_domain' => '{{ nextcloud_smtp_domain }}',
+  'mail_from_address' => '{{ nextcloud_smtp_from_address }}',
+  'mail_smtpauth' => true,
+  'mail_smtphost' => '{{ nextcloud_smtp_host }}',
+  'mail_smtpname' => '{{ nextcloud_smtp_username }}',
+  'mail_smtppassword' => '{{ nextcloud_smtp_password }}',
+  'mail_smtpport' => {{ nextcloud_smtp_port }},
+  'mail_smtpsecure' => '{{ nextcloud_smtp_security_type }}',
+  'trusted_domains' => array (
+    0 => '{{ nextcloud_host_name }}',
+  ),
+  'trusted_proxies' => array (
+    0 => '{{ nextcloud_proxy_host }}',
+  ),
+);

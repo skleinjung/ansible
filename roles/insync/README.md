@@ -12,7 +12,7 @@ This role was tested against the following version(s) of Insync:
 
 The role recognizes the following variables (an '*' indicates variables the user must set):
 
-- (*) `desktop_username`: name of the user for whom the app should be configured
+- (*) `username`: name of the user for whom the app should be configured
 - (*) `insync_settings_db`: absolute path to a settings.db file; See 'settings.db' below
 - (*) `insync_google_drive_root`: absolute filesystem path to which Google Drive files will be synced
 - (*) `insync_google_my_drive_id`: unique ID for the Google Drive account's 'My Drive' folder. See 'My Drive', below.

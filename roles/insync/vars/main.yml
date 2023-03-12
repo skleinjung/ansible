@@ -1,7 +1,7 @@
 ---
-insync_config_directory: /home/{{ desktop_username }}/.config/Insync
+insync_config_directory: /home/{{ username }}/.config/Insync
 
 insync_download_url: https://d2t3ff60b2tol4.cloudfront.net/builds/insync_{{ insync_version }}-jammy_amd64.deb
 
 # Local file system path to sync Google drive files to
-insync_google_drive_root: /home/{{ desktop_username }}/sync/google-drive
+insync_google_drive_root: /home/{{ username }}/sync/google-drive

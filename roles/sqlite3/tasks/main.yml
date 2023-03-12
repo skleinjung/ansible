@@ -3,6 +3,6 @@
   become: true
   apt: 
     pkg: sqlite3
-    state: latest
+    state: present
     update_cache: yes
     cache_valid_time: "{{ aptcachetime }}"

@@ -2,7 +2,7 @@
 - name: Check mandatory variables are defined
   assert:
     that:
-      - desktop_username is defined
+      - username is defined
       - radeon_profile_config_dir is defined
 
 - name: Add radeon-profile apt repository
@@ -19,16 +19,16 @@
 - name: Ensure '{{ radeon_profile_config_dir }}' exists
   file: 
     mode: '0775'
-    owner: '{{ desktop_username }}'
-    group: '{{ desktop_username }}'
+    owner: '{{ username }}'
+    group: '{{ username }}'
     path: '{{ radeon_profile_config_dir }}'
     state: directory
 - name: Copy radeon-profile configuration
   ansible.builtin.copy:
     src: '{{ item }}'
     dest: '{{ radeon_profile_config_dir }}'
-    owner: '{{ desktop_username }}'
-    group: '{{ desktop_username }}'
+    owner: '{{ username }}'
+    group: '{{ username }}'
     mode: '0664'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/~/.config/radeon-profile/*'
+    - '~/.config/radeon-profile/*'

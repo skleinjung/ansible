@@ -19,17 +19,30 @@
         cache_valid_time: 3600
         name: "*"
         state: latest
-        update_cache: yes
+        update_cache: true
+        update_only: true
 
 - hosts: nas_servers
   become: true
   roles:
     - nfs-server
 
+- hosts: nextcloud_servers
+  become: true
+  roles:
+    - role: nextcloud
+
 - hosts: qemu
   become: true
   roles:
     - role: qemu-agent
+
+- hosts: servers
+  become: true
+  roles:
+    - role: server
+    - role: ssh-server
+      when: sshd_enabled | bool
 
 - hosts: workstations
   become: true
@@ -51,7 +64,7 @@
   # add lockbox mounts
   #- name: Copy encrypted credentials
   #  ansible.builtin.copy:
-  #    src: '{{ playbook_dir }}/files/lockbox_credentials'
+  #    src: 'lockbox_credentials'
   #    dest: /root/.smbcredentials_lockbox
   #    owner: root
   #    group: root
@@ -76,7 +89,7 @@
   #    credentials_file: /root/.smbcredentials_lockbox
   #    path: /mnt/lockbox/usb-drive
   #    src: //lockbox.local/usb-drive
- 
+
 - hosts: vrising_servers
   become: true
   roles:

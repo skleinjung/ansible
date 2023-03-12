@@ -1,0 +1,2 @@
+---
+__php_static_packages: ['php={{ php_version }}']

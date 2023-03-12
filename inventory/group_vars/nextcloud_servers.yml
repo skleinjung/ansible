@@ -1,0 +1,17 @@
+---
+# apache options
+apache2_version: 2.4*
+
+# mariadb options
+mariadb_data_directory: /var/lib/db/mysql
+mariadb_version: 1:10.6*
+
+# php options
+php_version: 2:8.1*
+
+# ssh options
+sshd_enabled: 'true'
+
+# network options
+nextcloud_host_name: files.pegasuspad.com
+nextcloud_proxy_host: 192.168.68.64

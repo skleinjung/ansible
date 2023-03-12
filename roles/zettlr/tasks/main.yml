@@ -11,7 +11,7 @@
     group: sean
     mode: '0664'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/config/*'
+    - 'config/*'
 # copy snippets
 - name: Copy snippets
   ansible.builtin.copy:
@@ -21,4 +21,4 @@
     group: sean
     mode: '0664'
   with_fileglob:
-    - '{{ playbook_dir }}/roles/{{ role_name }}/files/snippets/*'
+    - 'snippets/*'
