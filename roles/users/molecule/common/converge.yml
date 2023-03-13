@@ -1,0 +1,36 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include users: no users"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config: []
+    - name: "Include users: no groups"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config:
+          - username: user_with_no_group
+    - name: "Include users: with existing group"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config:
+          - groups: [cdrom]
+            username: user_with_existing_group
+    - name: "Include users: with new groups"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config:
+          - groups: [new_group_1, new_group_2]
+            username: user_with_new_groups
+    - name: "Include users: with specific uid"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config:
+          - uid: 54000
+            username: user_with_specific_uid

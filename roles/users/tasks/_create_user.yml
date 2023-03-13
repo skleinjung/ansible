@@ -1,0 +1,16 @@
+---
+- name: "Ensure group exists: {{ group }}"
+  loop: "{{ user.groups | default([]) }}"
+  loop_control:
+    loop_var: group
+  ansible.builtin.group:
+    name: "{{ group }}"
+    state: present
+
+- name: "Create user account: {{ user.username }}"
+  ansible.builtin.user:
+    groups: "{{ user.groups | default(omit) }}"
+    name: "{{ user.username }}"
+    password: "!"
+    shell: /bin/bash
+    uid: "{{ user.uid | default(omit) }}"

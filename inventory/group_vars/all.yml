@@ -1,2 +1,10 @@
 ---
 aptcachetime: 3600
+
+# users configuration
+users_config:
+  - groups:
+      - adm
+      - sudo
+    uid: 1000
+    username: sean
