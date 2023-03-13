@@ -10,7 +10,10 @@ mariadb_version: 1:10.6*
 php_version: 2:8.1*
 
 # ssh options
-sshd_enabled: 'true'
+sshd_enabled: true
+
+# sudo options
+sudo_allow_passwordless: true
 
 # network options
 nextcloud_host_name: files.pegasuspad.com

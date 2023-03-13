@@ -1,0 +1,38 @@
+---
+- name: "Verify: require_password"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Command fails if no password supplied
+      block:
+        - name: Run whoami using sudo
+          become: true
+          become_user: test_user
+          changed_when: false
+          failed_when: whoami_results.rc not in [0, 1]
+          register: whoami_results
+          ansible.builtin.command: sudo whoami
+        - name: Verify return code is non-zero
+          ansible.builtin.assert:
+            that:
+              - whoami_results.rc != 0
+        - name: Verify stderr contains "a password is required"
+          ansible.builtin.assert:
+            that:
+              - whoami_results.stderr | regex_search('a password is required')
+    - name: Command succeeds if password supplied
+      block:
+        - name: Run whoami using sudo (with password)
+          become: true
+          become_user: test_user
+          changed_when: false
+          register: whoami_results
+          ansible.builtin.shell: echo -n 'testpa$$' | sudo -S whoami
+        - name: Verify return code is zero
+          ansible.builtin.assert:
+            that:
+              - whoami_results.rc == 0
+        - name: Verify stdout is "root"
+          ansible.builtin.assert:
+            that:
+              - whoami_results.stdout == 'root'

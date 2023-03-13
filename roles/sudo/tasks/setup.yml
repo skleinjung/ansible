@@ -1,0 +1,27 @@
+---
+- name: "Install sudo"
+  ansible.builtin.apt:
+    name: sudo
+    state: present
+
+- name: "Ensure group exists: {{ sudo_group }}"
+  ansible.builtin.group:
+    name: "{{ sudo_group }}"
+    state: present
+
+- name: "Create sudoer configuration for group: {{ sudo_group }}"
+  ansible.builtin.template:
+    dest: /etc/sudoers.d/000-{{ sudo_group }}-group
+    group: root
+    mode: "0440"
+    owner: root
+    src: etc/sudoers.d/sudo-group.j2
+
+- name: "Create /etc/sudoers configuration"
+  ansible.builtin.copy:
+    dest: /etc/sudoers
+    group: root
+    mode: "0440"
+    owner: root
+    src: etc/sudoers
+    validate: visudo -cf %s

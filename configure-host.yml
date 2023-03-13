@@ -9,9 +9,6 @@
 
 - hosts: all
   become: true
-  # Currently not running elastic, so we don't install the agent.
-  # roles:
-  #   - role: elastic-agent
   tasks:
     - name: Upgrade all packages
       tags: daily
@@ -30,6 +27,7 @@
 - hosts: nextcloud_servers
   become: true
   roles:
+    - role: sudo
     - role: nextcloud
 
 - hosts: qemu

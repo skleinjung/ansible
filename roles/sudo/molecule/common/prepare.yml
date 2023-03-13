@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: "Create sudo user"
+      ansible.builtin.user:
+        groups: "sudo"
+        name: "test_user"
+        # Plaintext: "testpa$$"
+        password: "$6$d1W9oKyiuGNhlxkP$tfBzNMcaVFlTl7oKbK2Gi36BfmGEFz1B/ZQCHp5pZukRFaH24m2gANjcRRoZEb6.GUYVvmJmC.MfSwC6k0kwW1"
+        shell: /bin/bash
