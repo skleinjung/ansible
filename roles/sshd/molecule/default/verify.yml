@@ -1,0 +1,75 @@
+---
+- name: "Verify: default"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Verify .ssh file and folder permissions
+      block:
+        - name: Read .ssh folder stats
+          ansible.builtin.stat:
+            path: /home/test_user/.ssh
+          register: ssh_folder
+        - name: Fail if .ssh folder has incorrect owner
+          ansible.builtin.assert:
+            fail_msg: ".ssh folder had incorrect owner. (Expected: test_user, Was: {{ ssh_folder.stat.pw_name }})"
+            that: ssh_folder.stat.pw_name == 'test_user'
+        - name: Fail if .ssh folder has incorrect permissions
+          ansible.builtin.assert:
+            fail_msg: ".ssh folder had incorrect permissions. (Expected: 0700, Was: {{ ssh_folder.stat.mode }})"
+            that: ssh_folder.stat.mode == '0700'
+        - name: Read authorized_keys file stats
+          ansible.builtin.stat:
+            path: /home/test_user/.ssh/authorized_keys
+          register: authorized_keys_file
+        - name: Fail if authorized_keys file has incorrect owner
+          ansible.builtin.assert:
+            fail_msg: "authorized_keys file had incorrect owner. (Expected: test_user, Was: {{ authorized_keys_file.stat.pw_name }})"
+            that: authorized_keys_file.stat.pw_name == 'test_user'
+        - name: Fail if authorized_keys file has incorrect permissions
+          ansible.builtin.assert:
+            fail_msg: "authorized_keys file had incorrect permissions. (Expected: 0600, Was: {{ authorized_keys_file.stat.mode }})"
+            that: authorized_keys_file.stat.mode == '0600'
+    - name: Verify authorized_keys configured correctly
+      block:
+        - name: Verify first expected authorized_keys entry
+          check_mode: true
+          failed_when: first_presence is changed
+          register: first_presence
+          ansible.builtin.lineinfile:
+            path: /home/test_user/.ssh/authorized_keys
+            line: "ssh-ed25519 AAAAC3Nza... First Key"
+            state: present
+        - name: Verify second expected authorized_keys entry
+          check_mode: true
+          failed_when: second_presence is changed
+          register: second_presence
+          ansible.builtin.lineinfile:
+            path: /home/test_user/.ssh/authorized_keys
+            line: "ssh-ed25519 BBBBB3Nza... Second Key"
+            state: present
+    - name: Verify ssh server is installed
+      block:
+        - name: Query installed packages for "openssh-server"
+          changed_when: false
+          register: apt_result
+          ansible.builtin.command: apt list openssh-server
+        - name: Verify return code is zero
+          ansible.builtin.assert:
+            that:
+              - apt_result.rc == 0
+        - name: Verify result is found
+          ansible.builtin.assert:
+            fail_msg: "Package 'openssh-server' was not installed"
+            that: apt_result.stdout | regex_search('(^|\n)openssh-server\/')
+    - name: Verify ssh server is enabled and running
+      block:
+        - name: Populate service facts
+          ansible.builtin.service_facts:
+        - name: Verify ssh service is enabled
+          ansible.builtin.assert:
+            fail_msg: "ssh service status was not 'enabled'. (Was: {{ ansible_facts.services['ssh.service'].status }})"
+            that: ansible_facts.services['ssh.service'].status == 'enabled'
+        - name: Verify ssh service is running
+          ansible.builtin.assert:
+            fail_msg: "ssh service state was not 'running'. (Was: {{ ansible_facts.services['ssh.service'].state }})"
+            that: ansible_facts.services['ssh.service'].state == 'running'

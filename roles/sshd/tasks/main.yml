@@ -1,0 +1,25 @@
+---
+- name: "Install sshd"
+  tags: [sshd_install]
+  when: sshd_enabled
+  block:
+    - name: "Install openssh-server"
+      ansible.builtin.apt:
+        name: openssh-server
+        state: present
+
+- name: "Configure sshd"
+  tags: [sshd_configure]
+  when: sshd_enabled
+  block:
+    - name: "Copy sshd_config"
+      notify: "Reload sshd"
+      ansible.builtin.copy:
+        dest: /etc/ssh/sshd_config
+        group: root
+        mode: "0644"
+        owner: root
+        src: "sshd_config"
+    - name: "Configure authorized keys"
+      loop: "{{ sshd_users }}"
+      ansible.builtin.include_tasks: _configure_user.yml

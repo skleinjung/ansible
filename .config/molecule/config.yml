@@ -2,18 +2,17 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: ubuntu
-    image: geerlingguy/docker-ubuntu2204-ansible
+    command: "/lib/systemd/systemd"
+    image: docker.io/eniocarboni/docker-ubuntu-systemd:22.04
+    pre_build_image: true
     tmpfs:
       - /run
       - /tmp
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    capabilities:
-      - SYS_ADMIN
-    pre_build_image: true
+    # volumes:
+    #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
   playbooks:

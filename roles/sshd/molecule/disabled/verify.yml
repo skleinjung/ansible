@@ -1,0 +1,16 @@
+---
+- name: "Verify: disabled"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Verify no .ssh folder created
+      block:
+        - name: Read .ssh folder stats
+          ansible.builtin.stat:
+            path: /home/test_user/.ssh
+          register: ssh_folder
+        - name: Fail if .ssh folder exists
+          ansible.builtin.assert:
+            fail_msg: ".ssh folder exists, but should not have been created"
+            that: not ssh_folder.stat.exists
+    # molecule tests require ssh server, so we don't test that it "isn't" installed

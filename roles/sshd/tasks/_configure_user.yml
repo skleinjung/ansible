@@ -1,0 +1,18 @@
+---
+- name: "Ensure .ssh directory exists for user: {{ item.username }}"
+  ansible.builtin.file:
+    group: "{{ item.username }}"
+    mode: "0700"
+    owner: "{{ item.username }}"
+    path: /home/{{ item.username }}/.ssh
+    state: directory
+
+- name: "Add authorized ssh keys for user: {{ item.username }}"
+  vars:
+    authorized_keys: "{{ item.authorized_keys | default([]) }}"
+  ansible.builtin.template:
+    dest: /home/{{ item.username }}/.ssh/authorized_keys
+    group: "{{ item.username }}"
+    mode: "0600"
+    owner: "{{ item.username }}"
+    src: home/~/.ssh/authorized_keys.j2
