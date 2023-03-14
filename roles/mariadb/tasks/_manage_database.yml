@@ -6,18 +6,11 @@
 # name: Name of the database
 # state: Desired state of the database ('present' or 'absent')
 
-- name: Verify required variables are set
-  block:
-    - name: Assert name is set
-      ansible.builtin.assert:
-        fail_msg: No 'name' was set for the new database
-        that:
-          - name is defined
-    - name: State is valid
-      ansible.builtin.assert:
-        fail_msg: "Invalid 'state' value (must be 'absent' or 'present'). (Was: {{ state }})"
-        that:
-          - state == 'absent' or state == 'present'
+- name: Verify inputs are valid
+  ansible.builtin.assert:
+    that:
+      - name is defined
+      - state == 'absent' or state == 'present'
 
 - name: "Manage database: {{ name }}"
   community.mysql.mysql_db:

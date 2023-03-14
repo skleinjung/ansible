@@ -11,9 +11,6 @@
 #         that:
 #           - apt_result.stdout | regex_search('(^|\n)apache2\/')
 
-- name: Configure mariadb database
-  ansible.builtin.import_tasks: database.yml
-
 - name: Download and unpack nextcloud
   ansible.builtin.import_tasks: download.yml
 

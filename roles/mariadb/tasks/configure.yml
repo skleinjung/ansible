@@ -52,7 +52,7 @@
   vars:
     mysql_root_password: "{{ mariadb_root_password }}"
 
-- name: "Manage database: {{ item.name }}"
+- name: "Manage databases"
   loop: "{{ mariadb_databases }}"
   vars:
     collation: "{{ item.collation }}"
@@ -60,4 +60,15 @@
     name: "{{ item.name }}"
     state: "{{ item.state | default('present') }}"
   ansible.builtin.include_tasks:
-    file: _create_database.yml
+    file: _manage_database.yml
+
+- name: "Manage users"
+  loop: "{{ mariadb_users }}"
+  no_log: true
+  vars:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    privileges: "{{ item.privileges }}"
+    state: "{{ item.state | default('present') }}"
+  ansible.builtin.include_tasks:
+    file: _manage_user.yml

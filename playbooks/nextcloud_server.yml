@@ -14,18 +14,9 @@
           - collation: "{{ nextcloud_db_collation }}"
             encoding: "{{ nextcloud_db_encoding }}"
             name: "{{ nextcloud_db_name }}"
-            state: present
-          - name: "{{ nextcloud_db_name }}_tmp1"
-            state: absent
-          - name: "{{ nextcloud_db_name }}_tmp2"
-            state: absent
-          - name: "{{ nextcloud_db_name }}_tmp3"
-            state: absent
-          - name: "{{ nextcloud_db_name }}_tmp4"
-            state: absent
         mariadb_root_password: "{{ nextcloud_db_root_password }}"
-        # mariadb_users:
-        #   - password: ""
-        #     privileges: ""
-        #     username: ""
+        mariadb_users:
+          - name: "{{ nextcloud_db_user }}"
+            password: "{{ nextcloud_db_password }}"
+            privileges: "{{ nextcloud_db_name }}.*:ALL"
     - nextcloud

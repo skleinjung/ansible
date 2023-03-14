@@ -1,8 +1,0 @@
----
-- name: Create user for Nextcloud
-  community.mysql.mysql_user:
-    host: localhost
-    name: "{{ nextcloud_db_user }}"
-    password: "{{ nextcloud_db_password }}"
-    priv: "{{ nextcloud_db_name }}.*:ALL"
-    state: present
