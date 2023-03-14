@@ -12,14 +12,3 @@
   ansible.builtin.command: a2ensite nextcloud
   args:
     creates: /etc/apache2/sites-enabled/nextcloud.conf
-
-- name: Enable required Apache modules
-  community.general.apache2_module:
-    state: present
-    name: "{{ item }}"
-  loop:
-    - dir
-    - env
-    - headers
-    - mime
-    - rewrite

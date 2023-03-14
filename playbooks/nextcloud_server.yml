@@ -7,6 +7,13 @@
     - role: users
     - role: sshd
     - role: apache
+      vars:
+        apache_modules:
+          - name: dir
+          - name: env
+          - name: headers
+          - name: mime
+          - name: rewrite
     - role: php
     - role: mariadb
       vars:
