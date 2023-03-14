@@ -7,29 +7,33 @@
 - name: Move data to new datadir
   when: (mysql_settings.settings.datadir.rstrip('/') | realpath) != (mariadb_data_directory.rstrip('/') | realpath)
   block:
-    - name: stop mysql
-      ansible.builtin.service: name=mysql state=stopped
+    - name: Stop mysql
+      ansible.builtin.service:
+        name: mysql
+        state: stopped
     - name: Ensure datadir exists
-      file: 
-        mode: '0750'
+      ansible.builtin.file:
+        mode: "0750"
         owner: mysql
         group: mysql
-        path: '{{ mariadb_data_directory }}'
+        path: "{{ mariadb_data_directory }}"
         state: directory
     - name: Copy data files to new location
       ansible.posix.synchronize:
-        src: '{{ mysql_settings.settings.datadir }}'
-        dest: '{{ mariadb_data_directory }}'
+        src: "{{ mysql_settings.settings.datadir }}"
+        dest: "{{ mariadb_data_directory }}"
     - name: Remove old datadir
       ansible.builtin.file:
-        path: '{{ mysql_settings.settings.datadir }}'
+        path: "{{ mysql_settings.settings.datadir }}"
         state: absent
     - name: Copy custom datadir configuration
-      template:
+      ansible.builtin.template:
         src: datadir.cnf.j2
         dest: /etc/mysql/conf.d/datadir.cnf
         owner: root
         group: mysql
-        mode: 0640
-    - name: start mysql
-      ansible.builtin.service: name=mysql state=restarted
+        mode: "0640"
+    - name: Start mysql
+      ansible.builtin.service:
+        name: mysql
+        state: restarted
