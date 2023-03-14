@@ -1,13 +1,13 @@
 ---
-- name: Install php packages
-  ansible.builtin.apt:
-    pkg: "{{ __php_static_packages + php_packages }}"
-    state: present
-    update_cache: true
-    cache_valid_time: "{{ aptcachetime }}"
-
-- name: Hold php packages from automatic upgrades
-  ansible.builtin.dpkg_selections:
-    name: "{{ item }}"
-    selection: hold
-  loop: "{{ (__php_static_packages + php_packages) | map('regex_replace', '=.+', '') | list }}"
+- name: Install php
+  tags: [php_install]
+  block:
+    - name: Install php packages
+      ansible.builtin.apt:
+        pkg: "{{ __php_static_packages + php_packages }}"
+        state: present
+    - name: Hold php packages from automatic upgrades
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop: "{{ (__php_static_packages + php_packages) | map('regex_replace', '=.+', '') | list }}"

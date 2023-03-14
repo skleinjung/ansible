@@ -6,4 +6,6 @@
     - sudo
     - users
     - sshd
+    - apache
+    - php
     - nextcloud

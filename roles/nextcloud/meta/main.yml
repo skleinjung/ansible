@@ -2,5 +2,4 @@
 dependencies:
   - role: mariadb
     vars:
-      mariadb_root_password: '{{ nextcloud_db_root_password }}'
-  - role: php
+      mariadb_root_password: "{{ nextcloud_db_root_password }}"

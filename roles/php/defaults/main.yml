@@ -1,5 +1,5 @@
 ---
-php_version: 2:8.1*
-
-# A list of the PHP packages to install. ('php' is always included)
+# A list of the PHP packages to install. ('php' is always included by default.) [Empty list]
 php_packages: []
+# mariadb_version: Version string for the php packages to install. May contain wildcards. [2:8.1*]
+php_version: 2:8.1*
