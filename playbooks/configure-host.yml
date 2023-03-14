@@ -9,9 +9,6 @@
 
 - hosts: all
   become: true
-  # Currently not running elastic, so we don't install the agent.
-  # roles:
-  #   - role: elastic-agent
   tasks:
     - name: Upgrade all packages
       tags: daily
@@ -32,13 +29,6 @@
   roles:
     - role: qemu-agent
 
-- hosts: servers
-  become: true
-  roles:
-    - role: server
-    - role: ssh-server
-      when: sshd_enabled | bool
-
 - hosts: vrising_servers
   become: true
   roles:
@@ -48,4 +38,4 @@
   ansible.builtin.import_playbook: workstation.yml
 
 - name: Include plays for nextcloud servers
-  ansible.builtin.import_playbook: nextcloud-server.yml
+  ansible.builtin.import_playbook: nextcloud_server.yml

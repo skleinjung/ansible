@@ -14,7 +14,9 @@
     - role: radeon-profile
     - role: shopify-cli
     - role: spotify
-    - role: ssh-server
+    - role: sudo
+    - role: users
+    - role: sshd
     - role: visual-studio-code
     - role: zettlr
   tasks:
