@@ -1,30 +1,8 @@
 ---
-- name: Check mandatory variables are defined
-  block:
-    - name: Assert mariadb_root_password is set
-      ansible.builtin.assert:
-        fail_msg: No 'mariadb_root_password' was set
-        that:
-          - mariadb_root_password is defined
-
-- name: Install mariadb packages
+- name: Install mariadb server
   tags: [mariadb_install]
-  block:
-    - name: Install mariadb-server package
-      ansible.builtin.apt:
-        pkg: mariadb-server={{ mariadb_version }}
-        state: present
-    - name: Hold mariadb-server package from automatic upgrades
-      ansible.builtin.dpkg_selections:
-        name: mariadb-server
-        selection: hold
+  ansible.builtin.import_tasks: install.yml
 
 - name: Configure mariadb server
   tags: [mariadb_configure]
-  block:
-    - name: Configure mariadb-server
-      notify: Reload mysql
-      ansible.builtin.import_tasks: configure.yml
-    - name: Harden mariadb-server
-      notify: Reload mysql
-      ansible.builtin.import_tasks: harden.yml
+  ansible.builtin.import_tasks: configure.yml

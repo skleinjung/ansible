@@ -1,0 +1,13 @@
+- name: Install mariadb packages
+  block:
+    - name: Install mariadb-server package
+      ansible.builtin.apt:
+        pkg: mariadb-server={{ mariadb_version }}
+        state: present
+    - name: Hold mariadb-server package from automatic upgrades
+      ansible.builtin.dpkg_selections:
+        name: mariadb-server
+        selection: hold
+    - name: Install python prereqs for mysql hardening role
+      ansible.builtin.pip:
+        name: jmespath

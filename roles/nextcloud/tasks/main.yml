@@ -1,4 +1,16 @@
 ---
+# - name: Verify that Apache is installed
+#   block:
+#     - name: Query installed packages for "apache2"
+#       changed_when: false
+#       register: apt_result
+#       ansible.builtin.command: apt list apache2
+#     - name: Verify result is found
+#       ansible.builtin.assert:
+#         fail_msg: "Package 'apache2' could not be found"
+#         that:
+#           - apt_result.stdout | regex_search('(^|\n)apache2\/')
+
 - name: Configure mariadb database
   ansible.builtin.import_tasks: database.yml
 

@@ -1,4 +1,12 @@
 ---
+- name: Check mandatory variables are defined
+  block:
+    - name: Assert mariadb_root_password is set
+      ansible.builtin.assert:
+        fail_msg: No 'mariadb_root_password' was set
+        that:
+          - mariadb_root_password is defined
+
 - name: Read MySQL/MariaDB settings
   community.mysql.mysql_info:
     filter: settings
@@ -37,3 +45,19 @@
       ansible.builtin.service:
         name: mysql
         state: restarted
+
+- name: Apply hardened mysql configuration
+  ansible.builtin.import_role:
+    name: devsec.hardening.mysql_hardening
+  vars:
+    mysql_root_password: "{{ mariadb_root_password }}"
+
+- name: "Manage database: {{ item.name }}"
+  loop: "{{ mariadb_databases }}"
+  vars:
+    collation: "{{ item.collation }}"
+    encoding: "{{ item.encoding }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  ansible.builtin.include_tasks:
+    file: _create_database.yml
