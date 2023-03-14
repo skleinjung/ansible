@@ -6,15 +6,6 @@
     - role: sudo
     - role: users
     - role: sshd
-    - role: apache
-      vars:
-        apache_modules:
-          - name: dir
-          - name: env
-          - name: headers
-          - name: mime
-          - name: rewrite
-    - role: php
     - role: mariadb
       vars:
         mariadb_databases:
@@ -27,3 +18,15 @@
             password: "{{ nextcloud_db_password }}"
             privileges: "{{ nextcloud_db_name }}.*:ALL"
     - nextcloud
+    - role: apache
+      vars:
+        apache_modules:
+          - name: dir
+          - name: env
+          - name: headers
+          - name: mime
+          - name: rewrite
+        apache_sites:
+          - name: nextcloud
+            template: nextcloud.conf.j2
+    - role: php

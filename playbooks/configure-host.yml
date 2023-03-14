@@ -38,4 +38,4 @@
   ansible.builtin.import_playbook: workstation.yml
 
 - name: Include plays for nextcloud servers
-  ansible.builtin.import_playbook: nextcloud_server.yml
+  ansible.builtin.import_playbook: nextcloud_server/nextcloud_server.yml

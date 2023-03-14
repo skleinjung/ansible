@@ -24,7 +24,7 @@
     mode: "0664"
     owner: root
     url: "{{ nextcloud_download_url }}"
-- name: Unarchive nextcloud # noqa: no-handler
+- name: Unarchive nextcloud
   ansible.builtin.unarchive:
     creates: "{{ nextcloud_current_version_path }}/index.php"
     dest: "{{ nextcloud_current_version_path }}"
