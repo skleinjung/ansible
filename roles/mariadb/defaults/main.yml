@@ -1,2 +1,6 @@
+# mariadb_data_directory: Directory to contain mysql data files. [/var/lib/mysql]
 mariadb_data_directory: /var/lib/mysql
+# mariadb_root_password: Password for the mariadb root account. [Required]
+# mariadb_root_password: NO DEFAULT
+# mariadb_version: Version string for the mariadb-server to install. May contain wildcards. [1:10.6*]
 mariadb_version: 1:10.6*

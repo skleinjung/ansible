@@ -1,24 +1,30 @@
 ---
-# - name: Check mandatory variables are defined
-#   assert:
-#     that:
-#       - mariadb_root_password is defined
-#       - radeon_profile_config_dir is defined
+- name: Check mandatory variables are defined
+  block:
+    - name: Assert mariadb_root_password is set
+      ansible.builtin.assert:
+        fail_msg: No 'mariadb_root_password' was set
+        that:
+          - mariadb_root_password is defined
 
-- name: Install mariadb-server package
-  ansible.builtin.apt:
-    pkg: mariadb-server={{ mariadb_version }}
-    state: present
+- name: Install mariadb packages
+  tags: [mariadb_install]
+  block:
+    - name: Install mariadb-server package
+      ansible.builtin.apt:
+        pkg: mariadb-server={{ mariadb_version }}
+        state: present
+    - name: Hold mariadb-server package from automatic upgrades
+      ansible.builtin.dpkg_selections:
+        name: mariadb-server
+        selection: hold
 
-- name: Hold mariadb-server package from automatic upgrades
-  ansible.builtin.dpkg_selections:
-    name: mariadb-server
-    selection: hold
-
-- name: Configure mariadb-server
-  notify: Reload mysql
-  ansible.builtin.import_tasks: configure.yml
-
-- name: Harden mariadb-server
-  notify: Reload mysql
-  ansible.builtin.import_tasks: harden.yml
+- name: Configure mariadb server
+  tags: [mariadb_configure]
+  block:
+    - name: Configure mariadb-server
+      notify: Reload mysql
+      ansible.builtin.import_tasks: configure.yml
+    - name: Harden mariadb-server
+      notify: Reload mysql
+      ansible.builtin.import_tasks: harden.yml
