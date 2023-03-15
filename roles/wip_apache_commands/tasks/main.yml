@@ -1,0 +1,13 @@
+---
+- name: Setup apache
+  tags: [apache_install, apache_configure]
+  when: apache_command is not defined
+  ansible.builtin.include_tasks:
+    file: setup.yml
+
+# tags set to 'always' so we don't filter out command execution requested by some other tagged process
+- name: Run requested command
+  tags: [always]
+  when: apache_command is defined
+  ansible.builtin.include_tasks:
+    file: run_command.yml

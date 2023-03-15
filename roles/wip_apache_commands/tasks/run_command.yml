@@ -1,0 +1,11 @@
+- name: Verify command name is valid
+  tags: [always]
+  ansible.builtin.assert:
+    fail_msg: "Invalid apache command: {{ apache_command }}"
+    that: apache_command in __apache_commands
+- name: Include command tasks
+  tags: [always]
+  ansible.builtin.include_tasks:
+    apply:
+      tags: always
+    file: "_{{ apache_command }}.yml"

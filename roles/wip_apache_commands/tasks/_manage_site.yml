@@ -1,0 +1,9 @@
+- name: Copy nextcloud configuration for Apache
+  ansible.builtin.template:
+    src: "{{ site_config_path }}"
+    dest: /tmp/huzza
+    # dest: /etc/apache2/sites-available/nextcloud.conf
+    group: root
+    mode: "0644"
+    owner: root
+  notify: restart apache

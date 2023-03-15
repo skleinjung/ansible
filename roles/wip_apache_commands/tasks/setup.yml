@@ -1,0 +1,30 @@
+---
+- name: Install Apache
+  tags: [apache_install]
+  when: apache_command is not defined
+  block:
+    - name: Install apache packages
+      ansible.builtin.import_role:
+        name: geerlingguy.apache
+      vars:
+        apache_packages:
+          - apache2={{ apache2_version }}
+          - apache2-utils={{ apache2_version }}
+        apache_remove_default_vhost: true
+    - name: Hold apache packages from automatic upgrades
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - apache2
+        - apache2-utils
+
+- name: Configure Apache
+  tags: [apache_configure]
+  when: apache_command is not defined
+  block:
+    - name: "Manage apache modules"
+      community.general.apache2_module:
+        name: "{{ item.name }}"
+        state: "{{ item.state | default('present') }}"
+      loop: "{{ apache_modules }}"

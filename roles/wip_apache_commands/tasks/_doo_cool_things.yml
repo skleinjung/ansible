@@ -1,0 +1,4 @@
+---
+- name: Print
+  ansible.builtin.debug:
+    var: apache_command
