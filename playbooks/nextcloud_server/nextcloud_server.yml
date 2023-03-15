@@ -17,7 +17,7 @@
           - name: "{{ nextcloud_db_user }}"
             password: "{{ nextcloud_db_password }}"
             privileges: "{{ nextcloud_db_name }}.*:ALL"
-    - nextcloud
+    - role: nextcloud
     - role: apache
       vars:
         apache_modules:

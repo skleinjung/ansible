@@ -11,6 +11,24 @@
 #         that:
 #           - apt_result.stdout | regex_search('(^|\n)apache2\/')
 
+- name: Install Nextcloud
+  tags: [nextcloud_install]
+  block:
+    - name: "Download nextcloud v{{ nextcloud_version }}"
+      vars:
+        checksum: "sha256:{{ nextcloud_digest_url }}"
+        directory: "{{ nextcloud_download_path }}"
+        filename: "nextcloud-{{ nextcloud_version }}.tar.bz2"
+        # group: adm
+        # mode: "0775"
+        # owner: root
+        url: "{{ nextcloud_download_url }}"
+      ansible.builtin.include_role:
+        name: fetch
+        tasks_from: download.yml
+
+# next thing to do is unarchive it here
+
 - name: Download and unpack nextcloud
   ansible.builtin.import_tasks: download.yml
 
