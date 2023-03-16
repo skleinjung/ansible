@@ -9,8 +9,8 @@
     - role: mariadb
       vars:
         mariadb_databases:
-          - collation: "{{ nextcloud_db_collation }}"
-            encoding: "{{ nextcloud_db_encoding }}"
+          - collation: "{{ __nextcloud_db_collation }}"
+            encoding: "{{ __nextcloud_db_encoding }}"
             name: "{{ nextcloud_db_name }}"
         mariadb_root_password: "{{ nextcloud_db_root_password }}"
         mariadb_users:
@@ -30,3 +30,5 @@
           - name: nextcloud
             template: nextcloud.conf.j2
     - role: php
+      vars:
+        php_packages: "{{ __nextcloud_php_packages }}"

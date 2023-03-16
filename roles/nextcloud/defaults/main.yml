@@ -51,8 +51,6 @@ nextcloud_backup_root: /mnt/backups
 # web server configuration
 nextcloud_document_root: /var/www/nextcloud
 
-# nextcloud download and installation configuration
-
 # nextcloud_path: root filesystem path to use for nextcloud resources
 nextcloud_path: /var/lib/nextcloud
 # nextcloud_data_path: base path for instance-specific data (apps, config, and files)
@@ -82,16 +80,5 @@ nextcloud_smtp_username: !vault |
   6266346564633832300a373664313235313032396334343437613163343032383036383964393436
   36306532366537303765656162653935323535326533303362346532643532383961
 
-libmagickcore_extra_version: 8:6.9*
-php_bcmath_version: "{{ php_version }}"
-php_bz2_version: "{{ php_version }}"
-php_cli_version: "{{ php_version }}"
-php_curl_version: "{{ php_version }}"
-php_gd_version: "{{ php_version }}"
-php_gmp_version: "{{ php_version }}"
-php_imagick_version: 3.6*
-php_intl_version: "{{ php_version }}"
-php_mbstring_version: "{{ php_version }}"
-php_mysql_version: "{{ php_version }}"
-php_xml_version: "{{ php_version }}"
-php_zip_version: "{{ php_version }}"
+nextcloud_libmagickcore_extra_version: 8:6.9*
+nextcloud_imagick_version: 3.6*

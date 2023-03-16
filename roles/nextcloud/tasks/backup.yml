@@ -43,8 +43,8 @@
           - nextcloud_db_backup_path is defined
     - name: Restore database backup
       community.mysql.mysql_db:
-        collation: "{{ nextcloud_db_collation }}"
-        encoding: "{{ nextcloud_db_encoding }}"
+        collation: "{{ __nextcloud_db_collation }}"
+        encoding: "{{ __nextcloud_db_encoding }}"
         name: "{{ nextcloud_db_name }}"
         state: import
         target: "{{ nextcloud_db_backup_path }}/db.sql.gz"

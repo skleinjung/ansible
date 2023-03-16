@@ -10,21 +10,21 @@
     recurse: true
     state: directory
   loop:
-    - "{{ nextcloud_apps_path }}"
-    - "{{ nextcloud_config_path }}"
-    - "{{ nextcloud_files_path }}"
+    - "{{ __nextcloud_paths.apps }}"
+    - "{{ __nextcloud_paths.config }}"
+    - "{{ __nextcloud_paths.files }}"
 
 - name: Create symlinks to config for new version
   ansible.builtin.file:
-    src: "{{ nextcloud_config_path }}"
-    dest: "{{ nextcloud_current_version_path }}/config"
+    src: "{{ __nextcloud_paths.config }}"
+    dest: "{{ __nextcloud_current_version_path }}/config"
     group: www-data
     owner: root
     state: link
 
 - name: Create symlink from document root to current version of nextcloud
   ansible.builtin.file:
-    src: "{{ nextcloud_current_version_path }}"
+    src: "{{ __nextcloud_current_version_path }}"
     dest: "{{ nextcloud_document_root }}"
     group: adm
     owner: root
@@ -40,7 +40,7 @@
 
 - name: Determine if nextcloud has been configured already
   ansible.builtin.stat:
-    path: "{{ nextcloud_config_file }}"
+    path: "{{ __nextcloud_config_file }}"
   register: nextcloud_config_stat
 
 - name: Create 'CAN_INSTALL' marker if needed
@@ -48,13 +48,13 @@
     group: www-data
     mode: "0770"
     owner: root
-    path: "{{ nextcloud_config_path }}/CAN_INSTALL"
+    path: "{{ __nextcloud_paths.config }}/CAN_INSTALL"
     state: touch
   when: not nextcloud_config_stat.stat.exists
 - name: Copy nextcloud auto-configuration template if needed
   ansible.builtin.template:
     src: autoconfig.php.j2
-    dest: "{{ nextcloud_autoconfig_file }}"
+    dest: "{{ __nextcloud_autoconfig_file }}"
     group: www-data
     mode: "0770"
     owner: root
@@ -63,7 +63,7 @@
 - name: Copy additional nextcloud settings
   ansible.builtin.template:
     src: custom.config.php.j2
-    dest: "{{ nextcloud_config_path }}/custom.config.php"
+    dest: "{{ __nextcloud_paths.config }}/custom.config.php"
     group: www-data
     mode: "0770"
     owner: root
@@ -71,7 +71,7 @@
 # update php settings
 - name: Set php memory limit to recommendation of 512M
   ansible.builtin.lineinfile:
-    path: "{{ __php_ini_path }}"
+    path: "{{ __nextcloud_php_ini_path }}"
     regexp: "^memory_limit ="
     insertafter: "^; https://php.net/memory-limit"
     line: memory_limit = 512M
