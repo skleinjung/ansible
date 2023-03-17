@@ -4,10 +4,10 @@
 #
 
 <VirtualHost *:80>
-  DocumentRoot {{ nextcloud_document_root }}
+  DocumentRoot {{ __nextcloud_document_root }}
   Protocols h2 http/1.1
   
-  <Directory {{ nextcloud_document_root }}>
+  <Directory {{ __nextcloud_document_root }}>
     Require all granted
     AllowOverride All
     Options FollowSymLinks MultiViews

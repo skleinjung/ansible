@@ -1,33 +1,42 @@
+# __nextcloud_config_file: absolute path to the nextcloud config.php file
+__nextcloud_config_file: "{{ __nextcloud_paths.config }}/config.php"
+
+# nextcloud_current_version_path: directory containing the unzipped nextcloud archive for the installed version
+__nextcloud_current_version_path: "{{ __nextcloud_paths.versions }}/{{ nextcloud_version }}"
+
+# this is ------- not valid (end sup empty?)
+
+__nextcloud_data_path: "{{ nextcloud_data_path | default([nextcloud_path, 'data'] | join('/')) }}"
+
+# __nextcloud_db_collation:
+__nextcloud_db_collation: utf8mb4_general_ci
+__nextcloud_db_encoding: utf8mb4
+
+# nextcloud_hash_url: url of the nextcloud archive hash
+__nextcloud_digest_url: "{{ __nextcloud_download_url }}.sha256"
+
+# directory containing the web document root for nextcloud
+__nextcloud_document_root: "{{ __nextcloud_current_version_path }}"
+
+# nextcloud_download_url: url of the nextcloud archive
+__nextcloud_download_url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2"
+
 # __nextcloud_paths: Derived directories containing various nextcloud files
 # __nextcloud_paths.apps: Directory containing additional installed apps
+# __nextcloud_paths.backup: Directory containing nextcloud backups
 # __nextcloud_paths.config: Directory containing nextcloud configuration
 # __nextcloud_paths.data: Base directory for all user-generated local data
 # __nextcloud_paths.files: Directory containing nextcloud files
 # __nextcloud_paths.versions: Directory containing expanded nextcloud archives ready to be deployed
 # __nextcloud_paths.work: Working directory for templ files
 __nextcloud_paths:
-  apps: "{{ nextcloud_data_path }}/apps"
-  config: "{{ nextcloud_data_path }}/config"
-  data: "{{ nextcloud_data_path }}"
-  files: "{{ nextcloud_data_path }}/files"
+  apps: "{{ __nextcloud_data_path }}/apps"
+  backup: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}"
+  config: "{{ __nextcloud_data_path }}/config"
+  data: "{{ __nextcloud_data_path }}"
+  files: "{{ __nextcloud_data_path }}/files"
   versions: "{{ nextcloud_path }}/versions"
   work: "{{ nextcloud_path }}/.work"
-
-# __nextcloud_config_file: absolute path to the nextcloud config.php file
-__nextcloud_config_file: "{{ __nextcloud_paths.config }}/config.php"
-# __nextcloud_config_file: absolute path to the nextcloud autoconfig.php file
-__nextcloud_autoconfig_file: "{{ __nextcloud_paths.config }}/autoconfig.php"
-
-# __nextcloud_db_collation:
-__nextcloud_db_collation: utf8mb4_general_ci
-__nextcloud_db_encoding: utf8mb4
-
-# nextcloud_current_version_path: directory containing the unzipped nextcloud archive for the installed version
-__nextcloud_current_version_path: "{{ __nextcloud_paths.versions }}/{{ nextcloud_version }}"
-# nextcloud_download_url: url of the nextcloud archive
-__nextcloud_download_url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2"
-# nextcloud_hash_url: url of the nextcloud archive hash
-__nextcloud_digest_url: "{{ __nextcloud_download_url }}.sha256"
 
 __nextcloud_php_packages:
   # needed for proper svg support

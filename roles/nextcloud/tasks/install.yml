@@ -1,0 +1,64 @@
+---
+- name: Install utilities needed for installation
+  ansible.builtin.apt:
+    pkg: bzip2
+    state: present
+
+# download and unarchive distribution
+- name: "Download nextcloud v{{ nextcloud_version }}"
+  vars:
+    checksum: "sha256:{{ __nextcloud_digest_url }}"
+    directory: "{{ __nextcloud_paths.work }}"
+    filename: "nextcloud-{{ nextcloud_version }}.tar.bz2"
+    mode: "0755"
+    url: "{{ __nextcloud_download_url }}"
+  ansible.builtin.include_role:
+    name: fetch
+    tasks_from: download.yml
+- name: Ensure current version directory exists
+  ansible.builtin.file:
+    group: www-data
+    mode: "0755"
+    owner: root
+    path: "{{ __nextcloud_current_version_path }}"
+    state: directory
+- name: Unarchive nextcloud
+  ansible.builtin.unarchive:
+    creates: "{{ __nextcloud_current_version_path }}/index.php"
+    dest: "{{ __nextcloud_current_version_path }}"
+    exclude:
+      - nextcloud/config
+    extra_opts: [--strip-components=1]
+    group: www-data
+    mode: "0755"
+    owner: root
+    remote_src: true
+    src: "{{ __nextcloud_paths.work }}/nextcloud-{{ nextcloud_version }}.tar.bz2"
+
+# set permissions to allow webserver access to nextcloud files
+- name: Create content and config directories
+  ansible.builtin.file:
+    group: www-data
+    mode: "0770"
+    owner: root
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  loop:
+    - "{{ __nextcloud_paths.apps }}"
+    - "{{ __nextcloud_paths.config }}"
+    - "{{ __nextcloud_paths.files }}"
+- name: Give webserver write permissions to .htaccess
+  ansible.builtin.file:
+    group: www-data
+    mode: "0770"
+    owner: root
+    path: "{{ __nextcloud_document_root }}/.htaccess"
+    state: file
+
+# create symlink to nextcloud config
+- name: Create symlinks to config for new version
+  ansible.builtin.file:
+    src: "{{ __nextcloud_paths.config }}"
+    dest: "{{ __nextcloud_current_version_path }}/config"
+    state: link

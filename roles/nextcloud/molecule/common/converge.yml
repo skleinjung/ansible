@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include nextcloud"
+      ansible.builtin.include_role:
+        name: "nextcloud"

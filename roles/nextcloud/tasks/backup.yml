@@ -24,13 +24,13 @@
         mode: "0700"
         owner: root
         group: root
-        path: "{{ nextcloud_backup_root }}/{{ timestamp }}"
+        path: "{{ __nextcloud_paths.backup }}/{{ timestamp }}"
         state: directory
     - name: Create database backup
       community.mysql.mysql_db:
         state: dump
         name: "{{ nextcloud_db_name }}"
-        target: "{{ nextcloud_backup_root }}/{{ timestamp }}/db.sql.gz"
+        target: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
 
 - name: Execute restore from backup
   tags:

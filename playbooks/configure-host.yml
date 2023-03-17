@@ -10,14 +10,16 @@
 - hosts: all
   become: true
   tasks:
+    - name: Update package lists
+      ansible.builtin.apt:
+        cache_valid_time: "{{ aptcachetime }}"
+        update_cache: true
     - name: Upgrade all packages
       tags: daily
-      apt:
-        cache_valid_time: 3600
+      ansible.builtin.apt:
         name: "*"
         state: latest
-        update_cache: true
-        update_only: true
+        only_upgrade: true
 
 - hosts: nas_servers
   become: true

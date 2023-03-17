@@ -1,0 +1,26 @@
+---
+provisioner:
+  inventory:
+    group_vars:
+      all:
+        nextcloud_admin:
+          password: test_admin_pass
+          username: test_admin_user
+        nextcloud_db:
+          host: localhost
+          name: nextcloudia
+          password: test_dbpass
+          port: 5432
+          username: test_dbuser
+          type: mysql
+        nextcloud_host_name: nextcloud.example.com
+        nextcloud_mail:
+          domain: nextcloud.example.com
+          from_address: nextcloud
+          smtp_auth:
+            password: test_smtp_pass
+            username: test_smtp_user
+          smtp_host: smtp.example.com
+          smtp_use_tls: true
+          smtp_port: 465
+        nextcloud_proxy_host: proxy.example.com
