@@ -1,6 +1,6 @@
 ---
 - name: "Install sshd"
-  tags: [sshd_install]
+  tags: [sshd, install, sshd_install]
   when: sshd_enabled
   block:
     - name: "Install openssh-server"
@@ -9,7 +9,7 @@
         state: present
 
 - name: "Configure sshd"
-  tags: [sshd_configure]
+  tags: [sshd, configure, sshd_configure]
   when: sshd_enabled
   block:
     - name: "Copy sshd_config"

@@ -1,6 +1,6 @@
 ---
 - name: Install Apache
-  tags: [apache_install]
+  tags: [apache, install, apache_install]
   block:
     - name: Install apache packages
       ansible.builtin.import_role:
@@ -19,7 +19,7 @@
         - apache2-utils
 
 - name: Configure Apache
-  tags: [apache_configure]
+  tags: [apache, configure, apache_configure]
   block:
     - name: "Manage apache modules"
       community.general.apache2_module:

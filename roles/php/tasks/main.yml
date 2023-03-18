@@ -1,6 +1,6 @@
 ---
 - name: Install php
-  tags: [php_install]
+  tags: [php, install, php_install]
   block:
     - name: Install php packages
       ansible.builtin.apt:
@@ -13,7 +13,7 @@
       loop: "{{ (__php_static_packages + php_packages) | map('regex_replace', '=.+', '') | list }}"
 
 - name: Configure php
-  tags: [php_configure]
+  tags: [php, configure, php_configure]
   block:
     # TODO: only configure and restart apache if it's installed..
     - name: "Create configuration: {{ item }}"

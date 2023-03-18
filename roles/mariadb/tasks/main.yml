@@ -1,8 +1,8 @@
 ---
 - name: Install mariadb server
-  tags: [mariadb_install]
+  tags: [mariadb, install, mariadb_install]
   ansible.builtin.import_tasks: install.yml
 
 - name: Configure mariadb server
-  tags: [mariadb_configure]
+  tags: [mariadb, configure, mariadb_configure]
   ansible.builtin.import_tasks: configure.yml

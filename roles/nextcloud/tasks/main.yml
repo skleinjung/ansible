@@ -1,10 +1,10 @@
 ---
 - name: Install Nextcloud
-  tags: [nextcloud, nextcloud_install]
+  tags: [nextcloud, install, nextcloud_install]
   ansible.builtin.import_tasks: install.yml
 
 - name: Configure Nextcloud
-  tags: [nextcloud, nextcloud_configure]
+  tags: [nextcloud, configure, nextcloud_configure]
   ansible.builtin.import_tasks: configure.yml
 
 - name: Manage backup and restore functions
