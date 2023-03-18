@@ -35,6 +35,9 @@ nextcloud_db_root_password: !vault |
 nextcloud_imagick_version: 3.6*
 nextcloud_libmagickcore_extra_version: 8:6.9*
 
+# nextcloud_maintenance_mode: whether the server should be in maintenance mode or not. [false]
+nextcloud_maintenance_mode: false
+
 # nextcloud_path: Root filesystem path to use for nextcloud resources. ["/var/lib/nextcloud"]
 nextcloud_path: /var/lib/nextcloud
 

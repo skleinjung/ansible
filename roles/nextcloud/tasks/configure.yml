@@ -97,3 +97,6 @@
     group: www-data
     mode: "0770"
     owner: root
+- name: Add maintenance mode settings
+  ansible.builtin.import_tasks:
+    file: actions/set_maintenance_mode.yml
