@@ -29,7 +29,7 @@
     - name: Create database backup
       community.mysql.mysql_db:
         state: dump
-        name: "{{ nextcloud_db_name }}"
+        name: "{{ nextcloud_db.name }}"
         target: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
 
 - name: Execute restore from backup
@@ -45,6 +45,6 @@
       community.mysql.mysql_db:
         collation: "{{ __nextcloud_db_collation }}"
         encoding: "{{ __nextcloud_db_encoding }}"
-        name: "{{ nextcloud_db_name }}"
+        name: "{{ nextcloud_db.name }}"
         state: import
         target: "{{ nextcloud_db_backup_path }}/db.sql.gz"
