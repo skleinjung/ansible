@@ -97,13 +97,3 @@
     group: www-data
     mode: "0770"
     owner: root
-# update php settings
-# - name: Set php memory limit to recommendation of 512M
-#   ansible.builtin.lineinfile:
-#     path: "{{ __nextcloud_php_ini_path }}"
-#     regexp: "^memory_limit ="
-#     insertafter: "^; https://php.net/memory-limit"
-#     line: memory_limit = 512M
-#   notify: restart apache
-# asserts in molecule? test on server
-# then: backup/restore; force reinitialize playbook

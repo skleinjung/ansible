@@ -31,4 +31,9 @@
             template: nextcloud.conf.j2
     - role: php
       vars:
+        php_ini:
+          memory_limit: 512M
+          opcache.jit: 1255
+          opcache.jit_buffer_size: 128M
+          opcache.revalidate_freq: 60
         php_packages: "{{ __nextcloud_php_packages }}"
