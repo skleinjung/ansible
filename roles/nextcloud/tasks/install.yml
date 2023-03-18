@@ -42,7 +42,6 @@
     mode: "0770"
     owner: root
     path: "{{ item }}"
-    recurse: true
     state: directory
   loop:
     - "{{ __nextcloud_paths.apps }}"
