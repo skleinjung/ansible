@@ -1,2 +1,4 @@
 ---
+__php_ini_scan_dir_apache2: /etc/php/8.1/apache2/conf.d
+__php_ini_scan_dir_cli: /etc/php/8.1/cli/conf.d
 __php_static_packages: ["php={{ php_version }}"]

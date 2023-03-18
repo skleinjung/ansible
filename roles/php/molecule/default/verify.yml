@@ -1,0 +1,9 @@
+---
+- name: "Verify: default"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Verify true
+      ansible.builtin.assert:
+        that:
+          - true
