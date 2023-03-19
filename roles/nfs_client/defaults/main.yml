@@ -1,0 +1,11 @@
+---
+# wip_experimental_nfs_client_enabled: Whether nfs filesystems are mounted on this system. [false]
+wip_experimental_nfs_client_enabled: false
+
+# nfs_client_mounts: List of nfs mounts to configure, with each being a dictionary of mount options. [None]
+# nfs_client_mounts[].host: Host name or IP of the nfs server.
+# nfs_client_mounts[].name: Name of the nfs export to mount.
+# nfs_client_mounts[].opts: Mount options. ["defaults"]
+# nfs_client_mounts[].path: Local path to mount the nfs share. ["/mnt/nfs"]
+# nfs_client_mounts[].state: Desired state of the filesystem mount, as described in `ansible.posix.mount` role. ["mounted"]
+nfs_client_mounts: []

@@ -1,0 +1,18 @@
+---
+- name: Verify required fields are present
+  ansible.builtin.assert:
+    that:
+      - item.host is defined
+      - item.name is defined
+
+- name: "Create mountpoint: {{ item.path | default('/mnt/nfs') }}"
+  ansible.builtin.file:
+    path: "{{ item.path | default('/mnt/nfs') }}"
+    state: directory
+- name: "Mount nfs filesystem: {{ item.name }}"
+  ansible.posix.mount:
+    fstype: nfs
+    opts: "{{ item.opts | default('defaults') }}"
+    path: "{{ item.path | default('/mnt/nfs') }}"
+    src: "{{ item.host }}:{{ item.name }}"
+    state: "{{ item.state | default('mounted') }}"

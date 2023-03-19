@@ -1,0 +1,7 @@
+# override users config to use legacy value on one specific server that requires it
+users_config:
+  - groups:
+      - adm
+      - sudo
+    uid: 1000
+    username: sean
