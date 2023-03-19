@@ -1,0 +1,8 @@
+---
+provisioner:
+  inventory:
+    group_vars:
+      all:
+        php_ini:
+          precision: 10
+          zlib.output_compression: true

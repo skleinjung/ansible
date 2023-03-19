@@ -1,2 +1,17 @@
 ---
 aptcachetime: 3600
+
+# sshd options
+# note: sshd is disabled by default, so these options are only applied if sshd_enabled is overridden elsewhere
+sshd_users:
+  - authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOT7hR5cbwyrOfcEdjhrepLec8CBsfaPQexbotN+hUoz Sean Kleinjung
+    username: sean
+
+# users configuration
+users_config:
+  - groups:
+      - adm
+      - sudo
+    uid: 1000
+    username: sean

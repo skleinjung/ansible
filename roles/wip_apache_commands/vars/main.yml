@@ -1,0 +1,4 @@
+# set of valid command names
+__apache_commands:
+  - doo_cool_things
+  - manage_site

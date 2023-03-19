@@ -1,0 +1,6 @@
+---
+# users_config: Configuration information for all users to manage. (Default: no users)
+# users_config.groups: List of groups to add the user to. Their personal group is always inclued (Default: pwersonal group only)
+# users_config.uid: Optional UID for the new user. (Default: assign automatically)
+# users_config.username: Name of the user to manage
+users_config: []

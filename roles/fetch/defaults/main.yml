@@ -1,0 +1,2 @@
+# fetch_default_directory: Default directory to use for downloaded files. ["/tmp"]
+fetch_default_directory: /tmp

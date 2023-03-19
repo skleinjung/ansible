@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include sshd"
+      ansible.builtin.include_role:
+        name: "sshd"
+      vars:
+        sshd_users:
+          - authorized_keys:
+              - ssh-ed25519 AAAAC3Nza... First Key
+              - ssh-ed25519 BBBBB3Nza... Second Key
+            username: test_user

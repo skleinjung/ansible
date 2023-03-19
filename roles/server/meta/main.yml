@@ -1,5 +1,0 @@
----
-dependencies: []
-  # - role: devsec.hardening.os_hardening
-  #   vars:
-  #     os_auditd_enabled: false

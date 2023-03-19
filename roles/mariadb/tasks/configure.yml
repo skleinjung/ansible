@@ -1,4 +1,12 @@
 ---
+- name: Check mandatory variables are defined
+  block:
+    - name: Assert mariadb_root_password is set
+      ansible.builtin.assert:
+        fail_msg: No 'mariadb_root_password' was set
+        that:
+          - mariadb_root_password is defined
+
 - name: Read MySQL/MariaDB settings
   community.mysql.mysql_info:
     filter: settings
@@ -7,29 +15,60 @@
 - name: Move data to new datadir
   when: (mysql_settings.settings.datadir.rstrip('/') | realpath) != (mariadb_data_directory.rstrip('/') | realpath)
   block:
-    - name: stop mysql
-      ansible.builtin.service: name=mysql state=stopped
+    - name: Stop mysql
+      ansible.builtin.service:
+        name: mysql
+        state: stopped
     - name: Ensure datadir exists
-      file: 
-        mode: '0750'
+      ansible.builtin.file:
+        mode: "0750"
         owner: mysql
         group: mysql
-        path: '{{ mariadb_data_directory }}'
+        path: "{{ mariadb_data_directory }}"
         state: directory
     - name: Copy data files to new location
       ansible.posix.synchronize:
-        src: '{{ mysql_settings.settings.datadir }}'
-        dest: '{{ mariadb_data_directory }}'
+        src: "{{ mysql_settings.settings.datadir }}"
+        dest: "{{ mariadb_data_directory }}"
     - name: Remove old datadir
       ansible.builtin.file:
-        path: '{{ mysql_settings.settings.datadir }}'
+        path: "{{ mysql_settings.settings.datadir }}"
         state: absent
     - name: Copy custom datadir configuration
-      template:
+      ansible.builtin.template:
         src: datadir.cnf.j2
         dest: /etc/mysql/conf.d/datadir.cnf
         owner: root
         group: mysql
-        mode: 0640
-    - name: start mysql
-      ansible.builtin.service: name=mysql state=restarted
+        mode: "0640"
+    - name: Start mysql
+      ansible.builtin.service:
+        name: mysql
+        state: restarted
+
+- name: Apply hardened mysql configuration
+  ansible.builtin.import_role:
+    name: devsec.hardening.mysql_hardening
+  vars:
+    mysql_root_password: "{{ mariadb_root_password }}"
+
+- name: "Manage databases"
+  loop: "{{ mariadb_databases }}"
+  vars:
+    collation: "{{ item.collation }}"
+    encoding: "{{ item.encoding }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  ansible.builtin.include_tasks:
+    file: _manage_database.yml
+
+- name: "Manage users"
+  loop: "{{ mariadb_users }}"
+  no_log: true
+  vars:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    privileges: "{{ item.privileges }}"
+    state: "{{ item.state | default('present') }}"
+  ansible.builtin.include_tasks:
+    file: _manage_user.yml

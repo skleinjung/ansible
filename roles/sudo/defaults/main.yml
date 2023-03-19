@@ -1,0 +1,9 @@
+---
+# sudo_enabled: Whether sudo is available or not. [true]
+sudo_enabled: true
+
+# sudo_allow_passwordless: Whether passwordless sudo is enabled for sudoers. [false]
+sudo_allow_passwordless: false
+
+# sudo_group: Name of the group containing sudoers. ["sudo"]
+sudo_group: sudo

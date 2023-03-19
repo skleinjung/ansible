@@ -1,0 +1,39 @@
+---
+- name: Configure nextcloud server
+  gather_facts: true
+  hosts: nextcloud_servers
+  roles:
+    - role: sudo
+    - role: users
+    - role: sshd
+    - role: mariadb
+      vars:
+        mariadb_databases:
+          - collation: "{{ __nextcloud_db_collation }}"
+            encoding: "{{ __nextcloud_db_encoding }}"
+            name: "{{ nextcloud_db.name }}"
+        mariadb_root_password: "{{ nextcloud_db_root_password }}"
+        mariadb_users:
+          - name: "{{ nextcloud_db.username }}"
+            password: "{{ nextcloud_db.password }}"
+            privileges: "{{ nextcloud_db.name }}.*:ALL"
+    - role: nextcloud
+    - role: apache
+      vars:
+        apache_modules:
+          - name: dir
+          - name: env
+          - name: headers
+          - name: mime
+          - name: rewrite
+        apache_sites:
+          - name: nextcloud
+            template: nextcloud.conf.j2
+    - role: php
+      vars:
+        php_ini:
+          memory_limit: 512M
+          opcache.jit: 1255
+          opcache.jit_buffer_size: 128M
+          opcache.revalidate_freq: 60
+        php_packages: "{{ __nextcloud_php_packages }}"

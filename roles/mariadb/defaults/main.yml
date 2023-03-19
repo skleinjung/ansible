@@ -1,2 +1,27 @@
+# mariadb_data_directory: Directory to contain mysql data files. [/var/lib/mysql]
 mariadb_data_directory: /var/lib/mysql
+
+# mariadb_databases: List of databases to manage. [None]
+# mariadb_databases[].collation: Collation mode (sorting). This only applies to new table/databases and does not update existing ones. [""]
+# mariadb_databases[].encoding: Encoding mode to use (e.g. utf8 or latin1_swedish_ci) at creation of database, dump or importation of sql script. [""]
+# mariadb_databases[].name: Name of the database.
+# mariadb_databases[].state: Desired state of the database ('present' or 'absent').
+mariadb_databases: []
+
+# mariadb_root_password: Password for the mariadb root account. [Required]
+# mariadb_root_password: NO DEFAULT
+
+# mariadb_users: List of users to manage. [None]
+# mariadb.users[].name: Name of the user (role) to add or remove.
+# mariadb_users[].password: Set the user’s password. Only for mysql_native_password authentication.
+# mariadb_users[].privileges: MySQL privileges in a format based on MySQL GRANT statement. ["*.*:USAGE", or no privileges]
+# mariadb_databases[].state: Desired state of the user ('present' or 'absent').
+mariadb_users: []
+
+# Additional detail on privileges:
+# - MySQL privileges string in the format: db.table:priv1,priv2.
+# - Multiple privileges can be specified by separating each one using a forward slash: db.table1:priv/db.table2:priv.
+# See https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_user_module.html#parameter-priv for more information.
+
+# mariadb_version: Version string for the mariadb-server to install. May contain wildcards. [1:10.6*]
 mariadb_version: 1:10.6*

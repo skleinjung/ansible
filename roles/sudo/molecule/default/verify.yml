@@ -1,0 +1,19 @@
+---
+- name: "Verify: default"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Run whoami using sudo
+      become: true
+      become_user: test_user
+      changed_when: false
+      register: whoami_results
+      ansible.builtin.command: sudo whoami
+    - name: Verify result is zero
+      ansible.builtin.assert:
+        that:
+          - whoami_results.rc == 0
+    - name: Verify stdout is "root"
+      ansible.builtin.assert:
+        that:
+          - whoami_results.stdout == 'root'

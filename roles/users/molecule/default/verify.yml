@@ -1,0 +1,27 @@
+---
+- name: "Verify: default"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Read passwd entry for "user_with_specific_uid"
+      ansible.builtin.getent:
+        database: passwd
+        key: user_with_specific_uid
+      register: user_info
+    - name: "Verify uid is 54000"
+      ansible.builtin.assert:
+        fail_msg: "User 'user_with_specific_uid' had wrong uid. (Was: {{ user_info.ansible_facts.getent_passwd.user_with_specific_uid[1] }})"
+        that: user_info.ansible_facts.getent_passwd.user_with_specific_uid[1] == '54000'
+    - name: "Verify groups"
+      loop:
+        - expected_groups: [user_with_no_group]
+          username: user_with_no_group
+        - expected_groups: [user_with_existing_group, cdrom]
+          username: user_with_existing_group
+        - expected_groups: [user_with_new_groups, new_group_1, new_group_2]
+          username: user_with_new_groups
+        - expected_groups: [user_with_specific_uid]
+          username: user_with_specific_uid
+      loop_control:
+        loop_var: user
+      ansible.builtin.include_tasks: _verify_groups.yml

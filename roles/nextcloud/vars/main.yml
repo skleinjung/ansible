@@ -1,38 +1,58 @@
-# data directories
-nextcloud_apps_path: "{{ nextcloud_current_version_path }}/apps"
-nextcloud_config_path: "{{ nextcloud_data_path }}/config"
-nextcloud_files_path: "{{ nextcloud_data_path }}/files"
+# __nextcloud_config_file: absolute path to the nextcloud config.php file
+__nextcloud_config_file: "{{ __nextcloud_paths.config }}/config.php"
 
-nextcloud_config_file: "{{ nextcloud_config_path }}/config.php"
-nextcloud_autoconfig_file: "{{ nextcloud_config_path }}/autoconfig.php"
-
-nextcloud_db_collation: utf8mb4_general_ci
-nextcloud_db_encoding: utf8mb4
-
-# nextcloud_download_path: path to download nextcloud artifacts
-nextcloud_download_path: "{{ nextcloud_path }}/.work"
 # nextcloud_current_version_path: directory containing the unzipped nextcloud archive for the installed version
-nextcloud_current_version_path: "{{ nextcloud_path }}/versions/{{ nextcloud_version }}"
-# nextcloud_download_url: url of the nextcloud archive
-nextcloud_download_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2
-# nextcloud_hash_url: url of the nextcloud archive hash
-nextcloud_digest_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.sha256
+__nextcloud_current_version_path: "{{ __nextcloud_paths.versions }}/{{ nextcloud_version }}"
 
-php_packages:
+# this is ------- not valid (end sup empty?)
+
+__nextcloud_data_path: "{{ nextcloud_data_path | default([nextcloud_path, 'data'] | join('/')) }}"
+
+# __nextcloud_db_collation:
+__nextcloud_db_collation: utf8mb4_general_ci
+__nextcloud_db_encoding: utf8mb4
+
+# nextcloud_hash_url: url of the nextcloud archive hash
+__nextcloud_digest_url: "{{ __nextcloud_download_url }}.sha256"
+
+# directory containing the web document root for nextcloud
+__nextcloud_document_root: "{{ __nextcloud_current_version_path }}"
+
+# nextcloud_download_url: url of the nextcloud archive
+__nextcloud_download_url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2"
+
+# __nextcloud_paths: Derived directories containing various nextcloud files
+# __nextcloud_paths.apps: Directory containing additional installed apps
+# __nextcloud_paths.backup: Directory containing nextcloud backups
+# __nextcloud_paths.config: Directory containing nextcloud configuration
+# __nextcloud_paths.data: Base directory for all user-generated local data
+# __nextcloud_paths.files: Directory containing nextcloud files
+# __nextcloud_paths.versions: Directory containing expanded nextcloud archives ready to be deployed
+# __nextcloud_paths.work: Working directory for templ files
+__nextcloud_paths:
+  apps: "{{ __nextcloud_data_path }}/apps"
+  backup: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}"
+  config: "{{ __nextcloud_data_path }}/config"
+  data: "{{ __nextcloud_data_path }}"
+  files: "{{ __nextcloud_data_path }}/files"
+  versions: "{{ nextcloud_path }}/versions"
+  work: "{{ nextcloud_path }}/.work"
+
+__nextcloud_php_packages:
   # needed for proper svg support
-  - libmagickcore-6.q16-6-extra={{ libmagickcore_extra_version }}
-  - php-bcmath={{ php_bcmath_version }}
-  - php-bz2={{ php_bz2_version }}
-  - php-cli={{ php_cli_version }}
-  - php-curl={{ php_curl_version }}
-  - php-gd={{ php_gd_version }}
-  - php-gmp={{ php_gmp_version }}
-  - php-imagick={{ php_imagick_version }}
-  - php-intl={{ php_intl_version }}
-  - php-mbstring={{ php_mbstring_version }}
-  - php-mysql={{ php_mysql_version }}
-  - php-xml={{ php_xml_version }}
-  - php-zip={{ php_zip_version }}
+  - libmagickcore-6.q16-6-extra={{ nextcloud_libmagickcore_extra_version }}
+  - php-bcmath={{ php_version }}
+  - php-bz2={{ php_version }}
+  - php-cli={{ php_version }}
+  - php-curl={{ php_version }}
+  - php-gd={{ php_version }}
+  - php-gmp={{ php_version }}
+  - php-imagick={{ nextcloud_imagick_version }}
+  - php-intl={{ php_version }}
+  - php-mbstring={{ php_version }}
+  - php-mysql={{ php_version }}
+  - php-xml={{ php_version }}
+  - php-zip={{ php_version }}
 
 # todo: update this to work even if we change php versions...
-__php_ini_path: /etc/php/8.1/apache2/php.ini
+__nextcloud_php_ini_path: /etc/php/8.1/apache2/php.ini

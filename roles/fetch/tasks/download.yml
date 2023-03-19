@@ -1,0 +1,32 @@
+---
+# checksum: Checksum to use for verifying the downloaded file. [No checksum validation]
+# directory: Directory to save downloaded files in. ["/tmp"]
+# filename: Name to use when saving the downloaded file. [server-provided name]
+# group: Name of the group that should own the filesystem object. [See ansible.builtin.get_url module]
+# mode: The permissions the resulting filesystem object should have. [See ansible.builtin.get_url module]
+# owner: Name of the user that should own the filesystem object. [See ansible.builtin.get_url module]
+# url: URL of the file to download.
+
+- name: "Download {{ url }}"
+  tags: [always]
+  block:
+    - name: "Check if destination directory exists: {{ directory | default(fetch_default_directory) }}"
+      ansible.builtin.stat:
+        path: "{{ directory | default(fetch_default_directory) }}"
+      register: destination
+    - name: "Create destination directory if needed: {{ directory | default(fetch_default_directory) }}"
+      when: not destination.stat.exists
+      ansible.builtin.file:
+        group: "{{ group | default(omit) }}"
+        mode: "{{ mode | default(omit) }}"
+        owner: "{{ owner | default(omit) }}"
+        path: "{{ directory | default(fetch_default_directory) }}"
+        state: directory
+    - name: Download file
+      ansible.builtin.get_url:
+        checksum: "{{ checksum | default(omit) }}"
+        dest: "{{ [directory | default(fetch_default_directory), filename] | select('defined') | join('/') }}"
+        group: "{{ group | default(omit) }}"
+        mode: "{{ mode | default(omit) }}"
+        owner: "{{ owner | default(omit) }}"
+        url: "{{ url }}"

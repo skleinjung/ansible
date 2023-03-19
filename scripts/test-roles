@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+for roledir in roles/*/molecule; do
+    pushd $(dirname $roledir)
+    molecule test --all
+    popd
+done

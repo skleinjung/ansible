@@ -1,0 +1,8 @@
+---
+# sshd_enabled: Whether sshd is installed and configured. (Default: false)
+sshd_enabled: false
+
+# sshd_users: List of users to manage ssh settings for. (Default: none)
+# sshd_users.authorized_keys: List of ssh keys to authorize for the user (Default: none)
+# sshd_users.username: Name of the user to configure
+sshd_users: []

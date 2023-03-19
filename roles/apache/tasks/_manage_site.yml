@@ -1,0 +1,34 @@
+---
+- name: Verify inputs are valid
+  ansible.builtin.assert:
+    that:
+      - name is defined
+      - template is defined
+      - state == 'absent' or state == 'disabled' or state == 'enabled'
+
+- name: "Disable site: {{ name }}"
+  args:
+    removes: "/etc/apache2/sites-enabled/{{ name }}.conf"
+  ansible.builtin.command: "a2dissite {{ name }}"
+  when: state == 'absent' or state == 'disabled'
+
+- name: "Remove site configuration: {{ name }}"
+  when: state == 'absent'
+  ansible.builtin.file:
+    path: "/etc/apache2/sites-available/{{ name }}.conf"
+    state: absent
+- name: "Update site configuration: {{ name }}"
+  notify: Reload apache
+  when: state == 'disabled' or state == 'enabled'
+  ansible.builtin.template:
+    src: "{{ template }}"
+    dest: "/etc/apache2/sites-available/{{ name }}.conf"
+    group: root
+    mode: "0644"
+    owner: root
+
+- name: "Enable site: {{ name }}"
+  args:
+    creates: "/etc/apache2/sites-enabled/{{ name }}.conf"
+  when: state == 'enabled'
+  ansible.builtin.command: "a2ensite {{ name }}"

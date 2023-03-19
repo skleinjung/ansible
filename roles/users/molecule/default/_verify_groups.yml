@@ -1,0 +1,16 @@
+---
+- name: "Invoke 'groups' command for: {{ user.username }}"
+  become: true
+  become_user: "{{ user.username }}"
+  changed_when: false
+  register: groups_result
+  ansible.builtin.command: groups
+- name: Verify return code is zero
+  ansible.builtin.assert:
+    that:
+      - groups_result.rc == 0
+- name: "Verify group list contains: {{ item }}"
+  loop: "{{ user.expected_groups }}"
+  ansible.builtin.assert:
+    fail_msg: "User '{{ user.username }}' was not in group: {{ item }}"
+    that: groups_result.stdout | regex_search('( |^)' + item + '( |$)')

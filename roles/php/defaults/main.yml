@@ -1,5 +1,9 @@
 ---
-php_version: 2:8.1*
+# php_ini: Dictionary containing php.ini directives and values to apply to the local configuration. [no custom configuration]
+php_ini: {}
 
-# A list of the PHP packages to install. ('php' is always included)
+# php_packages: A list of the PHP packages to install. ('php' is always included by default.) [Empty list]
 php_packages: []
+
+# php_version: Version string for the php packages to install. May contain wildcards. [2:8.1*]
+php_version: 2:8.1*

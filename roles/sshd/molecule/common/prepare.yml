@@ -1,0 +1,13 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        cache_valid_time: 3600
+        update_cache: true
+    - name: "Create test user"
+      ansible.builtin.user:
+        name: "test_user"
+        password: "!"
+        shell: /bin/bash

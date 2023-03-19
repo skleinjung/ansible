@@ -1,0 +1,7 @@
+---
+- name: "Manage sudo"
+  when: sudo_enabled
+  block:
+    - name: Install and configure sudo
+      ansible.builtin.include_tasks:
+        file: setup.yml

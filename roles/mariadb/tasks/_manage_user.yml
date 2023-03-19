@@ -1,0 +1,14 @@
+---
+- name: Verify inputs are valid
+  ansible.builtin.assert:
+    that:
+      - name is defined
+      - password is defined
+      - state == 'absent' or state == 'present'
+
+- name: "Manage user: {{ name }}"
+  community.mysql.mysql_user:
+    name: "{{ name }}"
+    password: "{{ password | default(omit) }}"
+    priv: "{{ privileges | default('*.*:USAGE') }}"
+    state: "{{ state }}"

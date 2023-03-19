@@ -1,0 +1,99 @@
+---
+# verify supplied variables are valid
+- name: Verify initial db setup is valid
+  when: nextcloud_db is defined and nextcloud_db | d(false)
+  block:
+    - name: Validate no unexpected configuration keys
+      ansible.builtin.assert:
+        fail_msg: nextcloud_db contains unexpected keys.
+        that:
+          - nextcloud_db.keys() | difference(['host', 'name', 'password', 'port', 'table_prefix', 'type', 'username']) == []
+    - name: Validate database type is valid
+      ansible.builtin.assert:
+        fail_msg: Database type is invalid.
+        that:
+          - nextcloud_db.type in ['pgsql', 'mysql', 'sqlite3']
+    - name: Validate mysql configuration
+      when: nextcloud_db.type == 'mysql'
+      ansible.builtin.assert:
+        fail_msg: Specified nextcloud_db configuration is invalid.
+        that:
+          - nextcloud_db.host is defined
+          - nextcloud_db.password is defined
+          - nextcloud_db.username is defined
+    - name: Validate pgsql configuration
+      when: nextcloud_db.type == 'pgsql'
+      ansible.builtin.assert:
+        fail_msg: Specified nextcloud_db configuration is invalid.
+        that:
+          - nextcloud_db.host is defined
+          - nextcloud_db.password is defined
+          - nextcloud_db.username is defined
+    - name: Validate sqlite3 configuration
+      when: nextcloud_db.type == 'sqlite3'
+      ansible.builtin.assert:
+        fail_msg: Specified nextcloud_db configuration is invalid.
+        that:
+          - nextcloud_db.host is not defined
+          - nextcloud_db.password is not defined
+          - nextcloud_db.port is not defined
+          - nextcloud_db.username is not defined
+
+- name: Verify required mail variables are set if mail is enabled
+  when: nextcloud_mail is defined and nextcloud_mail.enabled | default(true)
+  ansible.builtin.assert:
+    fail_msg: Specified nextcloud_mail configuration is invalid.
+    that:
+      - nextcloud_mail.smtp_host is defined
+      - nextcloud_mail.smtp_auth is not defined or (nextcloud_mail.smtp_auth.username is defined and nextcloud_mail.smtp_auth.password is defined)
+      - nextcloud_mail.keys() | difference(['domain', 'enabled', 'from_address', 'smtp_auth', 'smtp_host', 'smtp_port', 'smtp_use_tls']) == []
+
+- name: Verify both admin username and admin password are set if either is
+  when: nextcloud_admin is defined
+  ansible.builtin.assert:
+    fail_msg: Specified nextcloud_admin configuration is invalid.
+    that:
+      - nextcloud_admin.keys() | difference(['username', 'password']) == []
+      - nextcloud_admin.password is defined
+      - nextcloud_admin.username is defined
+
+# perform first-time setup if nextcloud isn't configured yet
+- name: Determine if nextcloud has been configured already
+  ansible.builtin.stat:
+    path: "{{ __nextcloud_config_file }}"
+  register: nextcloud_config_stat
+- name: Prepare initial configuration if needed
+  when: not nextcloud_config_stat.stat.exists
+  block:
+    - name: Create 'CAN_INSTALL' marker if needed
+      ansible.builtin.file:
+        access_time: preserve
+        modification_time: preserve
+        group: www-data
+        mode: "0770"
+        owner: root
+        path: "{{ __nextcloud_paths.config }}/CAN_INSTALL"
+        state: touch
+    - name: Copy nextcloud auto-configuration template if needed
+      ansible.builtin.template:
+        dest: "{{ __nextcloud_paths.config }}/autoconfig.php"
+        group: www-data
+        mode: "0770"
+        owner: root
+        src: autoconfig.php.j2
+
+# apply additional configuration options
+- name: Add nextcloud mail settings
+  ansible.builtin.template:
+    src: mail.config.php.j2
+    dest: "{{ __nextcloud_paths.config }}/mail.config.php"
+    group: www-data
+    mode: "0770"
+    owner: root
+- name: Copy additional nextcloud settings
+  ansible.builtin.template:
+    src: custom.config.php.j2
+    dest: "{{ __nextcloud_paths.config }}/custom.config.php"
+    group: www-data
+    mode: "0770"
+    owner: root
