@@ -10,4 +10,4 @@ collections:
 
 roles:
 - name: geerlingguy.apache
-  version: v3.3.0
+  version: '3.3.0'
