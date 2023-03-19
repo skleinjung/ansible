@@ -1,6 +1,15 @@
 ---
 aptcachetime: 3600
 
+# NFS options
+# must be enabled via wip_experimental_nfs_client_enabled for this setting to take effect
+nfs_client_mounts:
+  - host: 192.168.68.10
+    name: /srv/nfs/usb
+    opts: auto,nodev,noexec,nosuid,rw
+    path: /mnt/usb
+    state: mounted
+
 # sshd options
 # note: sshd is disabled by default, so these options are only applied if sshd_enabled is overridden elsewhere
 sshd_users:
@@ -13,5 +22,5 @@ users_config:
   - groups:
       - adm
       - sudo
-    uid: 1000
+    uid: 60000
     username: sean

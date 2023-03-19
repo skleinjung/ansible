@@ -6,6 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 /usr/local/bin/run-playbooks \
-  --extra-vars "nextcloud_db_backup_path=${1}" \
+  --limit "$(hostname)" \
+  --extra-vars "nextcloud_restore_path=${1}" \
   --tags restore_backup \
-  playbooks/nextcloud-server.yml
+  playbooks/nextcloud/nextcloud_backup.yml

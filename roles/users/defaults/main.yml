@@ -1,6 +1,9 @@
 ---
 # users_config: Configuration information for all users to manage. (Default: no users)
+# users_config.create_home: Whether a home directory will be made for the user. [false for system users, true for others]
 # users_config.groups: List of groups to add the user to. Their personal group is always inclued (Default: pwersonal group only)
+# users_config.shell: Shell to user for the user. [/bin/false for system users, /bin/bash for others]
+# users_config.system: Setting this to true makes the user a system account. [false]
 # users_config.uid: Optional UID for the new user. (Default: assign automatically)
 # users_config.username: Name of the user to manage
 users_config: []

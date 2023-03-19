@@ -34,3 +34,10 @@
         users_config:
           - uid: 54000
             username: user_with_specific_uid
+    - name: "Include users: system user"
+      ansible.builtin.include_role:
+        name: "users"
+      vars:
+        users_config:
+          - username: system_user
+            system: true

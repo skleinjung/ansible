@@ -2,4 +2,4 @@
 
 /usr/local/bin/run-playbooks \
   --tags backup \
-  playbooks/nextcloud-server.yml
+  playbooks/nextcloud/nextcloud_backup.yml

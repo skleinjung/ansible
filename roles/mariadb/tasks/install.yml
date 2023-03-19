@@ -2,12 +2,18 @@
   block:
     - name: Install mariadb-server package
       ansible.builtin.apt:
-        pkg: mariadb-server={{ mariadb_version }}
+        pkg:
+          - mariadb-server={{ mariadb_version }}
+          # needed for devsec hardening's connection from Python
+          - libmariadb-dev={{ mariadb_version }}
         state: present
     - name: Hold mariadb-server package from automatic upgrades
       ansible.builtin.dpkg_selections:
         name: mariadb-server
         selection: hold
+    - name: Install the Python mysqlclient module
+      ansible.builtin.pip:
+        name: mysqlclient
     - name: Install python prereqs for mysql hardening role
       ansible.builtin.pip:
         name: jmespath

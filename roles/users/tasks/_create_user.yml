@@ -9,8 +9,10 @@
 
 - name: "Create user account: {{ user.username }}"
   ansible.builtin.user:
+    create_home: "{{ user.create_home | default(not (user.system | default(false))) }}"
     groups: "{{ user.groups | default(omit) }}"
     name: "{{ user.username }}"
     password: "!"
-    shell: /bin/bash
+    shell: "{{ user.shell | default(user.system | default(false) | ternary('/bin/false', '/bin/bash')) }}"
+    system: "{{ user.system | default(false) }}"
     uid: "{{ user.uid | default(omit) }}"

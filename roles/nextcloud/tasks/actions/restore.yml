@@ -1,0 +1,14 @@
+---
+- name: Execute restore from backup
+  block:
+    - name: Assert path of backup to restore is specified
+      ansible.builtin.assert:
+        that:
+          - nextcloud_restore_path is defined
+    - name: Restore database backup
+      community.mysql.mysql_db:
+        collation: "{{ __nextcloud_db_collation }}"
+        encoding: "{{ __nextcloud_db_encoding }}"
+        name: "{{ nextcloud_db.name }}"
+        state: import
+        target: "{{ nextcloud_restore_path }}/db.sql.gz"

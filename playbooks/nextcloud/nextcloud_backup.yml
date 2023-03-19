@@ -1,0 +1,20 @@
+---
+- name: Backup nextcloud servers
+  gather_facts: true
+  hosts: nextcloud_servers
+  tags: [backup, daily, never]
+  tasks:
+    - name: Invoke backup tasks
+      ansible.builtin.include_role:
+        name: nextcloud
+        tasks_from: actions/backup.yml
+
+- name: Restore single nextcloud server
+  gather_facts: true
+  hosts: "{{ ansible_limit | default(omit) }}"
+  tags: [restore_backup, never]
+  tasks:
+    - name: Invoke restore tasks
+      ansible.builtin.include_role:
+        name: nextcloud
+        tasks_from: actions/restore.yml
