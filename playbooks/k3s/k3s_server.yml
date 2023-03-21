@@ -1,0 +1,9 @@
+---
+- name: Configure k3s server
+  gather_facts: false
+  hosts: k3s_servers
+  roles:
+    - role: sudo
+    - role: users
+    - role: sshd
+    - role: k3s_server

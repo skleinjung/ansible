@@ -1,0 +1,28 @@
+---
+- name: Install k3s
+  tags: [k3s_server_install]
+  block:
+    - name: Install prereqs
+      ansible.builtin.apt:
+        pkg: curl
+        state: present
+    - name: Create k3s config directory
+      ansible.builtin.file:
+        group: root
+        mode: "0660"
+        owner: root
+        path: /etc/rancher/k3s
+        state: directory
+    - name: Add k3s configuration
+      ansible.builtin.template:
+        group: root
+        mode: "0660"
+        owner: root
+        dest: /etc/rancher/k3s/config.yaml
+        src: etc/rancher/k3s/config.yaml.j2
+    - name: Run installation script
+      ansible.builtin.shell:
+        cmd: |
+          curl -sfL https://get.k3s.io | \
+            INSTALL_K3S_EXEC="server" \
+            sh -s - >> /var/log/k3s-install.log

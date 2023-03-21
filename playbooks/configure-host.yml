@@ -41,3 +41,6 @@
 
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
+
+- name: Include plays for k3s_servers
+  ansible.builtin.import_playbook: k3s/k3s_server.yml
