@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e
+
+DEBIAN_FRONTEND=noninteractive
+ANSIBLE_INSTALL_MARKER=/var/lock/ansible_installed
+COMPLETED_MARKER=/var/lock/proxmox_provisioned
+
+if [ -f $COMPLETED_MARKER ]; then
+  echo "Already provisioned."
+  exit 0
+fi
+
+if [ -f $ANSIBLE_INSTALL_MARKER ]; then
+  echo "Ansible already installed."
+else
+  # not exactly sure why, but our template has broken locale settings by default
+  locale-gen en_US
+  locale-gen en_US.UTF-8
+  update-locale LC_ALL=en_US.UTF-8
+
+  # add ansible PPA
+  apt-get update
+  apt-get install -y \
+    software-properties-common
+  apt-add-repository --yes ppa:ansible/ansible
+  apt-get update
+
+  # install ansible
+  apt-get install -y \
+    ansible-core
+
+  # install other prereqs
+  apt-get install -y \
+    cron \
+    git
+
+  # bootstrap management via ansible pull
+  ansible-pull \
+    --accept-host-key \
+    --inventory "localhost," \
+    --purge \
+    --url https://github.com/skleinjung/ansible.git \
+    --vault-password-file /var/ansible/vault-secret \
+    playbooks/bootstrap-ansible-pull.yml >>/var/log/ansible.log 2>&1
+
+  echo "Done $(date)" > $ANSIBLE_INSTALL_MARKER
+fi
+
+# run configure script installed by above playbook
+/usr/local/bin/configure-host
+
+echo "Done $(date)" > $COMPLETED_MARKER

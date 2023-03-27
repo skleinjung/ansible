@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMPLETED_MARKER=/var/lock/proxmox_provisioned
+
+if [ -f $COMPLETED_MARKER ]; then
+  exit 0
+else
+  exit 25
+fi
