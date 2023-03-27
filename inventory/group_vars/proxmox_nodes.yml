@@ -1,0 +1,25 @@
+# ssh options
+sshd_enabled: true
+sshd_users:
+  - authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOT7hR5cbwyrOfcEdjhrepLec8CBsfaPQexbotN+hUoz Sean Kleinjung
+    username: sean
+  - authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOT7hR5cbwyrOfcEdjhrepLec8CBsfaPQexbotN+hUoz Sean Kleinjung
+    username: ansible
+
+# sudo options
+sudo_allow_passwordless: true
+
+# users configuration
+users_config:
+  - groups:
+      - adm
+      - sudo
+    uid: 60000
+    username: sean
+  - groups:
+      - adm
+      - sudo
+    uid: 60001
+    username: ansible

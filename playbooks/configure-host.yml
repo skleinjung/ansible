@@ -36,6 +36,9 @@
   roles:
     - role: vrising-server
 
+- name: proxmox_nodes
+  ansible.builtin.import_playbook: proxmox/proxmox_node.configure.yml
+
 - name: Include plays for user workstations
   ansible.builtin.import_playbook: workstation.yml
 
