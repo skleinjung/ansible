@@ -1,59 +1,72 @@
 ---
 # this only works if user is root and shell is bash...
 - name: Add vault password location to ansible user's environment
+  become: true
   ansible.builtin.lineinfile:
     path: /root/.bashrc
-    regexp: '^export ANSIBLE_VAULT_PASSWORD_FILE='
-    line: 'export ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_secret_path }}'
+    regexp: "^export ANSIBLE_VAULT_PASSWORD_FILE="
+    line: "export ANSIBLE_VAULT_PASSWORD_FILE={{ ansible_secret_path }}"
 
 - name: Copy cronjob-lock script
+  become: true
   ansible.builtin.copy:
-    src: '{{ item }}'
+    src: "{{ item }}"
     dest: /usr/local/bin
     owner: root
     group: root
-    mode: '0744'
+    mode: "0744"
   with_fileglob:
-    - 'usr/local/bin/*'
+    - "usr/local/bin/*"
 - name: Copy scripts to run Ansible
-  template: 
-    src: '{{ item }}'
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}"
     dest: /usr/local/bin
-    owner: root 
-    group: root 
-    mode: '0744'
+    owner: root
+    group: root
+    mode: "0744"
   with_fileglob:
-    - '../templates/usr/local/bin/*'
+    - "../templates/usr/local/bin/*"
 
 - name: Set sleep time environment variable
+  become: true
   ansible.builtin.cron:
     env: true
-    job: '15'
+    job: "15"
     name: SLEEP_TIME_BEFORE_PULL
 - name: Re-run Ansible bootstrap periodically
+  become: true
   ansible.builtin.cron:
-    hour: '2'
+    hour: "2"
     job: /usr/local/bin/cronjob-lock /usr/local/bin/bootstrap-ansible >>{{ ansible_pull_logfile }} 2>&1
-    minute: '13'
+    minute: "13"
     name: "run ansible bootstrap"
     state: present
-    user: '{{ ansible_pull_user }}'
-- name: Re-run Ansible every {{ ansible_pull_schedule }} minutes
+    user: "{{ ansible_pull_user }}"
+- name: "Re-run Ansible every every N hours: {{ ansible_pull_schedule_hour }}"
+  become: true
   ansible.builtin.cron:
-    hour: '{{ ansible_pull_schedule_hour }}'
+    hour: "{{ ansible_pull_schedule_hour }}"
     job: /usr/local/bin/cronjob-lock /usr/local/bin/configure-host >>{{ ansible_pull_logfile }} 2>&1
-    minute: '*/10'
+    minute: "{{ ansible_pull_schedule_minute }}"
     name: "run ansible"
     state: present
-    user: '{{ ansible_pull_user }}'
+    user: "{{ ansible_pull_user }}"
 - name: Re-run Ansible daily tasks
+  become: true
   ansible.builtin.cron:
-    hour: '3'
+    hour: "3"
     job: /usr/local/bin/cronjob-lock /usr/local/bin/daily-updates >>{{ ansible_pull_logfile }} 2>&1
-    minute: '13'
+    minute: "13"
     name: "run ansible daily"
     state: present
-    user: '{{ ansible_pull_user }}'
+    user: "{{ ansible_pull_user }}"
 
 - name: Create logrotate entry for ansible-pull.log
-  template: src=templates/etc/logrotate.d/ansible-pull.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644
+  become: true
+  ansible.builtin.template:
+    dest: /etc/logrotate.d/ansible-pull
+    group: root
+    mode: "0644"
+    owner: root
+    src: etc/logrotate.d/ansible-pull.j2

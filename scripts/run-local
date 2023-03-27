@@ -6,6 +6,6 @@ set -x
 ansible-playbook \
   --ask-become-pass \
   --ask-vault-pass \
-  --skip-tags bootstrap,daily \
+  --skip-tags daily \
   --limit "$(hostname)" \
   "$1"
