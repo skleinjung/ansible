@@ -58,8 +58,14 @@
 # create symlink to nextcloud config
 - name: Create symlinks to config for new version
   ansible.builtin.file:
-    src: "{{ __nextcloud_paths.config }}"
     dest: "{{ __nextcloud_current_version_path }}/config"
+    src: "{{ __nextcloud_paths.config }}"
+    state: link
+# create symlink to external apps config
+- name: Create a symbolic link
+  ansible.builtin.file:
+    dest: "{{ __nextcloud_document_root }}/apps-custom"
+    src: "{{ __nextcloud_paths.apps }}"
     state: link
 
 - name: Install backup and restore scripts

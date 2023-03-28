@@ -88,14 +88,21 @@
     src: mail.config.php.j2
     dest: "{{ __nextcloud_paths.config }}/mail.config.php"
     group: www-data
-    mode: "0770"
+    mode: "0640"
+    owner: root
+- name: Add app folder settings
+  ansible.builtin.template:
+    src: apps.config.php.j2
+    dest: "{{ __nextcloud_paths.config }}/apps.config.php"
+    group: www-data
+    mode: "0640"
     owner: root
 - name: Copy additional nextcloud settings
   ansible.builtin.template:
     src: custom.config.php.j2
     dest: "{{ __nextcloud_paths.config }}/custom.config.php"
     group: www-data
-    mode: "0770"
+    mode: "0640"
     owner: root
 - name: Add maintenance mode settings
   ansible.builtin.import_tasks:
