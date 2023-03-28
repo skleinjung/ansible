@@ -1,0 +1,29 @@
+# proxmox_api: Required API configuration for controlling Proxmox
+# proxmox_api.host: Host name of the Proxmox API server.
+# proxmox_api.token_id: ID of the API token to use when connecting to the Proxmox API.
+# proxmox_api.token_secret: Secret for the API token to use when connecting to the Proxmox API.
+# proxmox_api.user: Username to use when connecting to the Proxmox API
+proxmox_api: {}
+
+# proxmox_default_disk_size: Default disk size, in GB, if not specified. [16]
+proxmox_default_disk_size: 16
+
+# proxmox_default_node: Default Proxmox node to schedule hosts on, if not specified. ["API default"]
+
+# proxmox_default_ostemplate: Default OS template to use if not specified. ["API default"]
+
+# proxmox_default_storage: Default storage for VMs and LXCs, if not specified. ["local"]
+proxmox_default_storage: local
+
+# Manage LXC containers.
+# Pegasus "proxmox-scripts" are bound as r/o in /mnt/proxmox-scripts. Currently DHCP only.
+
+# proxmox_lxc_configs: LXC configurations
+# proxmox_lxc_configs[].disk.sizeInGb: Size of the root disk, in GB. [proxmox_default_disk_size]
+# proxmox_lxc_configs[].disk.storage: Storage to use for the root disk. [proxmox_default_storage]
+# proxmox_lxc_configs[].hostname: Hostname of the LXC. Must be provided and unique if `vmid` is not provided. [API default]
+# proxmox_lxc_configs[].memory: Memory limit of the LXC, in MB. [API default]
+# proxmox_lxc_configs[].node: Proxmox node ot schedule the LXC on. [proxmox_default_node]
+# proxmox_lxc_configs[].ostemplate: OS template for the new container. [proxmox_default_ostemplate]
+# proxmox_lxc_configs[].state: Desired state of the LXC (present, started, etc.) ["started"]
+proxmox_lxc_configs: []
