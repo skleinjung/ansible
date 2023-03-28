@@ -23,3 +23,6 @@ users_config:
       - sudo
     uid: 60001
     username: ansible
+  - system: true
+    uid: 160002
+    username: nextcloud

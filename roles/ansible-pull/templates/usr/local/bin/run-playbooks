@@ -25,6 +25,4 @@ result="$?"
 if [ $result != "0" ]; then
   echo "Playbook failed! See /var/log/ansible.log for details."
   exit 1
-else
-  echo "Done - ${result}"
 fi

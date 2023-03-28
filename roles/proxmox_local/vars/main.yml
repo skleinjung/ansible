@@ -33,7 +33,7 @@ proxmox_lxc_configs:
         volume: local-hdd:256
       - backup: false
         path: /mnt/backups
-        volume: /mnt/bindmounts/usb-1tb/nextcloud-backups
+        volume: /mnt/bindmounts/nextcloud-backups
     state: started
   60001:
     disk:
@@ -46,5 +46,5 @@ proxmox_lxc_configs:
         volume: local-hdd:256
       - backup: false
         path: /mnt/backups
-        volume: /mnt/bindmounts/usb-1tb/nextcloud-backups
+        volume: /mnt/bindmounts/nextcloud-backups
     state: started
