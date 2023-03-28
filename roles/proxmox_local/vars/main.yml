@@ -24,7 +24,22 @@ proxmox_default_storage: local-hdd
 
 proxmox_lxc_configs:
   60000:
-    state: absent
+    disk:
+      sizeInGb: 64
+      storage: local-hdd
+    hostname: nextcloud-blue
+    memory: 2048
+    mounts:
+      - path: /var/lib/nextcloud/data
+        volume: local-hdd:256
+    state: started
   60001:
+    disk:
+      sizeInGb: 64
+      storage: local-hdd
     hostname: nextcloud-green
+    memory: 2048
+    mounts:
+      - path: /var/lib/nextcloud/data
+        volume: local-hdd:256
     state: started
