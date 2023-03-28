@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
+
 /usr/local/bin/run-playbooks \
   playbooks/bootstrap-ansible-pull.yml
