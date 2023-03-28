@@ -1,0 +1,11 @@
+---
+- name: Manage LXC containers
+  gather_facts: false
+  hosts: localhost
+  roles:
+    - proxmox_local
+
+    # - name: Provision
+    #   delegate_to: proxmox-1
+    #   ansible.builtin.shell:
+    #     cmd: /usr/local/bin/provision-lxc 10006
