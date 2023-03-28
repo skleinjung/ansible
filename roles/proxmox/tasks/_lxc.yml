@@ -7,8 +7,7 @@
   ansible.builtin.assert:
     that:
       - proxmox_api.host is defined
-      - proxmox_api.token_id is defined
-      - proxmox_api.token_secret is defined
+      - proxmox_api.password is defined
       - proxmox_api.user is defined
       - resolved_state == 'absent' or resolved_state == 'present' or resolved_state == 'started' or resolved_state == 'stopped' or resolved_state == 'restarted'
       - lxc.vmid is defined
@@ -37,7 +36,7 @@
 - name: "Render 'mounts' config for container: {{ lxc.hostname | default(lxc.vmid) }}"
   when: resolved_state != 'absent'
   vars:
-    mounts: "{{ lxc.mounts | default([]) }}"
+    mounts: "{{ [__proxmox_scripts_mount] + (lxc.mounts | default([])) }}"
   ansible.builtin.set_fact:
     mounts_string: "{{ lookup('ansible.builtin.template', 'mounts.j2') }}"
 
@@ -45,8 +44,7 @@
   when: resolved_state != 'absent'
   community.general.proxmox:
     api_host: "{{ proxmox_api.host }}"
-    api_token_id: "{{ proxmox_api.token_id }}"
-    api_token_secret: "{{ proxmox_api.token_secret }}"
+    api_password: "{{ proxmox_api.password }}"
     api_user: "{{ proxmox_api.user }}"
     disk: "{{ lxc.disk.storage | default(proxmox_default_storage) }}:{{ lxc.disk.sizeInGb | default(proxmox_default_disk_size) }}"
     hostname: "{{ lxc.hostname }}"
@@ -64,23 +62,21 @@
     unprivileged: true
     vmid: "{{ lxc.vmid }}"
 
-- name: "Add the proxmox-scripts bindmount: {{ lxc.hostname | default(lxc.vmid) }}"
-  become: true
-  delegate_to: "{{ proxmox_api.host }}"
-  register: config_file
-  when: resolved_state != 'absent'
-  ansible.builtin.lineinfile:
-    line: "mp{{ lxc.mounts | default([]) | length }}: /mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,ro=1"
-    path: "/etc/pve/lxc/{{ lxc.vmid }}.conf"
-    regexp: "^mp{{ lxc.mounts | default([]) | length }}:"
-    state: present
+# - name: "Add the proxmox-scripts bindmount: {{ lxc.hostname | default(lxc.vmid) }}"
+#   become: true
+#   delegate_to: "{{ proxmox_api.host }}"
+#   when: resolved_state != 'absent'
+#   ansible.builtin.lineinfile:
+#     line: "mp0: /mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,ro=1"
+#     path: "/etc/pve/lxc/{{ lxc.vmid }}.conf"
+#     regexp: "^mp0:"
+#     state: present
 
 - name: "(Re)start container: {{ lxc.hostname | default(lxc.vmid) }}"
   when: resolved_state == 'started' or resolved_state == 'restarted'
   community.general.proxmox:
     api_host: "{{ proxmox_api.host }}"
-    api_token_id: "{{ proxmox_api.token_id }}"
-    api_token_secret: "{{ proxmox_api.token_secret }}"
+    api_password: "{{ proxmox_api.password }}"
     api_user: "{{ proxmox_api.user }}"
     state: "{{ resolved_state }}"
     timeout: 90
@@ -109,8 +105,7 @@
   when: resolved_state != 'started' and resolved_state != 'restarted'
   community.general.proxmox:
     api_host: "{{ proxmox_api.host }}"
-    api_token_id: "{{ proxmox_api.token_id }}"
-    api_token_secret: "{{ proxmox_api.token_secret }}"
+    api_password: "{{ proxmox_api.password }}"
     api_user: "{{ proxmox_api.user }}"
     force: "{{ resolved_state == 'absent' }}"
     state: stopped
@@ -121,8 +116,7 @@
   when: resolved_state == 'absent'
   community.general.proxmox:
     api_host: "{{ proxmox_api.host }}"
-    api_token_id: "{{ proxmox_api.token_id }}"
-    api_token_secret: "{{ proxmox_api.token_secret }}"
+    api_password: "{{ proxmox_api.password }}"
     api_user: "{{ proxmox_api.user }}"
     state: absent
     unprivileged: true
