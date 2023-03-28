@@ -1,0 +1,5 @@
+{
+{% for mount in mounts %}
+  "mp{{ loop.index0 }}": "{{ mount.volume }},mp={{ mount.path }},backup={{ mount.backup | default(true) | ternary('1', '0') }},ro={{ mount.readonly | default(false) | ternary('1', '0') }}"{%- if not loop.last %},{% endif %}
+{% endfor %}
+}

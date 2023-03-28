@@ -1,12 +1,6 @@
 # Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
 # Visual Studio Code role from: https://github.com/gantsign/ansible-role-visual-studio-code
 
-- hosts: localhost
-  become: true
-  tags: bootstrap
-  roles:
-    - role: ansible-pull
-
 - hosts: all
   become: true
   tasks:

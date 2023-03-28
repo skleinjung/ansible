@@ -1,0 +1,21 @@
+- name: Copy local scripts
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/bin
+    group: root
+    mode: "0744"
+    owner: root
+    src: "{{ item }}"
+  with_fileglob:
+    - "usr/local/bin/*"
+
+- name: Copy container scripts
+  become: true
+  ansible.builtin.copy:
+    dest: /mnt/bindmounts/proxmox-scripts
+    group: root
+    mode: "0755"
+    owner: root
+    src: "{{ item }}"
+  with_fileglob:
+    - "_proxmox-scripts_/*"

@@ -1,15 +1,18 @@
 ---
 - name: "Install sudo"
+  become: true
   ansible.builtin.apt:
     name: sudo
     state: present
 
 - name: "Ensure group exists: {{ sudo_group }}"
+  become: true
   ansible.builtin.group:
     name: "{{ sudo_group }}"
     state: present
 
 - name: "Create sudoer configuration for group: {{ sudo_group }}"
+  become: true
   ansible.builtin.template:
     dest: /etc/sudoers.d/000-{{ sudo_group }}-group
     group: root
@@ -18,6 +21,7 @@
     src: etc/sudoers.d/sudo-group.j2
 
 - name: "Create /etc/sudoers configuration"
+  become: true
   ansible.builtin.copy:
     dest: /etc/sudoers
     group: root

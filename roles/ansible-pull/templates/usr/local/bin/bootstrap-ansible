@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
+
 /usr/local/bin/run-playbooks \
-  --tags bootstrap \
-  playbooks/install-dependencies.yml \
-  playbooks/configure-host.yml
+  playbooks/bootstrap-ansible-pull.yml

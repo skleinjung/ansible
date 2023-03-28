@@ -15,6 +15,17 @@ sshd_enabled: true
 # sudo options
 sudo_allow_passwordless: true
 
+# users
+users_config:
+  - groups:
+      - adm
+      - sudo
+    uid: 60000
+    username: sean
+  # nextcloud user must match what is on the proxmox host, for bindmounts to work
+  - uid: 60002
+    username: nextcloud
+
 # nextcloud configuration options
 nextcloud_admin:
   password: !vault |

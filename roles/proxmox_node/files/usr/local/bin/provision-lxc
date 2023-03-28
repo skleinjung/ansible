@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# prepare ansible
+pct exec $1 -- /usr/bin/sh -c '/usr/bin/mkdir -p /var/ansible'
+pct push $1 /mnt/local/hdd/snippets/vault-secret /var/ansible/vault-secret -perms 600
+
+# run provision script
+pct exec $1 -- /bin/bash -c "/mnt/proxmox-scripts/bootstrap-lxc >> /var/log/bootstrap.log"

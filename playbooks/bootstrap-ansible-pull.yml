@@ -1,0 +1,4 @@
+- name: Bootstrap management via ansible-pull
+  hosts: localhost
+  roles:
+    - role: ansible-pull

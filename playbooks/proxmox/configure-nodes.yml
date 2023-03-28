@@ -1,0 +1,9 @@
+---
+- name: Configure proxmox node
+  gather_facts: true
+  hosts: proxmox_nodes
+  roles:
+    - role: sudo
+    - role: users
+    - role: sshd
+    - role: proxmox_node

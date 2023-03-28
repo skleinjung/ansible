@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+set -e
+
+/usr/local/bin/run-playbooks \
+  playbooks/install-dependencies.yml
+
 /usr/local/bin/run-playbooks \
   --tags daily \
-  playbooks/install-dependencies.yml \
   playbooks/configure-host.yml

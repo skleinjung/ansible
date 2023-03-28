@@ -1,0 +1,5 @@
+__proxmox_scripts_mount:
+  backup: false
+  path: /mnt/proxmox-scripts
+  readonly: true
+  volume: /mnt/bindmounts/proxmox-scripts

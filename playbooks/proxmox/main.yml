@@ -1,0 +1,5 @@
+- name: Configure Proxmox nodes
+  ansible.builtin.import_playbook: configure-nodes.yml
+
+- name: Configure LXC containers
+  ansible.builtin.import_playbook: configure-containers.yml

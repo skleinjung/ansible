@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+set -e
+
 /usr/local/bin/run-playbooks \
-  --skip-tags bootstrap,daily \
-  playbooks/install-dependencies.yml \
+  playbooks/install-dependencies.yml
+
+/usr/local/bin/run-playbooks \
+  --skip-tags daily \
   playbooks/configure-host.yml

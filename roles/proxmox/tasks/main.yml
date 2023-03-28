@@ -1,0 +1,13 @@
+---
+- name: Install dependencies to use proxmox APIs
+  ansible.builtin.pip:
+    name:
+      - proxmoxer
+      - requests
+    state: present
+
+- name: "Manage LXC containers"
+  loop: "{{ proxmox_lxc_configs | dict2items }}"
+  vars:
+    lxc: "{{ item.value | ansible.builtin.combine({'vmid': item.key}) }}"
+  ansible.builtin.include_tasks: _lxc.yml

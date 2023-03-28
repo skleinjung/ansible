@@ -10,12 +10,19 @@ else
   gitRef=main
 fi
 
-set -x
+set +e
 
 /usr/bin/ansible-pull \
   --checkout "${gitRef}" \
   --inventory inventory \
+  --purge \
   --sleep "${sleepTime}" \
   --url https://github.com/skleinjung/ansible.git \
   --vault-password-file "{{ ansible_secret_path }}" \
-  "$@"
+  "$@" >>/var/log/ansible.log 2>&1
+
+result="$?"
+if [ $result != "0" ]; then
+  echo "Playbook failed! See /var/log/ansible.log for details."
+  exit 1
+fi
