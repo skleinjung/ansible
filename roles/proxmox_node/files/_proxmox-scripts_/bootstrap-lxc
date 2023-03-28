@@ -35,9 +35,16 @@ else
     cron \
     git
 
+  if [ -f /var/ansible/git-ref ]; then
+    gitRef=$(cat /var/ansible/git-ref)
+  else
+    gitRef=main
+  fi
+
   # bootstrap management via ansible pull
   ansible-pull \
     --accept-host-key \
+    --checkout "${gitRef}" \
     --inventory "localhost," \
     --purge \
     --url https://github.com/skleinjung/ansible.git \
