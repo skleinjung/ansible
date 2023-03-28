@@ -27,7 +27,7 @@ proxmox_lxc_configs:
       sizeInGb: 64
       storage: local-hdd
     hostname: nextcloud-blue
-    memory: 2048
+    memory: 4096
     mounts:
       - path: /var/lib/nextcloud/data
         volume: local-hdd:256
@@ -38,12 +38,12 @@ proxmox_lxc_configs:
   60001:
     disk:
       sizeInGb: 64
-      storage: local-hdd
+      storage: local-nvme
     hostname: nextcloud-green
-    memory: 2048
+    memory: 4096
     mounts:
       - path: /var/lib/nextcloud/data
-        volume: local-hdd:256
+        volume: local-nvme:256
       - backup: false
         path: /mnt/backups
         volume: /mnt/bindmounts/nextcloud-backups
