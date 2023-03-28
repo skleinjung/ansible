@@ -34,7 +34,7 @@ proxmox_lxc_configs:
       - backup: false
         path: /mnt/backups
         volume: /mnt/bindmounts/usb-1tb/nextcloud-backups
-    state: present
+    state: started
   60001:
     disk:
       sizeInGb: 64
@@ -47,4 +47,4 @@ proxmox_lxc_configs:
       - backup: false
         path: /mnt/backups
         volume: /mnt/bindmounts/usb-1tb/nextcloud-backups
-    state: present
+    state: started
