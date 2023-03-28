@@ -19,27 +19,20 @@
         name: "{{ nextcloud_db.name }}"
         state: import
         target: "{{ nextcloud_restore_path }}/db.sql.gz"
-    - name: Create temporary restore directory
+    - name: Remove existing data directory
       ansible.builtin.file:
-        group: "{{ nextcloud_backup_group }}"
-        mode: "0640"
-        owner: "{{ nextcloud_backup_user }}"
-        path: "/tmp/restore_{{ timestamp }}"
-        state: directory
-    - name: Extract data archive to temporary directory
-      ansible.builtin.unarchive:
-        src: "{{ nextcloud_restore_path }}/nextcloud_data.tar.xz"
-        dest: "/tmp/restore_{{ timestamp }}"
-        copy: false
-    - name: Copy archive contents to root directory
-      ansible.posix.synchronize:
-        archive: true
-        delete: true
-        dest: "{{ __nextcloud_paths.data }}"
-        rsync_opts:
-          - "--exclude=lost+found/"
-        src: "/tmp/restore_{{ timestamp }}/."
-    - name: Remove temporary directory
-      ansible.builtin.file:
-        path: "/tmp/restore_{{ timestamp }}"
+        path: "{{ __nextcloud_paths.data }}"
         state: absent
+    - name: Recreate data directory with correct permissions
+      ansible.builtin.file:
+        group: www-data
+        mode: "0750"
+        owner: root
+        path: "{{ __nextcloud_paths.data }}"
+        state: directory
+    - name: Unarchive backup to data directory
+      ansible.builtin.unarchive:
+        copy: false
+        dest: "{{ __nextcloud_paths.data }}"
+        extra_opts: "--strip-components=1"
+        src: "{{ nextcloud_restore_path }}/nextcloud_data.tar.xz"

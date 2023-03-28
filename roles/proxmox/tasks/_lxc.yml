@@ -96,8 +96,7 @@
   become: true
   changed_when: true
   delegate_to: "{{ proxmox_api.host }}"
-  register: stuff
-  when: resolved_state == 'started' or resolved_state == 'restarted' and bootstrap_check.rc != 0
+  when: (resolved_state == 'started' or resolved_state == 'restarted') and bootstrap_check.rc != 0
   ansible.builtin.command: "/usr/local/bin/provision-lxc {{ lxc.vmid }}"
 
 - name: "Stop container: {{ lxc.hostname | default(lxc.vmid) }}" # noqa ignore-errors

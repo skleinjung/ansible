@@ -34,7 +34,7 @@ proxmox_lxc_configs:
       - backup: false
         path: /mnt/backups
         volume: /mnt/bindmounts/nextcloud-backups
-    state: started
+    state: stopped
   60001:
     disk:
       sizeInGb: 64
@@ -42,7 +42,7 @@ proxmox_lxc_configs:
     hostname: nextcloud-green
     memory: 4096
     mounts:
-      - path: /var/lib/nextcloud/data
+      - path: /var/lib/nextcloud
         volume: local-nvme:256
       - backup: false
         path: /mnt/backups
