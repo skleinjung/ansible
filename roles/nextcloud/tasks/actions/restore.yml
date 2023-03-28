@@ -36,3 +36,8 @@
         dest: "{{ __nextcloud_paths.data }}"
         extra_opts: "--strip-components=1"
         src: "{{ nextcloud_restore_path }}/nextcloud_data.tar.xz"
+    - name: Disable maintenance mode
+      vars:
+        nextcloud_maintenance_mode: false
+      ansible.builtin.include_tasks:
+        file: actions/set_maintenance_mode.yml
