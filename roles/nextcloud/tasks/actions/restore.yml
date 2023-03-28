@@ -5,6 +5,13 @@
       ansible.builtin.assert:
         that:
           - nextcloud_restore_path is defined
+    - name: Generate timestamp (YYYYMMDDTHHMMSS)
+      ansible.builtin.set_fact:
+        timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+    - name: Delete existing database
+      community.mysql.mysql_db:
+        name: "{{ nextcloud_db.name }}"
+        state: absent
     - name: Restore database backup
       community.mysql.mysql_db:
         collation: "{{ __nextcloud_db_collation }}"
@@ -12,3 +19,27 @@
         name: "{{ nextcloud_db.name }}"
         state: import
         target: "{{ nextcloud_restore_path }}/db.sql.gz"
+    - name: Create temporary restore directory
+      ansible.builtin.file:
+        group: "{{ nextcloud_backup_group }}"
+        mode: "0640"
+        owner: "{{ nextcloud_backup_user }}"
+        path: "/tmp/restore_{{ timestamp }}"
+        state: directory
+    - name: Extract data archive to temporary directory
+      ansible.builtin.unarchive:
+        src: "{{ nextcloud_restore_path }}/nextcloud_data.tar.xz"
+        dest: "/tmp/restore_{{ timestamp }}"
+        copy: false
+    - name: Copy archive contents to root directory
+      ansible.posix.synchronize:
+        archive: true
+        delete: true
+        dest: "{{ __nextcloud_paths.data }}"
+        rsync_opts:
+          - "--exclude=lost+found/"
+        src: "/tmp/restore_{{ timestamp }}/."
+    - name: Remove temporary directory
+      ansible.builtin.file:
+        path: "/tmp/restore_{{ timestamp }}"
+        state: absent
