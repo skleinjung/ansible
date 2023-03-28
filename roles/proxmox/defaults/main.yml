@@ -23,6 +23,11 @@ proxmox_default_storage: local
 # proxmox_lxc_configs[].disk.storage: Storage to use for the root disk. [proxmox_default_storage]
 # proxmox_lxc_configs[].hostname: Hostname of the LXC. Must be provided and unique if `vmid` is not provided. [API default]
 # proxmox_lxc_configs[].memory: Memory limit of the LXC, in MB. [API default]
+# proxmox_lxc_configs[].mounts: Configuration of container mount points. [No mounts]
+# proxmox_lxc_configs[].mounts[].backup: Whether to include the mount point in backups (only used for volume mount points). [true]
+# proxmox_lxc_configs[].mounts[].path: Path to the mount point as seen from inside the container.
+# proxmox_lxc_configs[].mounts[].readonly: If true, this volume will be readonly. [false]
+# proxmox_lxc_configs[].mounts[].volume: Volume, device or directory to mount into the container.
 # proxmox_lxc_configs[].node: Proxmox node ot schedule the LXC on. [proxmox_default_node]
 # proxmox_lxc_configs[].ostemplate: OS template for the new container. [proxmox_default_ostemplate]
 # proxmox_lxc_configs[].state: Desired state of the LXC (present, started, etc.) ["started"]

@@ -12,6 +12,21 @@
       - proxmox_api.user is defined
       - resolved_state == 'absent' or resolved_state == 'present' or resolved_state == 'started' or resolved_state == 'stopped' or resolved_state == 'restarted'
       - lxc.vmid is defined
+      - lxc.mounts is not defined or lxc.mounts is iterable
+      - lxc.mounts is not defined or lxc.mounts is not string
+
+- name: Verify mount configs are valid
+  loop: "{{ lxc.mounts | default([]) }}"
+  loop_control:
+    index_var: mount_index
+    loop_var: mount_item
+  ansible.builtin.assert:
+    fail_msg: "Mount mp{{ mount_index }} is invalid"
+    that:
+      - (mount_item.backup is not defined) or (mount_item.backup is boolean)
+      - mount_item.path is defined
+      - (mount_item.readonly is not defined) or (mount_item.readonly is boolean)
+      - mount_item.volume is defined
 
 - name: Verify inputs are valid when not deleting container
   when: resolved_state != 'absent'
@@ -19,9 +34,15 @@
     that:
       - lxc.hostname is defined
 
+- name: "Render 'mounts' config for container: {{ lxc.hostname | default(lxc.vmid) }}"
+  when: resolved_state != 'absent'
+  vars:
+    mounts: "{{ lxc.mounts | default([]) }}"
+  ansible.builtin.set_fact:
+    mounts_string: "{{ lookup('ansible.builtin.template', 'mounts.j2') }}"
+
 - name: "Create container: {{ lxc.hostname | default(lxc.vmid) }}"
   when: resolved_state != 'absent'
-  register: newlxc
   community.general.proxmox:
     api_host: "{{ proxmox_api.host }}"
     api_token_id: "{{ proxmox_api.token_id }}"
@@ -30,10 +51,7 @@
     disk: "{{ lxc.disk.storage | default(proxmox_default_storage) }}:{{ lxc.disk.sizeInGb | default(proxmox_default_disk_size) }}"
     hostname: "{{ lxc.hostname }}"
     memory: "{{ lxc.memory | default(omit) }}"
-    # mounts: |
-    #   {
-    #     "mp0": "/mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,ro=true"
-    #   }
+    mounts: "{{ mounts_string }}"
     netif: |
       {
         "net0": "name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"
@@ -52,9 +70,9 @@
   register: config_file
   when: resolved_state != 'absent'
   ansible.builtin.lineinfile:
-    line: "mp0: /mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,ro=1"
+    line: "mp{{ lxc.mounts | default([]) | length }}: /mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,ro=1"
     path: "/etc/pve/lxc/{{ lxc.vmid }}.conf"
-    regexp: "^mp0:"
+    regexp: "^mp{{ lxc.mounts | default([]) | length }}:"
     state: present
 
 - name: "(Re)start container: {{ lxc.hostname | default(lxc.vmid) }}"
@@ -64,7 +82,7 @@
     api_token_id: "{{ proxmox_api.token_id }}"
     api_token_secret: "{{ proxmox_api.token_secret }}"
     api_user: "{{ proxmox_api.user }}"
-    state: "{{ config_file.changed | ternary('restarted', resolved_state) }}"
+    state: "{{ resolved_state }}"
     timeout: 90
     unprivileged: true
     vmid: "{{ lxc.vmid }}"
@@ -75,7 +93,7 @@
   delegate_to: "{{ proxmox_api.host }}"
   failed_when: bootstrap_check.rc != 25 and bootstrap_check.rc != 0
   register: bootstrap_check
-  when: resolved_state != 'absent' and resolved_state != 'stopped'
+  when: resolved_state == 'started' or resolved_state == 'restarted'
   ansible.builtin.command: "pct exec '{{ lxc.vmid }}' -- /mnt/proxmox-scripts/check-bootstrap"
 
 - name: "Run bootstrap script in container: {{ lxc.hostname | default(lxc.vmid) }}"
@@ -83,7 +101,7 @@
   changed_when: true
   delegate_to: "{{ proxmox_api.host }}"
   register: stuff
-  when: resolved_state != 'absent' and resolved_state != 'stopped' and bootstrap_check.rc != 0
+  when: resolved_state == 'started' or resolved_state == 'restarted' and bootstrap_check.rc != 0
   ansible.builtin.command: "/usr/local/bin/provision-lxc {{ lxc.vmid }}"
 
 - name: "Stop container: {{ lxc.hostname | default(lxc.vmid) }}" # noqa ignore-errors
@@ -94,6 +112,7 @@
     api_token_id: "{{ proxmox_api.token_id }}"
     api_token_secret: "{{ proxmox_api.token_secret }}"
     api_user: "{{ proxmox_api.user }}"
+    force: "{{ resolved_state == 'absent' }}"
     state: stopped
     unprivileged: true
     vmid: "{{ lxc.vmid }}"
