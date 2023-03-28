@@ -11,9 +11,9 @@
         file: actions/set_maintenance_mode.yml
     - name: "Ensure backup directory exists: {{ __nextcloud_paths.backup + '/' + timestamp }}"
       ansible.builtin.file:
-        group: root
-        mode: "0700"
-        owner: root
+        # group: root
+        # mode: "0700"
+        # owner: root
         path: "{{ __nextcloud_paths.backup }}/{{ timestamp }}"
         state: directory
     - name: Create database backup
@@ -25,9 +25,9 @@
       community.general.archive:
         dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/nextcloud_data.tar.xz"
         format: xz
-        group: root
-        mode: "0640"
-        owner: root
+        # group: root
+        # mode: "0640"
+        # owner: root
         path: "{{ __nextcloud_paths.data }}"
     - name: Disable maintenance mode
       vars:
