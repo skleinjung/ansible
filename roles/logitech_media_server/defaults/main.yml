@@ -1,0 +1,5 @@
+# logitech_media_server_version: Version of the LMS package to install. [7.9.2]
+logitech_media_server_version: 7.9.2
+
+# libio_socket_ssl_perl_version: Version string for the libio-socket-ssl-perl to install. May contain wildcards. [2.074*]
+libio_socket_ssl_perl_version: 2.074*
