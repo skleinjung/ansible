@@ -9,3 +9,6 @@
 - name: "Install Logitech Media Server v{{ logitech_media_server_version }}"
   ansible.builtin.apt:
     deb: "{{ __logitech_media_server_download_url }}"
+- name: Fix .deb package missing dependencies
+  ansible.builtin.command: apt-get install -f
+  become: true
