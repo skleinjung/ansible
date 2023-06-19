@@ -1,6 +1,21 @@
 # Automated Ubuntu desktop setup with Ansible
 
-## Quick Start
+## Setting up a new server
+
+Proxmox nodes have the following scripts (installed by the `proxmox_node_ role):
+
+- /mnt/bindmounts/proxmox-scripts/bootstrap-lxc. If run inside an LXC container, this script sets up Ansible pull.
+- /usr/local/bin/provision-lxc: Uses `pct` to run the above script and setup a new LXC container (which already exists)
+- The host will need to have a hostname that matches the play(s) needed for setup
+
+Using the above scripts, the process for creating a new LXC-based server is:
+
+- Use Proxmox to create the LXC container with the correct host name
+- Mount needed scripts: `mp0: /mnt/bindmounts/proxmox-scripts,mp=/mnt/proxmox-scripts,backup=0,ro=1`
+- (Optional) Create a `/var/ansible/git-ref` file, which contains the git ref that should be used to configure the container
+- From the Proxmox node, run `/usr/local/bin/provision-lxc {CONTAINER_ID}`, where `{CONTAINER_ID}` is the LXC container ID
+
+## [DEPRECATED] Workstation Quick Start
 
 1. Install Ubuntu
 2. Store vault password in a file called `.vault-secret`, set permissions to '0600'

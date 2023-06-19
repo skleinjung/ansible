@@ -1,0 +1,9 @@
+---
+- name: Configure Logitech Media Server (LMS) server
+  gather_facts: true
+  hosts: logitech_media_servers
+  roles:
+    - role: sudo
+    - role: users
+    - role: sshd
+    - role: logitech_media_server

@@ -33,5 +33,8 @@
 - name: Include plays for user workstations
   ansible.builtin.import_playbook: workstation.yml
 
+- name: Include plays for Logitech Media Servers
+  ansible.builtin.import_playbook: logitech_media_server/logitech_media_server.yml
+
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
