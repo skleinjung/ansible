@@ -6,11 +6,12 @@
       ansible.builtin.apt:
         pkg: "{{ __php_static_packages + php_packages }}"
         state: present
-    - name: Hold php packages from automatic upgrades
-      ansible.builtin.dpkg_selections:
-        name: "{{ item }}"
-        selection: hold
-      loop: "{{ (__php_static_packages + php_packages) | map('regex_replace', '=.+', '') | list }}"
+    # disable holding packages, because the way it's used here is causing ansible to fail
+    # - name: Hold php packages from automatic upgrades
+    #   ansible.builtin.dpkg_selections:
+    #     name: "{{ item }}"
+    #     selection: hold
+    #   loop: "{{ (__php_static_packages + php_packages) | map('regex_replace', '=.+', '') | list }}"
 
 - name: Configure php
   tags: [php, configure, php_configure]
