@@ -1,0 +1,11 @@
+---
+- name: Install prerequisites
+  ansible.builtin.apt:
+    pkg:
+      - libio-socket-ssl-perl={{ libio_socket_ssl_perl_version }}
+    state: present
+
+# install package
+- name: "Install Logitech Media Server v{{ logitech_media_server_version }}"
+  ansible.builtin.apt:
+    deb: "{{ __logitech_media_server_download_url }}"

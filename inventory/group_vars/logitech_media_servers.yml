@@ -1,0 +1,6 @@
+---
+# ssh options
+sshd_enabled: true
+
+# sudo options
+sudo_allow_passwordless: true

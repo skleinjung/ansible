@@ -1,0 +1,4 @@
+---
+- name: Install Logitech Media Server
+  tags: [logitech_media_server, install, logitech_media_server_install]
+  ansible.builtin.import_tasks: install.yml
