@@ -36,6 +36,7 @@
         mode: "0640"
         owner: "{{ nextcloud_backup_user }}"
         path: "{{ __nextcloud_paths.data }}"
+  always:
     - name: Disable maintenance mode
       vars:
         nextcloud_maintenance_mode: false
