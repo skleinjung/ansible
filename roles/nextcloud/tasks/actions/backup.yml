@@ -30,8 +30,8 @@
         state: file
     - name: "Create backup archive of data directory: {{ __nextcloud_paths.data }}"
       community.general.archive:
-        dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/nextcloud_data.tar.xz"
-        format: xz
+        dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/nextcloud_data.tar.gz"
+        format: gz
         group: "{{ nextcloud_backup_group }}"
         mode: "0640"
         owner: "{{ nextcloud_backup_user }}"
