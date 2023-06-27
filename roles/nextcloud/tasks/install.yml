@@ -3,6 +3,9 @@
   ansible.builtin.apt:
     pkg: bzip2
     state: present
+- name: Install requried python modules
+  ansible.builtin.pip:
+    name: lzma
 
 # download and unarchive distribution
 - name: "Download nextcloud v{{ nextcloud_version }}"
