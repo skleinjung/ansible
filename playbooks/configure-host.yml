@@ -1,17 +1,6 @@
 # Probably should use these roles: https://github.com/sys0dm1n/ansible-ubuntu-desktop
 # Visual Studio Code role from: https://github.com/gantsign/ansible-role-visual-studio-code
 
-- name: Update system packages
-  become: true
-  hosts: all
-  tags: daily
-  tasks:
-    - name: Update package lists and upgrade all packages
-      ansible.builtin.apt:
-        cache_valid_time: "{{ aptcachetime }}"
-        update_cache: true
-        upgrade: true
-
 - hosts: nas_servers
   become: true
   roles:
@@ -36,10 +25,24 @@
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
 
-- name: Reboot system if required
+- name: Bootstrap ansible-pull for ongoing configuration
+  hosts: all
+  tags: bootstrap
+  roles:
+    - role: ansible-pull
+
+- name: Update system packages
   become: true
   hosts: all
+  tags:
+    - daily
+    - bootstrap
   tasks:
+    - name: Update package lists and upgrade all packages
+      ansible.builtin.apt:
+        cache_valid_time: "{{ aptcachetime }}"
+        update_cache: true
+        upgrade: true
     - name: Check if a reboot is required
       ansible.builtin.stat:
         path: /var/run/reboot-required

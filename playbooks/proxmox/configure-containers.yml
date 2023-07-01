@@ -1,7 +1,7 @@
 ---
 - name: Manage LXC containers
   gather_facts: false
-  hosts: localhost
+  hosts: all
   roles:
     - proxmox_local
 

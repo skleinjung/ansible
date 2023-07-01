@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
   name: Install requirements from ansible-galaxy
   tasks:
     - name: Install requirements

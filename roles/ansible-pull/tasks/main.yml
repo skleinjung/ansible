@@ -41,7 +41,7 @@
     job: /usr/local/bin/cronjob-lock /usr/local/bin/bootstrap-ansible >>{{ ansible_pull_logfile }} 2>&1
     minute: "13"
     name: "run ansible bootstrap"
-    state: present
+    state: absent
     user: "{{ ansible_pull_user }}"
 - name: "Re-run Ansible every every N hours: {{ ansible_pull_schedule_hour }}"
   become: true

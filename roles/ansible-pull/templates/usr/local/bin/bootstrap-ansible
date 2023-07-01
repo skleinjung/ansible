@@ -3,4 +3,8 @@
 set -e
 
 /usr/local/bin/run-playbooks \
-  playbooks/bootstrap-ansible-pull.yml
+  playbooks/install-dependencies.yml
+
+/usr/local/bin/run-playbooks \
+  --tags bootstrap \
+  playbooks/configure-host.yml

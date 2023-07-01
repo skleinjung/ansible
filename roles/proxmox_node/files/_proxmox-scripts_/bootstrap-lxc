@@ -45,11 +45,20 @@ else
   ansible-pull \
     --accept-host-key \
     --checkout "${gitRef}" \
-    --inventory "localhost," \
+    --inventory inventory \
     --purge \
     --url https://github.com/skleinjung/ansible.git \
     --vault-password-file /var/ansible/vault-secret \
-    playbooks/bootstrap-ansible-pull.yml >>/var/log/ansible.log 2>&1
+    playbooks/install-dependencies.yml >>/var/log/ansible.log 2>&1
+  ansible-pull \
+    --accept-host-key \
+    --checkout "${gitRef}" \
+    --inventory inventory \
+    --purge \
+    --tags bootstrap \
+    --url https://github.com/skleinjung/ansible.git \
+    --vault-password-file /var/ansible/vault-secret \
+    playbooks/configure-host.yml >>/var/log/ansible.log 2>&1
 
   echo "Done $(date)" > $ANSIBLE_INSTALL_MARKER
 fi

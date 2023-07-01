@@ -6,5 +6,5 @@ set -e
   playbooks/install-dependencies.yml
 
 /usr/local/bin/run-playbooks \
-  --skip-tags daily \
+  --skip-tags bootstrap,daily \
   playbooks/configure-host.yml
