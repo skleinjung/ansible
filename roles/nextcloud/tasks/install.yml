@@ -73,6 +73,46 @@
     src: "{{ __nextcloud_paths.apps }}"
     state: link
 
+- name: Enable thumbnail generation for PDF files
+  block:
+    # @todo - will fail with different ImageMagick versions
+    - name: Enable PDF in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="PDF" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="PDF" />'
+      notify: restart apache
+    - name: Enable PS in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="PS" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="PS" />'
+      notify: restart apache
+    - name: Enable PS2 in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="PS2" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="PS2" />'
+      notify: restart apache
+    - name: Enable PS3 in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="PS3" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="PS3" />'
+      notify: restart apache
+    - name: Enable EPS in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="EPS" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="EPS" />'
+      notify: restart apache
+    - name: Enable XPS in ImageMagick policy
+      ansible.builtin.replace:
+        path: /etc/ImageMagick-6/policy.xml
+        regexp: '<policy domain="coder" rights="none" pattern="XPS" />'
+        replace: '<policy domain="coder" rights="read|write" pattern="XPS" />'
+      notify: restart apache
+
 - name: Install backup and restore scripts
   ansible.builtin.copy:
     src: "{{ item }}"
