@@ -60,5 +60,5 @@ nextcloud_path: /var/lib/nextcloud
 # nextcloud_mail.smtp_use_tls: Whether to connect to the SMTP server using SSL/TLS. [true]
 # nextcloud_mail:
 
-# nextcloud_version: Version number of Nextcloud to install. ["26.0.3"]
-nextcloud_version: 26.0.3
+# nextcloud_version: Version number of Nextcloud to install. ["27.0.0"]
+nextcloud_version: 27.0.0
