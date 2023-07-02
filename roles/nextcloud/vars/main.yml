@@ -54,5 +54,8 @@ __nextcloud_php_packages:
   - php-xml={{ php_version }}
   - php-zip={{ php_version }}
 
+# __nextcloud_static_packages: packages which are always installed, in addition to extra packages
+__nextcloud_static_packages: ["ffmpeg"]
+
 # todo: update this to work even if we change php versions...
 __nextcloud_php_ini_path: /etc/php/8.1/apache2/php.ini

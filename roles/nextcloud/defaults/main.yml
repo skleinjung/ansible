@@ -40,6 +40,9 @@ nextcloud_db_root_password: !vault |
 # nextcloud_db.username: Username to use when connecting to the database.
 # nextcloud_db:
 
+# nextcloud_extra_packages: Additional packages to install, which are typically dependencies for apps. []
+nextcloud_extra_packages: []
+
 nextcloud_imagick_version: 3.6*
 nextcloud_libmagickcore_extra_version: 8:6.9*
 

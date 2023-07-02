@@ -4,6 +4,11 @@
     pkg: bzip2
     state: present
 
+- name: Install extra packages
+  ansible.builtin.apt:
+    pkg: "{{ __nextcloud_static_packages + nextcloud_extra_packages }}"
+    state: present
+
 # download and unarchive distribution
 - name: "Download nextcloud v{{ nextcloud_version }}"
   vars:
