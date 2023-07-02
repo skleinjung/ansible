@@ -107,13 +107,3 @@
 - name: Add maintenance mode settings
   ansible.builtin.import_tasks:
     file: actions/set_maintenance_mode.yml
-
-- name: Perform nightly backups
-  become: true
-  ansible.builtin.cron:
-    hour: "9" # 4am central
-    job: /usr/local/bin/cronjob-lock /usr/local/bin/backup >>{{ nextcloud_backup_logfile }} 2>&1
-    minute: "2"
-    name: "backup nextcloud nightly"
-    state: present
-    user: "root"

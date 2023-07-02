@@ -14,7 +14,7 @@
     dest: /usr/local/bin
     owner: root
     group: root
-    mode: "0744"
+    mode: "0755"
   with_fileglob:
     - "usr/local/bin/*"
 - name: Copy scripts to run Ansible
