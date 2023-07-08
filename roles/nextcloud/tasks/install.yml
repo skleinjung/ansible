@@ -131,6 +131,14 @@
     name: "run nextcloud cron scripts"
     state: present
     user: "www-data"
+- name: Pre-generate image previews every 10 minutes
+  become: true
+  ansible.builtin.cron:
+    job: "/bin/php -f {{ __nextcloud_current_version_path }}/occ preview:pre-generate >>{{ nextcloud_logfile }} 2>&1"
+    minute: "*/10"
+    name: "pre-generate image previews"
+    state: present
+    user: "www-data"
 
 - name: Perform nightly backups
   become: true
