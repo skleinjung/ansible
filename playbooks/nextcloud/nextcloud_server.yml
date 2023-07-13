@@ -20,6 +20,7 @@
     - role: nextcloud
     - role: apache
       vars:
+        apache_coredump_enabled: true
         apache_modules:
           - name: dir
           - name: env
