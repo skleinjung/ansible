@@ -21,7 +21,14 @@
 - name: Configure Apache
   tags: [apache, configure, apache_configure]
   block:
-    - name: "Manage apache modules"
+    - name: "Manage configuration"
+      vars:
+        name: "enable-core-dumps"
+        template: "etc/apache2/conf-available/enable-core-dumps.conf.j2"
+        state: "{{ apache_coredump_enabled | bool | ternary('enabled', 'disabled') }}"
+      ansible.builtin.include_tasks:
+        file: _manage_conf.yml
+    - name: "Manage modules"
       community.general.apache2_module:
         name: "{{ item.name }}"
         state: "{{ item.state | default('present') }}"
@@ -34,3 +41,11 @@
         state: "{{ item.state | default('enabled') }}"
       ansible.builtin.include_tasks:
         file: _manage_site.yml
+    - name: "Create core dumps folder"
+      when: apache_coredump_enabled
+      ansible.builtin.file:
+        group: www-data
+        mode: "0770"
+        owner: root
+        path: "{{ apache_coredump_dir }}"
+        state: directory

@@ -6,31 +6,31 @@
       - template is defined
       - state == 'absent' or state == 'disabled' or state == 'enabled'
 
-- name: "Disable site: {{ name }}"
+- name: "Disable conf: {{ name }}"
   args:
-    removes: "/etc/apache2/sites-enabled/{{ name }}.conf"
-  ansible.builtin.command: "a2dissite {{ name }}"
+    removes: "/etc/apache2/conf-enabled/{{ name }}.conf"
+  ansible.builtin.command: "a2disconf {{ name }}"
   notify: Reload apache
   when: state == 'absent' or state == 'disabled'
 
-- name: "Remove site configuration: {{ name }}"
+- name: "Remove conf configuration: {{ name }}"
   when: state == 'absent'
   ansible.builtin.file:
-    path: "/etc/apache2/sites-available/{{ name }}.conf"
+    path: "/etc/apache2/conf-available/{{ name }}.conf"
     state: absent
-- name: "Update site configuration: {{ name }}"
+- name: "Update conf configuration: {{ name }}"
   notify: Reload apache
   when: state == 'disabled' or state == 'enabled'
   ansible.builtin.template:
     src: "{{ template }}"
-    dest: "/etc/apache2/sites-available/{{ name }}.conf"
+    dest: "/etc/apache2/conf-available/{{ name }}.conf"
     group: root
     mode: "0644"
     owner: root
 
-- name: "Enable site: {{ name }}"
+- name: "Enable conf: {{ name }}"
   args:
-    creates: "/etc/apache2/sites-enabled/{{ name }}.conf"
+    creates: "/etc/apache2/conf-enabled/{{ name }}.conf"
   notify: Reload apache
   when: state == 'enabled'
-  ansible.builtin.command: "a2ensite {{ name }}"
+  ansible.builtin.command: "a2enconf {{ name }}"

@@ -1,3 +1,8 @@
+# apache_coredump_directory: directory to which Apache2 core dumps should be written, if enabled. [/var/dumps/apache2]
+apache_coredump_directory: /var/dumps/apache2
+# apache_coredump_enabled: Whether or not to enable Apache2 core dumps. [false]
+apache_coredump_enabled: false
+
 # apache_modules: List of Apache modules to manage. [None]
 # apache_modules[].name: Name of the module.
 # apache_modules[].state: Desired state of the site ('absent', 'disabled', or 'enabled'. [Enabled]
