@@ -21,6 +21,14 @@
 - name: Configure Apache
   tags: [apache, configure, apache_configure]
   block:
+    - name: "Create core dumps folder"
+      when: apache_coredump_enabled
+      ansible.builtin.file:
+        group: www-data
+        mode: "0770"
+        owner: root
+        path: "{{ apache_coredump_directory }}"
+        state: directory
     - name: "Manage configuration"
       vars:
         name: "enable-core-dumps"
@@ -41,11 +49,3 @@
         state: "{{ item.state | default('enabled') }}"
       ansible.builtin.include_tasks:
         file: _manage_site.yml
-    - name: "Create core dumps folder"
-      when: apache_coredump_enabled
-      ansible.builtin.file:
-        group: www-data
-        mode: "0770"
-        owner: root
-        path: "{{ apache_coredump_dir }}"
-        state: directory
