@@ -43,6 +43,12 @@ nextcloud_db_root_password: !vault |
 # nextcloud_extra_packages: Additional packages to install, which are typically dependencies for apps. []
 nextcloud_extra_packages: []
 
+# nextcloud_google_photos: Configuration options for the Google Photos account to sync to. [null]
+# nextcloud_google_photos.client_id: Client ID for the Google Photos account
+# nextcloud_google_photos.client_secret: Client secret for the Google Photos account
+# nextcloud_google_photos.token: OAuth token for the Google Photos account
+# nextcloud_google_photos:
+
 nextcloud_imagick_version: 3.6*
 nextcloud_libmagickcore_extra_version: 8:6.9*
 

@@ -54,6 +54,15 @@ __nextcloud_php_packages:
   - php-xml={{ php_version }}
   - php-zip={{ php_version }}
 
+# __nextcloud_rclone_configs: list of rclone configs to be installed; see https://github.com/stefangweichinger/ansible-rclone
+__nextcloud_rclone_configs:
+  - name: google-photos
+    properties:
+      type: google photos
+      client_id: "{{ nextcloud_google_photos.client_id }}"
+      client_secret: "{{ nextcloud_google_photos.client_secret }}"
+      token: "{{ nextcloud_google_photos.token }}"
+
 # __nextcloud_static_packages: packages which are always installed, in addition to extra packages
 __nextcloud_static_packages: ["ffmpeg"]
 
