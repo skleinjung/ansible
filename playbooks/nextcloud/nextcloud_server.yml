@@ -6,6 +6,9 @@
     - role: sudo
     - role: users
     - role: sshd
+    - role: stefangweichinger.ansible_rclone
+      vars:
+        rclone_version: 1.63.1
     - role: mariadb
       vars:
         mariadb_databases:
