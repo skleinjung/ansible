@@ -11,3 +11,5 @@ collections:
 roles:
 - name: geerlingguy.apache
   version: '3.3.0'
+- name: stefangweichinger.ansible_rclone
+  version: '0.1.2'
