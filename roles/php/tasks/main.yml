@@ -2,6 +2,10 @@
 - name: Install php
   tags: [php, install, php_install]
   block:
+    - name: Add ppa:ondrej/php repository
+      ansible.builtin.apt_repository:
+        repo: "ppa:ondrej/php"
+        state: present
     - name: Install php packages
       ansible.builtin.apt:
         pkg: "{{ __php_static_packages + php_packages }}"
