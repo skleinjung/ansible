@@ -30,6 +30,8 @@
           - name: env
           - name: headers
           - name: mime
+          - name: proxy
+          - name: proxy_fcgi
           - name: rewrite
         apache_sites:
           - name: nextcloud

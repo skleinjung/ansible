@@ -107,3 +107,14 @@
 - name: Add maintenance mode settings
   ansible.builtin.import_tasks:
     file: actions/set_maintenance_mode.yml
+
+# configure php-fpm pool configuration
+- name: Create php-fpm pool configuration
+  become: true
+  ansible.builtin.template:
+    dest: /etc/php/8.2/fpm/pool.d/www.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: etc/php/8.2/fpm/pool.d/www.conf.j2
+  notify: restart php-fpm

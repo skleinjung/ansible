@@ -45,6 +45,7 @@ __nextcloud_php_packages:
   - php-bz2={{ php_version }}
   - php-cli={{ php_version }}
   - php-curl={{ php_version }}
+  - php-fpm={{ php_version }}
   - php-gd={{ php_version }}
   - php-gmp={{ php_version }}
   - php-imagick={{ nextcloud_imagick_version }}
@@ -67,4 +68,4 @@ __nextcloud_rclone_configs:
 __nextcloud_static_packages: ["ffmpeg"]
 
 # todo: update this to work even if we change php versions...
-__nextcloud_php_ini_path: /etc/php/8.1/apache2/php.ini
+__nextcloud_php_ini_path: /etc/php/8.2/apache2/php.ini

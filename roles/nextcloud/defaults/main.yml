@@ -49,7 +49,7 @@ nextcloud_extra_packages: []
 # nextcloud_google_photos.token: OAuth token for the Google Photos account
 # nextcloud_google_photos:
 
-nextcloud_imagick_version: 3.6*
+nextcloud_imagick_version: 3.7*
 nextcloud_libmagickcore_extra_version: 8:6.9*
 
 # nextcloud_maintenance_mode: whether the server should be in maintenance mode or not. [false]
@@ -69,6 +69,9 @@ nextcloud_path: /var/lib/nextcloud
 # nextcloud_mail.smtp_port: Port to use for sending mail. [25]
 # nextcloud_mail.smtp_use_tls: Whether to connect to the SMTP server using SSL/TLS. [true]
 # nextcloud_mail:
+
+# nextcloud_use_fpm: whether to use PHP-FPM or not. [false]
+nextcloud_use_fpm: false
 
 # nextcloud_version: Version number of Nextcloud to install. ["27.0.0"]
 nextcloud_version: 27.0.0
