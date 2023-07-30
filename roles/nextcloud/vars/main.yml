@@ -24,14 +24,16 @@ __nextcloud_download_url: "https://download.nextcloud.com/server/releases/nextcl
 # __nextcloud_paths: Derived directories containing various nextcloud files
 # __nextcloud_paths.apps: Directory containing additional installed apps
 # __nextcloud_paths.backup: Directory containing nextcloud backups
+# __nextcloud_paths.backup_staging: Working directory for creating and uploading backups
 # __nextcloud_paths.config: Directory containing nextcloud configuration
 # __nextcloud_paths.data: Base directory for all user-generated local data
 # __nextcloud_paths.files: Directory containing nextcloud files
 # __nextcloud_paths.versions: Directory containing expanded nextcloud archives ready to be deployed
-# __nextcloud_paths.work: Working directory for templ files
+# __nextcloud_paths.work: Working directory for temp files
 __nextcloud_paths:
   apps: "{{ __nextcloud_data_path }}/apps"
   backup: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}"
+  backup_staging: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}/staging"
   config: "{{ __nextcloud_data_path }}/config"
   data: "{{ __nextcloud_data_path }}"
   files: "{{ __nextcloud_data_path }}/files"
@@ -65,7 +67,7 @@ __nextcloud_rclone_configs:
       token: "{{ nextcloud_google_photos.token }}"
 
 # __nextcloud_static_packages: packages which are always installed, in addition to extra packages
-__nextcloud_static_packages: ["ffmpeg"]
+__nextcloud_static_packages: ["ffmpeg", "restic"]
 
 # todo: update this to work even if we change php versions...
 __nextcloud_php_ini_path: /etc/php/8.2/apache2/php.ini

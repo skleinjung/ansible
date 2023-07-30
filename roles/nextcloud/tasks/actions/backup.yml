@@ -1,14 +1,53 @@
 ---
-- name: Execute backup
+- name: Generate timestamp (YYYYMMDDTHHMMSS)
+  ansible.builtin.set_fact:
+    timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+
+- name: Stage local backup
   block:
-    - name: Generate timestamp (YYYYMMDDTHHMMSS)
-      ansible.builtin.set_fact:
-        timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+    - name: "Ensure backup data staging exists: {{ __nextcloud_paths.backup_staging + '/data' }}"
+      ansible.builtin.file:
+        group: "{{ nextcloud_backup_group }}"
+        mode: "0750"
+        owner: "{{ nextcloud_backup_user }}"
+        path: "{{ __nextcloud_paths.backup_staging }}/data"
+        state: directory
+    - name: "Create unsafe staged backup, which will be resynced during maintenance mode"
+      ansible.posix.synchronize:
+        archive: true
+        compress: true
+        delay_updates: false
+        delete: true
+        dest: "{{ __nextcloud_paths.backup_staging }}/data"
+        mode: push
+        src: "{{ __nextcloud_paths.data }}/"
     - name: Enable maintenance mode
       vars:
         nextcloud_maintenance_mode: true
       ansible.builtin.include_tasks:
         file: actions/set_maintenance_mode.yml
+    - name: "Sync nextcloud data to backup staging directory"
+      ansible.posix.synchronize:
+        archive: true
+        compress: true
+        delete: true
+        dest: "{{ __nextcloud_paths.backup_staging }}/data"
+        mode: push
+        src: "{{ __nextcloud_paths.data }}/"
+    - name: Create database backup
+      community.mysql.mysql_db:
+        name: "{{ nextcloud_db.name }}"
+        state: dump
+        target: "{{ __nextcloud_paths.backup_staging }}/db.sql.gz"
+  always:
+    - name: Disable maintenance mode
+      vars:
+        nextcloud_maintenance_mode: false
+      ansible.builtin.include_tasks:
+        file: actions/set_maintenance_mode.yml
+
+- name: Create local backup
+  block:
     - name: "Ensure backup directory exists: {{ __nextcloud_paths.backup + '/' + timestamp }}"
       ansible.builtin.file:
         group: "{{ nextcloud_backup_group }}"
@@ -16,18 +55,13 @@
         owner: "{{ nextcloud_backup_user }}"
         path: "{{ __nextcloud_paths.backup }}/{{ timestamp }}"
         state: directory
-    - name: Create database backup
-      community.mysql.mysql_db:
-        name: "{{ nextcloud_db.name }}"
-        state: dump
-        target: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
-    - name: Set owner of database backup
-      ansible.builtin.file:
+    - name: Copy staged database backup
+      ansible.builtin.copy:
+        dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
         group: "{{ nextcloud_backup_group }}"
         mode: "0640"
         owner: "{{ nextcloud_backup_user }}"
-        path: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
-        state: file
+        src: "{{ __nextcloud_paths.backup_staging }}/db.sql.gz"
     - name: "Create backup archive of data directory: {{ __nextcloud_paths.data }}"
       community.general.archive:
         dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/nextcloud_data.tar.gz"
@@ -35,10 +69,4 @@
         group: "{{ nextcloud_backup_group }}"
         mode: "0640"
         owner: "{{ nextcloud_backup_user }}"
-        path: "{{ __nextcloud_paths.data }}"
-  always:
-    - name: Disable maintenance mode
-      vars:
-        nextcloud_maintenance_mode: false
-      ansible.builtin.include_tasks:
-        file: actions/set_maintenance_mode.yml
+        path: "{{ __nextcloud_paths.backup_staging }}/data"
