@@ -143,7 +143,7 @@
 - name: Perform nightly backups
   become: true
   ansible.builtin.cron:
-    hour: "9" # 4am central
+    hour: "7" # 2am central
     job: /usr/local/bin/cronjob-lock /usr/local/bin/backup >>{{ nextcloud_logfile }} 2>&1
     minute: "2"
     name: "backup nextcloud nightly"

@@ -1,16 +1,45 @@
 ---
-- name: Execute restore from backup
+- name: Generate timestamp (YYYYMMDDTHHMMSS)
+  ansible.builtin.set_fact:
+    timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+- name: Calculate restore destination path
+  ansible.builtin.set_fact:
+    restore_destination: "{{ nextcloud_restore_path }}/{{ nextcloud_restore_snapshot_id == 'latest' ? timestamp : nextcloud_restore_snapshot_id }}"
+
+- name: Check if restored data exists
+  ansible.builtin.stat:
+    path: "{{ restore_destination }}/data"
+  register: restored_data_path
+
+- name: Restore restic snapshot
+  when: not restored_data_path.stat.exists
   block:
-    - name: Assert path of backup to restore is specified
-      ansible.builtin.assert:
-        that:
-          - nextcloud_restore_path is defined
-    - name: Generate timestamp (YYYYMMDDTHHMMSS)
-      ansible.builtin.set_fact:
-        timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
+    - name: Create restore destination
+      ansible.builtin.file:
+        group: root
+        mode: "0700"
+        owner: root
+        path: "{{ restore_destination }}"
+        state: directory
+    - name: Extract the snapshot from restic
+      ansible.builtin.command:
+        cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" restore "{{ nextcloud_restore_snapshot_id }}" --target "{{ restore_destination }}"
+        creates: "{{ restore_destination }}/data"
+
+- name: Restore nextcloud from snapshot
+  block:
+    - name: Enable maintenance mode
+      vars:
+        nextcloud_maintenance_mode: true
+      ansible.builtin.include_tasks:
+        file: actions/set_maintenance_mode.yml
     - name: Delete existing database
       community.mysql.mysql_db:
         name: "{{ nextcloud_db.name }}"
+        state: absent
+    - name: Remove existing data directory
+      ansible.builtin.file:
+        path: "{{ __nextcloud_paths.data }}"
         state: absent
     - name: Restore database backup
       community.mysql.mysql_db:
@@ -19,10 +48,6 @@
         name: "{{ nextcloud_db.name }}"
         state: import
         target: "{{ nextcloud_restore_path }}/db.sql.gz"
-    - name: Remove existing data directory
-      ansible.builtin.file:
-        path: "{{ __nextcloud_paths.data }}"
-        state: absent
     - name: Recreate data directory with correct permissions
       ansible.builtin.file:
         group: www-data
@@ -30,12 +55,14 @@
         owner: root
         path: "{{ __nextcloud_paths.data }}"
         state: directory
-    - name: Unarchive backup to data directory
-      ansible.builtin.unarchive:
-        copy: false
+    - name: "Sync restored data to Nextcloud data directory"
+      ansible.posix.synchronize:
+        archive: true
+        compress: true
+        delete: true
         dest: "{{ __nextcloud_paths.data }}"
-        extra_opts: "--strip-components=1"
-        src: "{{ nextcloud_restore_path }}/nextcloud_data.tar.xz"
+        mode: push
+        src: "{{ nextcloud_restore_path }}/data/"
     - name: Disable maintenance mode
       vars:
         nextcloud_maintenance_mode: false

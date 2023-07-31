@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 if [ "$#" -ne 1 ]; then
-  echo "Usage: restore <path_to_backup>"
+  echo "Usage: restore <restic_snapshot_id>"
   exit 1
 fi
 
 /usr/local/bin/run-playbooks \
   --limit "$(hostname)" \
-  --extra-vars "nextcloud_restore_path=${1}" \
+  --extra-vars "nextcloud_restore_snapshot_id=${1}" \
   --tags restore_backup \
   playbooks/nextcloud/nextcloud_backup.yml

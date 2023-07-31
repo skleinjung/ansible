@@ -34,6 +34,7 @@ __nextcloud_paths:
   apps: "{{ __nextcloud_data_path }}/apps"
   backup: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}"
   backup_staging: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}/staging"
+  backup_restore_path: "{{ nextcloud_backup_path | default([nextcloud_path, 'backups'] | join('/')) }}/restored-snapshots"
   config: "{{ __nextcloud_data_path }}/config"
   data: "{{ __nextcloud_data_path }}"
   files: "{{ __nextcloud_data_path }}/files"
