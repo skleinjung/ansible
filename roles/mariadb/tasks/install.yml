@@ -3,6 +3,7 @@
     - name: Install mariadb-server package
       ansible.builtin.apt:
         pkg:
+          - pkg-config
           - mariadb-server={{ mariadb_version }}
           # needed for devsec hardening's connection from Python
           - libmariadb-dev={{ mariadb_version }}

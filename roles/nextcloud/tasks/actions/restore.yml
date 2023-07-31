@@ -4,7 +4,7 @@
     timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
 - name: Calculate restore destination path
   ansible.builtin.set_fact:
-    restore_destination: "{{ nextcloud_restore_path }}/{{ nextcloud_restore_snapshot_id == 'latest' ? timestamp : nextcloud_restore_snapshot_id }}"
+    restore_destination: "{{ __nextcloud_paths.backup_restore_path }}/{{ nextcloud_restore_snapshot_id }}"
 
 - name: Check if restored data exists
   ansible.builtin.stat:
@@ -47,7 +47,7 @@
         encoding: "{{ __nextcloud_db_encoding }}"
         name: "{{ nextcloud_db.name }}"
         state: import
-        target: "{{ nextcloud_restore_path }}/db.sql.gz"
+        target: "{{ restore_destination }}/db.sql.gz"
     - name: Recreate data directory with correct permissions
       ansible.builtin.file:
         group: www-data
@@ -62,7 +62,7 @@
         delete: true
         dest: "{{ __nextcloud_paths.data }}"
         mode: push
-        src: "{{ nextcloud_restore_path }}/data/"
+        src: "{{ restore_destination }}/data/"
     - name: Disable maintenance mode
       vars:
         nextcloud_maintenance_mode: false

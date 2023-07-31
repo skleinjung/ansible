@@ -4,7 +4,7 @@
   register: restic_bin
 
 - name: Download and unzip restic
-  when: not restic_bin.stat.exists
+  when: not restic_bin.stat.exists or restic_bin.stat.mode != "0755"
   block:
     - name: "Download restic v{{ restic_version }}"
       vars:

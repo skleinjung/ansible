@@ -27,7 +27,6 @@
           - name: "{{ nextcloud_db.username }}"
             password: "{{ nextcloud_db.password }}"
             privileges: "{{ nextcloud_db.name }}.*:ALL"
-    - role: nextcloud
     - role: apache
       vars:
         apache_coredump_enabled: true
@@ -51,3 +50,4 @@
           opcache.revalidate_freq: 60
         php_packages: "{{ __nextcloud_php_packages }}"
         php_version: 2:8.2*
+    - role: nextcloud

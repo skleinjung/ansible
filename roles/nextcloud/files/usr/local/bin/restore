@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 if [ "$#" -ne 1 ]; then
+  restic --password-file /etc/restic/repository-password -r /mnt/backups/repository snapshots
+  
   echo "Usage: restore <restic_snapshot_id>"
   exit 1
 fi
