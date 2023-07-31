@@ -59,12 +59,11 @@ __nextcloud_php_packages:
 
 # __nextcloud_rclone_configs: list of rclone configs to be installed; see https://github.com/stefangweichinger/ansible-rclone
 __nextcloud_rclone_configs:
-  - name: google-photos
+  - name: backblaze-b2
     properties:
-      type: google photos
-      client_id: "{{ nextcloud_google_photos.client_id }}"
-      client_secret: "{{ nextcloud_google_photos.client_secret }}"
-      token: "{{ nextcloud_google_photos.token }}"
+      type: b2
+      account: "{{ nextcloud_backblaze_b2_account }}"
+      key: "{{ nextcloud_backblaze_b2_key }}"
 
 # __nextcloud_static_packages: packages which are always installed, in addition to extra packages
 __nextcloud_static_packages: ["ffmpeg"]
