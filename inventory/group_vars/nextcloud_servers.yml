@@ -27,7 +27,7 @@ users_config:
     username: nextcloud
 
 # nextcloud configuration options
-nextcloud_active_server: nextcloud-green
+nextcloud_active_server: nextcloud-blue
 nextcloud_admin:
   password: !vault |
     $ANSIBLE_VAULT;1.1;AES256
