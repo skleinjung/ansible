@@ -24,13 +24,22 @@
         fail_msg: Repository type is invalid.
         that:
           - restic_repository.type == "local"
+    - name: Create /etc/restic directory
+      ansible.builtin.file:
+        access_time: preserve
+        modification_time: preserve
+        group: root
+        mode: "0750"
+        owner: root
+        path: "/etc/restic"
+        state: directory
     - name: Create configuration files in /etc/restic
       ansible.builtin.template:
         dest: "/etc/restic/repository-password"
         group: root
         mode: "0600"
         owner: root
-        src: repository-password.j2
+        src: etc/restic/repository-password.j2
     - name: Create restic repository
       ansible.builtin.command:
         cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"

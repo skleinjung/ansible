@@ -7,6 +7,11 @@
     - role: users
     - role: sshd
     - role: restic
+      vars:
+        restic_repository:
+          password: "{{ nextcloud_backup_password }}"
+          path: "{{ nextcloud_backup_path }}/repository"
+          type: local
     - role: stefangweichinger.ansible_rclone
       vars:
         rclone_configs: "{{ __nextcloud_rclone_configs }}"
