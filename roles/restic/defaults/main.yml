@@ -1,0 +1,5 @@
+# restic_checksum: Optional checksum to use when downloading Restic, as expected by the ansible.builtin.get_url module. [0.15.2 checksum]
+restic_checksum: sha256:44ce3367b0b413ad48757de8e2a1f4e2c30137e7cdc77db64906f3eb7087b78f
+
+# restic_version: Version of Restic to install. ["0.15.2"]
+restic_version: 0.15.2

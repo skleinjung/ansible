@@ -67,7 +67,7 @@ __nextcloud_rclone_configs:
       token: "{{ nextcloud_google_photos.token }}"
 
 # __nextcloud_static_packages: packages which are always installed, in addition to extra packages
-__nextcloud_static_packages: ["ffmpeg", "restic"]
+__nextcloud_static_packages: ["ffmpeg"]
 
 # todo: update this to work even if we change php versions...
 __nextcloud_php_ini_path: /etc/php/8.2/apache2/php.ini

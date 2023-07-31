@@ -6,6 +6,7 @@
     - role: sudo
     - role: users
     - role: sshd
+    - role: restic
     - role: stefangweichinger.ansible_rclone
       vars:
         rclone_configs: "{{ __nextcloud_rclone_configs }}"

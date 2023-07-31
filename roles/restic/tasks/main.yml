@@ -1,0 +1,39 @@
+- name: Check if restic version exists in /usr/local/bin
+  ansible.builtin.stat:
+    path: "{{ __restic_binary_path }}"
+  register: restic_bin
+
+- name: Download and unzip restic
+  when: not restic_bin.stat.exists
+  block:
+    - name: "Download restic v{{ restic_version }}"
+      vars:
+        checksum: "{{ restic_checksum }}"
+        directory: "/tmp"
+        filename: "restic-{{ restic_version }}.bz2"
+        mode: "0700"
+        url: "{{ __restic_download_url }}"
+      ansible.builtin.include_role:
+        name: fetch
+        tasks_from: download.yml
+    - name: Unarchive restic
+      ansible.builtin.shell:
+        cmd: bunzip2 --stdout /tmp/restic-{{ restic_version }}.bz2 > "{{ __restic_binary_path }}"
+        creates: "{{ __restic_binary_path }}"
+    - name: Set file permissions
+      ansible.builtin.file:
+        group: root
+        mode: "0755"
+        owner: root
+        path: "{{ __restic_binary_path }}"
+  always:
+    - name: Remove tmp downloaded files
+      ansible.builtin.file:
+        path: "/tmp/restic-{{ restic_version }}.bz2"
+        state: absent
+
+- name: Create symlink to restic
+  ansible.builtin.file:
+    dest: "/usr/bin/restic"
+    src: "{{ __restic_binary_path }}"
+    state: link

@@ -1,0 +1,8 @@
+# __restic_binary_path: full to th the unarchived restic binary
+__restic_binary_path: /usr/local/bin/{{ __restic_filename }}
+
+# __restic_download_url: url of the restic archive
+__restic_download_url: "https://github.com/restic/restic/releases/download/v{{ restic_version }}/restic_{{ restic_version }}_linux_amd64.bz2"
+
+# __restic_filename: name of the unarchived restic binary, without path
+__restic_filename: restic-{{ restic_version }}_linux_amd64
