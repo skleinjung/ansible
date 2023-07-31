@@ -47,4 +47,17 @@
     - name: Create restic snapshot in local repository
       changed_when: true
       ansible.builtin.command:
-        cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" --verbose --tag "nextcloud,nextcloud_v{{ nextcloud_version }}" backup "{{ __nextcloud_paths.backup_staging }}"
+        chdir: "{{ __nextcloud_paths.backup_staging }}"
+        cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" --verbose --tag "nextcloud,nextcloud_v{{ nextcloud_version }}" backup .
+
+- name: Sync backup repository to cloud provider(s)
+  when: inventory_hostname == nextcloud_active_server
+  block:
+    - name: Verify backup integrity
+      changed_when: false
+      ansible.builtin.command:
+        cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" check --read-data-subset=10%
+    - name: Sync backup to backblaze b2
+      changed_when: true
+      ansible.builtin.command:
+        cmd: /usr/local/bin/rclone sync --auto-confirm --check-first --fast-list "{{ nextcloud_backup_path }}/repository" "backblaze-b2:/backup-nextcloud-pegasuspad"
