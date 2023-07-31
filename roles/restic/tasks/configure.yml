@@ -1,0 +1,37 @@
+- name: "Check if restic repository exists"
+  ansible.builtin.stat:
+    path: "{{ restic_repository.path }}"
+  register: restic_repository_path
+  when: restic_repository is defined
+
+- name: Create local repository
+  when: restic_repository is defined and not restic_repository_path.stat.exists
+  block:
+    - name: Validate no unexpected configuration keys
+      ansible.builtin.assert:
+        fail_msg: restic_repository contains unexpected keys.
+        that:
+          - restic_repository.keys() | difference(['path', 'password', 'type']) == []
+    - name: Validate required keys are defined
+      ansible.builtin.assert:
+        fail_msg: Specified restic_repository configuration is invalid.
+        that:
+          - restic_repository.path is defined
+          - restic_repository.password is defined
+          - restic_repository.type is defined
+    - name: Validate repository type is valid
+      ansible.builtin.assert:
+        fail_msg: Repository type is invalid.
+        that:
+          - restic_repository.type == "local"
+    - name: Create configuration files in /etc/restic
+      ansible.builtin.template:
+        dest: "/etc/restic/repository-password"
+        group: root
+        mode: "0600"
+        owner: root
+        src: repository-password.j2
+    - name: Create restic repository
+      ansible.builtin.command:
+        cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"
+        creates: "{{ restic_repository.path }}"

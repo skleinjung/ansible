@@ -1,3 +1,3 @@
 # restic role
 
-Install, configure, and provide usage assistance for the [restic](https://restic.net/) backup tool.
+Install the [restic](https://restic.net/) backup tool and configure a local backup repository.
