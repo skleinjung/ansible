@@ -1,8 +1,4 @@
 ---
-- name: Generate timestamp (YYYYMMDDTHHMMSS)
-  ansible.builtin.set_fact:
-    timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
-
 - name: Stage local backup
   block:
     - name: "Ensure backup data staging exists: {{ __nextcloud_paths.backup_staging + '/data' }}"
@@ -48,25 +44,7 @@
 
 - name: Create local backup
   block:
-    - name: "Ensure backup directory exists: {{ __nextcloud_paths.backup + '/' + timestamp }}"
-      ansible.builtin.file:
-        group: "{{ nextcloud_backup_group }}"
-        mode: "0750"
-        owner: "{{ nextcloud_backup_user }}"
-        path: "{{ __nextcloud_paths.backup }}/{{ timestamp }}"
-        state: directory
-    - name: Copy staged database backup
-      ansible.builtin.copy:
-        dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/db.sql.gz"
-        group: "{{ nextcloud_backup_group }}"
-        mode: "0640"
-        owner: "{{ nextcloud_backup_user }}"
-        src: "{{ __nextcloud_paths.backup_staging }}/db.sql.gz"
-    - name: "Create backup archive of data directory: {{ __nextcloud_paths.data }}"
-      community.general.archive:
-        dest: "{{ __nextcloud_paths.backup }}/{{ timestamp }}/nextcloud_data.tar.gz"
-        format: gz
-        group: "{{ nextcloud_backup_group }}"
-        mode: "0640"
-        owner: "{{ nextcloud_backup_user }}"
-        path: "{{ __nextcloud_paths.backup_staging }}/data"
+    - name: Create restic snapshot in local repository
+      changed_when: true
+      ansible.builtin.command:
+        cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" --verbose --tag "nextcloud,nextcloud_v{{ nextcloud_version }}" backup "{{ __nextcloud_paths.backup_staging }}"
