@@ -37,10 +37,6 @@
       community.mysql.mysql_db:
         name: "{{ nextcloud_db.name }}"
         state: absent
-    - name: Remove existing data directory
-      ansible.builtin.file:
-        path: "{{ __nextcloud_paths.data }}"
-        state: absent
     - name: Restore database backup
       community.mysql.mysql_db:
         collation: "{{ __nextcloud_db_collation }}"
@@ -48,6 +44,10 @@
         name: "{{ nextcloud_db.name }}"
         state: import
         target: "{{ restore_destination }}/db.sql.gz"
+    - name: Remove existing data directory
+      ansible.builtin.file:
+        path: "{{ __nextcloud_paths.data }}"
+        state: absent
     - name: Recreate data directory with correct permissions
       ansible.builtin.file:
         group: www-data
