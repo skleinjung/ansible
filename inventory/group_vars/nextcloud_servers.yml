@@ -1,4 +1,8 @@
 ---
+# ansible-pull options
+# 5am central, after 2am backup
+ansible_pull_schedule_hour: 10
+
 # apache options
 apache2_version: 2.4*
 
