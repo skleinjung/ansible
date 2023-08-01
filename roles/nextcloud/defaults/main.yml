@@ -1,7 +1,4 @@
 ---
-# __nextcloud_active_server: host name of the currently-active nextcloud server. [None]
-# nextcloud_active_server: nextcloud-green
-
 # name of the log file that should contain backup process logs. ["/var/log/nextcloud.log"]
 nextcloud_logfile: /var/log/nextcloud.log
 

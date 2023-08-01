@@ -48,6 +48,7 @@
     owner: root
     path: "{{ item }}"
     state: directory
+    recurse: true
   loop:
     - "{{ __nextcloud_paths.apps }}"
     - "{{ __nextcloud_paths.config }}"

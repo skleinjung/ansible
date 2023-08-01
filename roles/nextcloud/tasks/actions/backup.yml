@@ -43,7 +43,6 @@
         file: actions/set_maintenance_mode.yml
 
 - name: Create local backup
-  when: inventory_hostname == nextcloud_active_server
   block:
     - name: Create restic snapshot in local repository
       changed_when: true
@@ -52,7 +51,6 @@
         cmd: restic --password-file /etc/restic/repository-password -r "{{ nextcloud_backup_path }}/repository" --verbose --tag "nextcloud,nextcloud_v{{ nextcloud_version }}" backup .
 
 - name: Sync backup repository to cloud provider(s)
-  when: inventory_hostname == nextcloud_active_server
   block:
     - name: Verify backup integrity
       changed_when: false
