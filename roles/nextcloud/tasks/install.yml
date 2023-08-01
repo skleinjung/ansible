@@ -126,7 +126,7 @@
 - name: Run nextcloud cron scripts every 5 minutes
   become: true
   ansible.builtin.cron:
-    job: "/bin/php -f {{ __nextcloud_current_version_path }}/cron.php >>{{ nextcloud_logfile }} 2>&1"
+    job: "/usr/local/bin/cronjob-lock /bin/php -f {{ __nextcloud_current_version_path }}/cron.php >>{{ nextcloud_logfile }} 2>&1"
     minute: "*/5"
     name: "run nextcloud cron scripts"
     state: present
@@ -134,7 +134,7 @@
 - name: Pre-generate image previews every 10 minutes
   become: true
   ansible.builtin.cron:
-    job: "/bin/php -f {{ __nextcloud_current_version_path }}/occ preview:pre-generate >>{{ nextcloud_logfile }} 2>&1"
+    job: "/usr/local/bin/cronjob-lock /bin/php -f {{ __nextcloud_current_version_path }}/occ preview:pre-generate >>{{ nextcloud_logfile }} 2>&1"
     minute: "*/10"
     name: "pre-generate image previews"
     state: present
