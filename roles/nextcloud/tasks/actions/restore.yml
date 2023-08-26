@@ -52,7 +52,7 @@
       ansible.builtin.file:
         group: www-data
         mode: "0750"
-        owner: root
+        owner: www-data
         path: "{{ __nextcloud_paths.data }}"
         state: directory
     - name: "Sync restored data to Nextcloud data directory"

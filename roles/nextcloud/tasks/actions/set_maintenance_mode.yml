@@ -5,4 +5,4 @@
     dest: "{{ __nextcloud_paths.config }}/maintenance.config.php"
     group: www-data
     mode: "0770"
-    owner: root
+    owner: www-data

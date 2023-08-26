@@ -24,7 +24,7 @@
   ansible.builtin.file:
     group: www-data
     mode: "0755"
-    owner: root
+    owner: www-data
     path: "{{ __nextcloud_current_version_path }}"
     state: directory
 - name: Unarchive nextcloud
@@ -36,7 +36,7 @@
     extra_opts: [--strip-components=1]
     group: www-data
     mode: "0755"
-    owner: root
+    owner: www-data
     remote_src: true
     src: "{{ __nextcloud_paths.work }}/nextcloud-{{ nextcloud_version }}.tar.bz2"
 
@@ -45,7 +45,7 @@
   ansible.builtin.file:
     group: www-data
     mode: "0770"
-    owner: root
+    owner: www-data
     path: "{{ item }}"
     state: directory
     recurse: true
@@ -57,7 +57,7 @@
   ansible.builtin.file:
     group: www-data
     mode: "0770"
-    owner: root
+    owner: www-data
     path: "{{ __nextcloud_document_root }}/.htaccess"
     state: file
 
