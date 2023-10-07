@@ -1,0 +1,4 @@
+- name: Bootstrap ansible-pull for ongoing configuration
+  hosts: all
+  roles:
+    - role: ansible-pull

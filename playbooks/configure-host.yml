@@ -28,18 +28,11 @@
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
 
-- name: Bootstrap ansible-pull for ongoing configuration
-  hosts: all
-  tags: bootstrap
-  roles:
-    - role: ansible-pull
-
 - name: Update system packages
   become: true
   hosts: all
   tags:
     - daily
-    - bootstrap
   tasks:
     - name: Update package lists and upgrade all packages
       ansible.builtin.apt:

@@ -2,9 +2,5 @@
 
 set -e
 
-/usr/local/bin/run-playbooks \
-  playbooks/install-dependencies.yml
-
-/usr/local/bin/run-playbooks \
-  --tags daily \
-  playbooks/configure-host.yml
+/usr/local/bin/run-playbooks playbooks/install-dependencies.yml
+/usr/local/bin/run-playbooks --tags daily playbooks/configure-host.yml
