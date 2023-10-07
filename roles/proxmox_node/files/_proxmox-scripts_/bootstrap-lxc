@@ -48,7 +48,7 @@ else
     --inventory inventory \
     --purge \
     --url https://github.com/skleinjung/ansible.git \
-    --vault-password-file /var/ansible/vault-secret \
+    --vault-password-file /etc/runtime-metadata/ansible-vault-secret \
     playbooks/install-dependencies.yml >>/var/log/ansible.log 2>&1
   ansible-pull \
     --accept-host-key \
@@ -57,7 +57,7 @@ else
     --purge \
     --tags bootstrap \
     --url https://github.com/skleinjung/ansible.git \
-    --vault-password-file /var/ansible/vault-secret \
+    --vault-password-file /etc/runtime-metadata/ansible-vault-secret \
     playbooks/configure-host.yml >>/var/log/ansible.log 2>&1
 
   echo "Done $(date)" > $ANSIBLE_INSTALL_MARKER
