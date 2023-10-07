@@ -48,5 +48,7 @@
         path: /var/run/reboot-required
       register: reboot_required
     - name: Reboot the machine if needed
-      ansible.builtin.reboot:
+      ansible.builtin.shell: sleep 15 && /sbin/shutdown -r now 'Rebooting to apply package updates'
+      changed_when: true
+      ignore_errors: true
       when: reboot_required.stat.exists
