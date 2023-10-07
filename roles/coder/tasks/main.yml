@@ -1,6 +1,27 @@
-- name: Container present
+# See: https://serverfault.com/a/1011758
+- name: Get docker gid
+  ansible.builtin.getent:
+    database: group
+    key: docker
+
+- name: Start coderd container
   community.docker.docker_container:
-    name: mycontainer
-    state: present
-    image: ubuntu:14.04
-    command: sleep infinity
+    auto_remove: false
+    detach: true
+    env:
+      CODER_HTTP_ADDRESS: 0.0.0.0:3000
+      CODER_TELEMETRY_ENABLED: "false"
+      CODER_UPDATE_CHECK: "true"
+    exposed_ports:
+      - "3000"
+    groups:
+      - "{{ getent_group.docker[1] }}"
+    image: ghcr.io/coder/coder:latest
+    name: coderd
+    published_ports:
+      - 3000:3000
+    restart_policy: always
+    restart_retries: 10
+    state: started
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
