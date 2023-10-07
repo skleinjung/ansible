@@ -1,0 +1,37 @@
+# todo: Running nginx in read-only mode
+
+- name: Create nginx config directory
+  ansible.builtin.file:
+    group: nginx
+    mode: "0755"
+    owner: nginx
+    path: "{{ __nextcloud_current_version_path }}"
+    state: directory
+- name: Copy nginx configuration
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/nginx
+    owner: nginx
+    group: nginx
+    mode: "0744"
+  with_fileglob:
+    - "etc/nginx/**/*"
+
+- name: Start nginx container
+  community.docker.docker_container:
+    auto_remove: false
+    detach: true
+    env: {}
+    exposed_ports:
+      - "80"
+      - "443"
+    image: nginx:1.25.2-alpine
+    name: nginx
+    published_ports:
+      - 8080:80
+      - 8443:443
+    restart_policy: always
+    restart_retries: 10
+    state: started
+    volumes:
+      - /etc/nginx:/etc/nginx:ro

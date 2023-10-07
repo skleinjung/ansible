@@ -25,6 +25,9 @@
 - name: Include plays for Logitech Media Servers
   ansible.builtin.import_playbook: logitech_media_server/logitech_media_server.yml
 
+- name: Include plays for ingress server
+  ansible.builtin.import_playbook: net_ingress/net_ingress.yml
+
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
 
