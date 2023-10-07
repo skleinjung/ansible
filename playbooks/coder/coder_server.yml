@@ -1,0 +1,25 @@
+---
+- name: Configure coder server
+  gather_facts: true
+  hosts: coder_servers
+  roles:
+    - role: sudo
+    - role: users
+    - role: sshd
+    - role: geerlingguy.pip
+      vars:
+        pip_install_packages:
+          - name: docker
+    - role: geerlingguy.docker
+      vars:
+        docker_edition: "ce"
+        docker_install_compose_plugin: false
+        docker_install_compose: false
+        docker_packages_state: present
+        docker_restart_handler_state: restarted
+        docker_service_enabled: true
+        docker_service_manage: true
+        docker_service_state: started
+        docker_users:
+          - sean
+    - role: coder

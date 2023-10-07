@@ -1,0 +1,9 @@
+---
+# users
+users_config: []
+# users_config:
+#   - groups:
+#       - adm
+#       - sudo
+#     uid: 60000
+#     username: sean

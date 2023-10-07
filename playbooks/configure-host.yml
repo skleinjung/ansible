@@ -16,6 +16,9 @@
   roles:
     - role: vrising-server
 
+- name: Include plays for coder servers
+  ansible.builtin.import_playbook: coder/coder_server.yml
+
 - name: Include plays for user workstations
   ansible.builtin.import_playbook: workstation.yml
 
