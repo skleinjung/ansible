@@ -1,9 +1,15 @@
 ---
-# users
-users_config: []
-# users_config:
-#   - groups:
-#       - adm
-#       - sudo
-#     uid: 60000
-#     username: sean
+# ssh options
+sshd_enabled: true
+
+# sudo options
+sudo_allow_passwordless: true
+
+users_config:
+  - uid: 29000
+    username: coder
+  - groups:
+      - adm
+      - sudo
+    uid: 60000
+    username: sean

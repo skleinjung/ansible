@@ -1,27 +1,106 @@
 # See: https://serverfault.com/a/1011758
+
+- name: Create config directory
+  ansible.builtin.file:
+    group: "{{ coder_uid }}"
+    mode: "0755"
+    owner: "{{ coder_uid }}"
+    path: /etc/coder
+    state: directory
+- name: Copy configuration
+  ansible.builtin.copy:
+    dest: /etc/coder
+    group: "{{ coder_uid }}"
+    owner: "{{ coder_uid }}"
+    mode: "0744"
+    src: "{{ item }}"
+  with_fileglob:
+    - "etc/coder/*"
+
 - name: Get docker gid
   ansible.builtin.getent:
     database: group
     key: docker
+
+- name: Create network for 'coder' contrainers
+  community.docker.docker_network:
+    attachable: "true"
+    name: network_coder
+
+# @todo - use variables for nfs config ...
+- name: Create PostgreSQL data volume
+  community.docker.docker_volume:
+    driver: local
+    driver_options:
+      device: ":/srv/nfs/docker/coder/postgresql-data"
+      o: addr=192.168.68.10,rw,actimeo=1800,hard,nconnect=16,nfsvers=3,noatime,proto=tcp
+      type: nfs
+    name: postgresql-data
+    recreate: never
+    state: present
+
+- name: Start PostgreSQL container
+  community.docker.docker_container:
+    auto_remove: false
+    detach: true
+    env:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: coder
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US"
+      POSTGRES_PASSWORD: "{{ coder_db_password }}"
+      POSTGRES_USER: coder
+    exposed_ports:
+      - "5432"
+    image: postgres:{{ coder_db_image_version }}
+    mounts:
+      - no_copy: true
+        source: postgresql-data
+        target: /var/lib/postgresql/data
+        type: volume
+    name: postgresql
+    networks:
+      - name: network_coder
+        aliases:
+          - postgresql
+    published_ports:
+      - 5432:5432
+    restart_policy: always
+    state: started
+    user: "{{ coder_uid }}:{{ coder_uid }}"
+    volumes:
+      - /etc/coder/postgresql.conf:/etc/postgresql/postgresql.conf:ro
 
 - name: Start coderd container
   community.docker.docker_container:
     auto_remove: false
     detach: true
     env:
+      CODER_ACCESS_URL: https://{{ coder_host }}
+      CODER_DISABLE_OWNER_WORKSPACE_ACCESS: "true"
+      CODER_DISABLE_PASSWORD_AUTH: "true"
       CODER_HTTP_ADDRESS: 0.0.0.0:3000
+      CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS: "true"
+      CODER_OAUTH2_GITHUB_ALLOWED_ORGS: "{{ coder_github_org }}"
+      CODER_OAUTH2_GITHUB_CLIENT_ID: "{{ coder_github_client_id }}"
+      CODER_OAUTH2_GITHUB_CLIENT_SECRET: "{{ coder_github_client_secret }}"
+      CODER_PG_CONNECTION_URL: postgresql://coder:{{ coder_db_password }}@postgresql:5432/coder?sslmode=disable
+      CODER_SECURE_AUTH_COOKIE: "true"
       CODER_TELEMETRY_ENABLED: "false"
       CODER_UPDATE_CHECK: "true"
+      CODER_WILDCARD_ACCESS_URL: "*.{{ coder_host }}"
     exposed_ports:
       - "3000"
     groups:
       - "{{ getent_group.docker[1] }}"
     image: ghcr.io/coder/coder:latest
     name: coderd
+    networks:
+      - name: network_coder
+        aliases:
+          - coderd
     published_ports:
       - 3000:3000
     restart_policy: always
-    restart_retries: 10
     state: started
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
