@@ -31,6 +31,9 @@
 - name: Include plays for nextcloud servers
   ansible.builtin.import_playbook: nextcloud/nextcloud_server.yml
 
+- name: Include plays for repositories server (git, docker, etc.)
+  ansible.builtin.import_playbook: repositories/repositories_server.yml
+
 - name: Update system packages
   become: true
   hosts: all

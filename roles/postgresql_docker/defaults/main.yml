@@ -1,0 +1,19 @@
+# postgres_docker_db_name: name of the databse to create
+#postgres_docker_db_name: 
+# postgres_docker_db_password: password for remote database connections
+#postgres_docker_db_password: 
+
+# postgres_docker_image_version: Docker tag for the postgresql image to use
+#postgres_docker_image_version:
+
+# postgres_docker_network: Optional configuration for the network to add the db container to.
+#postgres_docker_network
+
+# postgres_docker_uid: User id of the postgresql user.
+#postgres_docker_uid
+
+# postgres_docker_volume: configuration for the postgresql data volume
+# postgres_docker_volume.type: Type of volume. Must be one of: "nfs".
+# postgres_docker_volume.nfs_host: When "type" is "nfs", this is the host of the NFS server. 
+# postgres_docker_volume.nfs_path: When "type" is "nfs", this is the path of the NFS share
+#postgres_docker_volume: 

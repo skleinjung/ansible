@@ -1,0 +1,15 @@
+---
+# ssh options
+sshd_enabled: true
+
+# sudo options
+sudo_allow_passwordless: true
+
+users_config:
+  - uid: 21000
+    username: repositories
+  - groups:
+      - adm
+      - sudo
+    uid: 60000
+    username: sean

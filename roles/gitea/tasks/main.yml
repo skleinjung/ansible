@@ -1,0 +1,102 @@
+# See: https://serverfault.com/a/1011758
+
+- name: Create gitea configuration
+  tags: [gitea, configure, gitea_configure]
+  block:
+    - name: Create gitea config directory
+      ansible.builtin.file:
+        group: "{{ gitea_uid }}"
+        mode: "0755"
+        owner: "{{ gitea_uid }}"
+        path: /etc/gitea
+        state: directory
+    - name: Copy gitea configuration
+      ansible.builtin.copy:
+        dest: /etc/gitea
+        group: "{{ gitea_uid }}"
+        owner: "{{ gitea_uid }}"
+        mode: "0744"
+        src: "{{ item }}"
+      with_fileglob:
+        - "etc/gitea/*"
+
+- name: Deploy gitea
+  tags: [gitea, deploy, gitea_deploy]
+  block:
+    - name: Create network for 'gitea' containers
+      community.docker.docker_network:
+        attachable: "true"
+        name: network_gitea
+    - name: Deploy postgresql docker container
+      ansible.builtin.import_role:
+        name: postgresql_docker
+      vars:
+        postgres_docker_db_name: gitea
+        postgres_docker_db_password: blehblah
+        postgres_docker_image_version: 16-alpine
+        postgres_docker_network:
+          name: network_gitea
+          aliases:
+            - db
+        postgres_docker_uid: "{{ gitea_uid }}"
+        postgres_docker_volume:
+          nfs_host: "{{ gitea_nfs_host }}"
+          nfs_path: "{{ gitea_nfs_path_postgres_data }}"
+          type: nfs
+    - name: Create nfs volume for gitea data
+      community.docker.docker_volume:
+        driver: local
+        driver_options:
+          device: ":{{ gitea_nfs_path_data }}"
+          o: addr={{ gitea_nfs_host }},rw,actimeo=1800,hard,nconnect=16,nfsvers=3,noatime,proto=tcp
+          type: nfs
+        name: gitea-data
+        recreate: never
+        state: present
+    - name: Create nfs volume for gitea config
+      community.docker.docker_volume:
+        driver: local
+        driver_options:
+          device: ":/srv/nfs/docker/repositories/gitea-config"
+          o: addr={{ gitea_nfs_host }},rw,actimeo=1800,hard,nconnect=16,nfsvers=3,noatime,proto=tcp
+          type: nfs
+        name: gitea-config
+        recreate: never
+        state: present
+    - name: Deploy gitea container
+      community.docker.docker_container:
+        auto_remove: false
+        detach: true
+        env:
+          GITEA__database__DB_TYPE: postgres
+          GITEA__database__HOST: db:5432
+          GITEA__database__NAME: gitea
+          GITEA__database__USER: gitea
+          GITEA__database__PASSWD: blehblah
+        exposed_ports:
+          - "3000"
+          - "2222"
+        image: gitea/gitea:{{ gitea_image_version }}
+        mounts:
+          - no_copy: true
+            source: gitea-config
+            target: /etc/gitea
+            type: volume
+          - no_copy: true
+            source: gitea-data
+            target: /var/lib/gitea
+            type: volume
+        name: gitea
+        networks:
+          - name: network_gitea
+            aliases:
+              - gitea
+        published_ports:
+          - 3000:3000
+          - 2222:2222
+        restart_policy: always
+        state: started
+        user: "{{ gitea_uid }}:{{ gitea_uid }}"
+        volumes:
+          - /etc/localtime:/etc/localtime:ro
+          - /etc/timezone:/etc/timezone:ro

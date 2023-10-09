@@ -1,0 +1,56 @@
+- name: Verify PostgreSQL options are valid
+  block:
+    - name: Verify inputs are valid
+      ansible.builtin.assert:
+        that:
+          - postgres_docker_db_name is defined
+          - postgres_docker_db_password is defined
+          - postgres_docker_image_version is defined
+          - postgres_docker_uid is defined
+          - postgres_docker_volume is defined
+          - postgres_docker_volume.type in ['nfs']
+    - name: Verify nfs volume options are valid
+      when: postgres_docker_volume.type == 'nfs'
+      ansible.builtin.assert:
+        fail_msg: Volume options are invalid for type "nfs".
+        that:
+          - postgres_docker_volume.nfs_host is defined
+          - postgres_docker_volume.nfs_path is defined
+      
+- name: Create nfs PostgreSQL data volume
+  community.docker.docker_volume:
+    driver: local
+    driver_options:
+      device: ":{{ postgres_docker_volume.nfs_path }}"
+      o: addr={{ postgres_docker_volume.nfs_host }},rw,actimeo=1800,hard,nconnect=16,nfsvers=3,noatime,proto=tcp
+      type: nfs
+    name: "{{ postgres_docker_db_name }}-postgres-data"
+    recreate: never
+    state: present
+  when: postgres_docker_volume.type == 'nfs'
+
+- name: Start PostgreSQL container
+  community.docker.docker_container:
+    auto_remove: false
+    detach: true
+    env:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: "{{ postgres_docker_db_name}}"
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US"
+      POSTGRES_PASSWORD: "{{ postgres_docker_db_password }}"
+      POSTGRES_USER: "{{ postgres_docker_db_name}}"
+    exposed_ports:
+      - "5432"
+    image: postgres:{{ postgres_docker_image_version }}
+    mounts:
+      - no_copy: true
+        source: "{{ postgres_docker_db_name }}-postgres-data"
+        target: /var/lib/postgresql/data
+        type: volume
+    name: postgresql
+    networks: "{{ postgres_docker_network | default(false) | ternary([postgres_docker_network], []) }}"
+    published_ports:
+      - 5432:5432
+    restart_policy: always
+    state: started
+    user: "{{ postgres_docker_uid }}:{{ postgres_docker_uid }}"
