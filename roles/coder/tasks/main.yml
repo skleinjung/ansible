@@ -83,7 +83,9 @@
       CODER_OAUTH2_GITHUB_ALLOWED_ORGS: "{{ coder_github_org }}"
       CODER_OAUTH2_GITHUB_CLIENT_ID: "{{ coder_github_client_id }}"
       CODER_OAUTH2_GITHUB_CLIENT_SECRET: "{{ coder_github_client_secret }}"
-      CODER_PG_CONNECTION_URL: postgresql://coder:{{ coder_db_password }}@postgresql:5432/coder?sslmode=disable
+      # format is due to a bug in urlencode filter
+      # See: https://github.com/ansible/ansible/issues/73054#issuecomment-1189553097
+      CODER_PG_CONNECTION_URL: postgresql://coder:{{ "{}".format(coder_db_password) | urlencode }}@postgresql:5432/coder?sslmode=disable
       CODER_SECURE_AUTH_COOKIE: "true"
       CODER_TELEMETRY_ENABLED: "false"
       CODER_UPDATE_CHECK: "true"
