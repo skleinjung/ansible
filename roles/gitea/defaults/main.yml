@@ -1,13 +1,16 @@
 ---
+# gitea_db_password: password for the postgres database 
+#gitea_db_password: <REQUIRED>
+
 # gitea_image_version: Docker tag of the gitea image to use
 gitea_image_version: 1-rootless
 
 # gitea_nfs_host: IP or name of the NFS host to use for storage
 gitea_nfs_host: 192.168.68.10
 # gitea_nfs_path_data: path on the NFS server for gitea's storage area
-gitea_nfs_path_data: /srv/nfs/docker/repositories/gitea-data
+gitea_nfs_path_data: /srv/nfs/ssd/gitea/data
 # gitea_nfs_path_postgres_data: path on the NFS server for gitea's postgres data
-gitea_nfs_path_postgres_data: /srv/nfs/docker/repositories/gitea-postgres-data
+gitea_nfs_path_postgres_data: /srv/nfs/ssd/gitea/postgres-data
 
-# gitea_uid: uid/gid for the repositories user
-gitea_uid: 21000
+# gitea_uid: uid/gid for the gitea user
+gitea_uid: 21001
