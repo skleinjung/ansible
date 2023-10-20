@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Ensure the script exits if any command fails
+set -e
+
+# Check if a volume name is provided for restoration
+if [ -z "$1" ]; then
+  echo "Please provide a volume name to restore."
+  echo "Usage: $0 <volume-name>"
+  exit 1
+fi
+
+VOLUME="$1"
+BACKUP_DIR="{{ docker_backup_destination }}/$VOLUME"
+
+# Check if backup exists for the provided volume
+if [ ! -d "$BACKUP_DIR" ]; then
+  echo "Backup for $VOLUME does not exist in $BACKUP_DIR"
+  exit 2
+fi
+
+# Use docker run to start a temporary container to mount and restore the volume data with rsync
+docker run --rm \
+  -v $VOLUME:/destination \
+  -v $BACKUP_DIR:/backup:ro \
+  --entrypoint="" \  # Clearing default entrypoint
+  instrumentisto/rsync-ssh \
+  rsync -av --delete /backup/ /destination/
+
+echo "Restored $VOLUME from $BACKUP_DIR"
+

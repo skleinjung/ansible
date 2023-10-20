@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Ensure the script exits if any command fails
+set -e
+
+BACKUP_ROOT="{{ docker_backup_destination }}"
+
+# Iterate over each directory in $BACKUP_ROOT
+for BACKUP_DIR in $BACKUP_ROOT/*; do
+    # Extract the volume name from the directory path
+    VOLUME_NAME=$(basename $BACKUP_DIR)
+
+    # Check if a Docker volume with this name exists
+    if ! docker volume ls -q | grep -wq $VOLUME_NAME; then
+        # If not, create it
+        docker volume create $VOLUME_NAME
+        echo "Created volume: $VOLUME_NAME"
+    fi
+
+    # Call the restore-volume script to restore this volume
+    /usr/local/bin/restore-volume $VOLUME_NAME
+done
+
+echo "All backups restored successfully!"
