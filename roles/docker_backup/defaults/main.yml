@@ -1,0 +1,2 @@
+# docker_backup_destination: folder in which to backup Docker volumes
+docker_backup_destination: /mnt/backup/{{ inventory_hostname }}
