@@ -15,15 +15,12 @@ fi
 
 VOLUME="$1"
 
-BACKUP_GROUP="{{ docker_backup_group }}"
 BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
-BACKUP_USER="{{ docker_backup_user }}"
 
 BACKUP_DIR="${BACKUP_STAGING_ROOT}/${VOLUME}"
   
 # Create the backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
-chown -R "${BACKUP_USER}:${BACKUP_GROUP}" "$BACKUP_DIR"
   
 # Use docker run to start a temporary container to mount and copy the volume data with rsync
 docker run --rm \
