@@ -3,10 +3,10 @@
 # Ensure the script exits if any command fails
 set -e
 
-BACKUP_ROOT="{{ docker_backup_destination }}"
+STAGING_ROOT="{{ docker_backup_staging_directory }}"
 
-# Iterate over each directory in $BACKUP_ROOT
-for BACKUP_DIR in $BACKUP_ROOT/*; do
+# Iterate over each directory in $STAGING_ROOT
+for BACKUP_DIR in $STAGING_ROOT/*; do
     # Extract the volume name from the directory path
     VOLUME_NAME=$(basename $BACKUP_DIR)
 

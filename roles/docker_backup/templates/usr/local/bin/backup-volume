@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Ensure the script exits if any command fails
+set -e
+
+BACKUP_GROUP="{{ docker_backup_group }}"
+BACKUP_USER="{{ docker_backup_user }}"
+
+# Fetch the list of volume names
+VOLUMES=$(docker volume ls -q)
+
+for VOLUME in $VOLUMES; do
+  BACKUP_DIR="{{ docker_backup_staging_directory }}/$VOLUME"
+  
+  # Create the backup directory if it doesn't exist
+  mkdir -p "$BACKUP_DIR"
+  
+  # Use docker run to start a temporary container to mount and copy the volume data with rsync
+  docker run --rm \
+    -v $VOLUME:/source:ro \
+    -v $BACKUP_DIR:/backup \
+    --entrypoint="" \
+    --user="${BACKUP_USER}:${BACKUP_GROUP}" \
+    instrumentisto/rsync-ssh \
+    rsync -av --delete /source/ /backup/
+  
+  echo "Backed up $VOLUME to $BACKUP_DIR"
+done
+
+echo "All volumes backed up successfully!"

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# rsyncs the contents of all Docker volume to the backup staging area, and then 
+# backs up the staged files to a restic repository
+
+
 # Ensure the script exits if any command fails
 set -e
 
@@ -7,20 +11,9 @@ set -e
 VOLUMES=$(docker volume ls -q)
 
 for VOLUME in $VOLUMES; do
-  BACKUP_DIR="{{ docker_backup_destination }}/$VOLUME"
-  
-  # Create the backup directory if it doesn't exist
-  mkdir -p "$BACKUP_DIR"
-  
-  # Use docker run to start a temporary container to mount and copy the volume data with rsync
-  docker run --rm \
-    -v $VOLUME:/source:ro \
-    -v $BACKUP_DIR:/backup \
-    --entrypoint="" \  # Clearing default entrypoint
-    instrumentisto/rsync-ssh \
-    rsync -av --delete /source/ /backup/
-  
-  echo "Backed up $VOLUME to $BACKUP_DIR"
+  echo "Staging backup for volume '$VOLUME'."
+  /usr/local/bin/stage-volume-backup "$VOLUME"
+  echo "Copied volume '$VOLUME' to backup staging directory '$BACKUP_DIR'."
 done
 
-echo "All volumes backed up successfully!"
+echo "All volume back ups staged successfully!"

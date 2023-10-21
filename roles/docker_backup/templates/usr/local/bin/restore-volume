@@ -11,7 +11,7 @@ if [ -z "$1" ]; then
 fi
 
 VOLUME="$1"
-BACKUP_DIR="{{ docker_backup_destination }}/$VOLUME"
+BACKUP_DIR="{{ docker_backup_staging_directory }}/$VOLUME"
 
 # Check if backup exists for the provided volume
 if [ ! -d "$BACKUP_DIR" ]; then

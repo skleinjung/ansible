@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# rsyncs the contents of a Docker volume to the backup staging area
+
+# Ensure the script exits if any command fails
+set -e
+
+# Check if a volume name is provided for restoration
+if [ -z "$1" ]; then
+  echo "stage-volume-backup: rsyncs the contents of a Docker volume to the backup staging area"
+  echo "Please provide a volume name to restore."
+  echo "Usage: $0 <volume-name>"
+  exit 1
+fi
+
+VOLUME="$1"
+
+BACKUP_GROUP="{{ docker_backup_group }}"
+BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
+BACKUP_USER="{{ docker_backup_user }}"
+
+BACKUP_DIR="${BACKUP_STAGING_ROOT}/${VOLUME}"
+  
+# Create the backup directory if it doesn't exist
+mkdir -p "$BACKUP_DIR"
+chown -R "${BACKUP_USER}:${BACKUP_GROUP}" "$BACKUP_DIR"
+  
+# Use docker run to start a temporary container to mount and copy the volume data with rsync
+docker run --rm \
+  -v $VOLUME:/source:ro \
+  -v $BACKUP_DIR:/backup \
+  --entrypoint="" \
+  instrumentisto/rsync-ssh \
+  rsync -av --delete /source/ /backup/
+  

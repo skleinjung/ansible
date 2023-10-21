@@ -23,4 +23,7 @@
         docker_users:
           - sean
     - role: docker_backup
+      vars:
+        docker_backup_group: 29000
+        docker_backup_user: 29000
     - role: coder

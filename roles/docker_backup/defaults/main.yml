@@ -1,2 +1,6 @@
-# docker_backup_destination: folder in which to backup Docker volumes
-docker_backup_destination: /mnt/backup/{{ inventory_hostname }}
+# docker_backup_group: group id to assume when performing backups inside containers [root]
+docker_backup_group: root
+# docker_backup_staging_directory: folder in which volume backups are staged [/var/lib/backup]
+docker_backup_staging_directory: /var/lib/backup
+# docker_backup_user: user id to assume when performing backups inside containers [root]
+docker_backup_user: root

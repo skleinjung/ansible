@@ -1,6 +1,7 @@
 ---
 # coder_db_image_version: postgres image tag to use
 coder_db_image_version: 16-alpine
+
 # coder_db_password: password for the postgresql database user
 coder_db_password: !vault |
   $ANSIBLE_VAULT;1.1;AES256
