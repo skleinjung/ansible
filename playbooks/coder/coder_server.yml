@@ -25,5 +25,4 @@
     - role: docker_backup
       vars:
         docker_backup_repository_password: temporary
-        docker_backup_user: coder
     - role: coder
