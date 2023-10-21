@@ -21,28 +21,39 @@
     access_time: preserve
     modification_time: preserve
     group: root
-    mode: "0750"
-    owner: root
+    mode: "0550"
+    owner: "{{ restic_user | default('root') }}"
     path: "/etc/restic"
     state: directory
 - name: Create configuration files in /etc/restic
   ansible.builtin.template:
     dest: "/etc/restic/repository-password"
     group: root
-    mode: "0600"
-    owner: root
+    mode: "0440"
+    owner: "{{ restic_user | default('root') }}"
     src: etc/restic/repository-password.j2
 
-- name: "Check if restic repository exists"
-  ansible.builtin.stat:
-    path: "{{ restic_repository.path }}"
-  register: restic_repository_path
-  when: restic_repository is defined
-
-- name: Create restic repository
-  become: "{{ restic_user is defined }}"
-  become_user: "{{ restic_user | default(omit) }}"
-  when: restic_repository is defined and not restic_repository_path.stat.exists
-  ansible.builtin.command:
-    cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"
-    creates: "{{ restic_repository.path }}"
+- name: Initialize restic repository, if needed
+  block:
+    - name: "Check if restic repository exists"
+      ansible.builtin.stat:
+        path: "{{ restic_repository.path }}/config"
+      register: restic_repository_path
+      when: restic_repository is defined
+    - name: "Create repository directory: {{ restic_repository.path }}"
+      when: restic_repository is defined and not restic_repository_path.stat.exists
+      ansible.builtin.file:
+        access_time: preserve
+        modification_time: preserve
+        group: root
+        mode: "0750"
+        owner: "{{ restic_user | default('root') }}"
+        path: "{{ restic_repository.path }}"
+        state: directory
+    - name: Initialize restic repository
+      become: "{{ restic_user is defined }}"
+      become_user: "{{ restic_user | default(omit) }}"
+      when: restic_repository is defined and not restic_repository_path.stat.exists
+      ansible.builtin.command:
+        cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"
+        creates: "{{ restic_repository.path }}/config"
