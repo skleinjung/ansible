@@ -3,7 +3,9 @@
 # rsyncs the contents of all Docker volume to the backup staging area, and then 
 # backs up the staged files to a restic repository
 
+BACKUP_REPOSITORY="{{ docker_backup_repository }}"
 BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
+BACKUP_USER="{{ docker_backup_user | default('') }}"
 
 # Fetch the list of volume names
 VOLUMES=$(docker volume ls -q)
@@ -42,4 +44,30 @@ fi
 {% endraw %}
 
 echo "All volume back ups staged successfully!"
+
+echo "Creating restic snapshot in repository '${BACKUP_REPOSITORY}'."
+
+set -e
+
+if [ -z "$BACKUP_USER" ]; then
+  # BACKUP_USER is empty, execute command normally
+  restic \
+    --password-file /etc/restic/repository-password \
+    -r "${BACKUP_REPOSITORY}" \
+    --verbose \
+    --tag "{{ inventory_hostname}}" \
+    backup \
+    "${BACKUP_STAGING_ROOT}"
+else
+  # BACKUP_USER is set, execute command as that user
+  sudo -u "$BACKUP_USER" restic \
+    --password-file /etc/restic/repository-password \
+    -r "${BACKUP_REPOSITORY}" \
+    --verbose \
+    --tag "{{ inventory_hostname}}" \
+    backup \
+    "${BACKUP_STAGING_ROOT}"
+fi
+
+echo "Restic snapshot created successfully."
 exit 0

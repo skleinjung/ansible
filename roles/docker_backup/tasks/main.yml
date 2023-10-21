@@ -1,10 +1,12 @@
-# need to correctly invoke this to install restic 
-#     - role: restic
-#       vars:
-#         restic_repository:
-#           password: "{{ nextcloud_backup_password }}"
-#           path: "{{ nextcloud_backup_path }}/repository"
-#           type: local
+- name: Install restic via restic role
+  ansible.builtin.include_role:
+    name: restic
+  vars:
+    restic_repository:
+      password: "{{ docker_backup_repository_password }}"
+      path: "{{ docker_backup_repository }}"
+      type: local
+    restic_user: "{{ docker_backup_user | default(omit) }}"
 
 - name: Copy scripts
   become: true

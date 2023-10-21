@@ -1,6 +1,11 @@
-# docker_backup_group: group id to assume when performing backups inside containers [root]
-docker_backup_group: root
+# docker_backup_repository: full path to the directory containing the restic repository [/mnt/backup]
+docker_backup_repository: /mnt/backup
+
+# docker_backup_repository_password: Password for the restic repository. Setting one is required.
+#docker_backup_repository_password: <required>
+
 # docker_backup_staging_directory: folder in which volume backups are staged [/var/lib/backup]
 docker_backup_staging_directory: /var/lib/backup
-# docker_backup_user: user id to assume when performing backups inside containers [root]
-docker_backup_user: root
+
+# docker_backup_user: optional user id to assume when reading/writing restic backup repository [current user]
+#docker_backup_user: root
