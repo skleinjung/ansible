@@ -64,7 +64,6 @@ else
     --password-file /etc/restic/repository-password \
     -r "${BACKUP_REPOSITORY}" \
     --verbose \
-    --tag "{{ inventory_hostname}}" \
     backup \
     "${BACKUP_STAGING_ROOT}"
 fi
