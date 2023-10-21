@@ -32,4 +32,3 @@ docker run --rm \
   --entrypoint="" \
   instrumentisto/rsync-ssh \
   rsync -av --delete /source/ /backup/
-  

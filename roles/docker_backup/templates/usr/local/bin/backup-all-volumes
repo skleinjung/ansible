@@ -3,17 +3,43 @@
 # rsyncs the contents of all Docker volume to the backup staging area, and then 
 # backs up the staged files to a restic repository
 
-
-# Ensure the script exits if any command fails
-set -e
+BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
 
 # Fetch the list of volume names
 VOLUMES=$(docker volume ls -q)
 
+# Initialize an empty list to store failed volumes
+FAILED_VOLUMES=()
+
 for VOLUME in $VOLUMES; do
+  BACKUP_DIR="${BACKUP_STAGING_ROOT}/${VOLUME}"
+
+  echo "********************************************************************************"
   echo "Staging backup for volume '$VOLUME'."
-  /usr/local/bin/stage-volume-backup "$VOLUME"
-  echo "Copied volume '$VOLUME' to backup staging directory '$BACKUP_DIR'."
+  echo "********************************************************************************"
+
+  if ! /usr/local/bin/stage-volume-backup "$VOLUME"; then
+    echo "********************************************************************************"
+    echo "WARNING: Failed to stage backup for volume '$VOLUME'."
+    echo "********************************************************************************"
+    FAILED_VOLUMES+=("$VOLUME")
+  else
+    echo "********************************************************************************"
+    echo "Completed staging backup for volume '$VOLUME' to '${BACKUP_STAGING_ROOT}/${VOLUME}'."
+    echo "********************************************************************************"
+  fi
 done
 
+{% raw %}
+# If there are any failed volumes, report them and exit with a failure status
+if [ ${#FAILED_VOLUMES[@]} -ne 0 ]; then
+  echo "ERROR: Failed to stage backups for the following volumes:"
+  for FAILED_VOLUME in "${FAILED_VOLUMES[@]}"; do
+    echo "- $FAILED_VOLUME"
+  done
+  exit 1
+fi
+{% endraw %}
+
 echo "All volume back ups staged successfully!"
+exit 0
