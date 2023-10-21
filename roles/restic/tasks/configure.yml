@@ -16,18 +16,6 @@
     that:
       - restic_repository.type == "local"
 
-- name: "Check if restic repository exists"
-  ansible.builtin.stat:
-    path: "{{ restic_repository.path }}"
-  register: restic_repository_path
-  when: restic_repository is defined
-
-- name: Create restic repository
-  when: restic_repository is defined and not restic_repository_path.stat.exists
-  ansible.builtin.command:
-    cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"
-    creates: "{{ restic_repository.path }}"
-
 - name: Create /etc/restic directory
   ansible.builtin.file:
     access_time: preserve
@@ -44,3 +32,17 @@
     mode: "0600"
     owner: root
     src: etc/restic/repository-password.j2
+
+- name: "Check if restic repository exists"
+  ansible.builtin.stat:
+    path: "{{ restic_repository.path }}"
+  register: restic_repository_path
+  when: restic_repository is defined
+
+- name: Create restic repository
+  become: "{{ restic_user is defined }}"
+  become_user: "{{ restic_user | default(omit) }}"
+  when: restic_repository is defined and not restic_repository_path.stat.exists
+  ansible.builtin.command:
+    cmd: "{{ __restic_binary_path }} init --repo {{ restic_repository.path }} --password-file /etc/restic/repository-password"
+    creates: "{{ restic_repository.path }}"
