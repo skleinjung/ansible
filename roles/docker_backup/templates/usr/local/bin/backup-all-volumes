@@ -56,7 +56,6 @@ if [ -z "$BACKUP_USER" ]; then
     --password-file /etc/restic/repository-password \
     -r "${BACKUP_REPOSITORY}" \
     --verbose \
-    --tag "{{ inventory_hostname}}" \
     backup .
 else
   # BACKUP_USER is set, execute command as that user
