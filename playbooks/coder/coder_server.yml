@@ -23,6 +23,4 @@
         docker_users:
           - sean
     - role: docker_backup
-      vars:
-        docker_backup_repository_password: temporary
     - role: coder
