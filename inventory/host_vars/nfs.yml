@@ -1,4 +1,8 @@
 ---
 nfs_exports:
-  - /srv/nfs/storage                192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
-  - /srv/nfs/usb                    192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
+  - /srv/nfs/docker/coder/postgresql-data   192.168.68.111/22(rw,sync,no_subtree_check)
+  - /srv/nfs/docker/repositories  192.168.68.62/22(rw,sync,no_subtree_check)
+  - /srv/nfs/ssd/gitea	192.168.68.71/22(rw,sync,no_subtree_check)
+  - /srv/nfs/storage  192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
+  - /srv/nfs/usb  192.168.68.1/255.255.252.0(rw,sync,no_subtree_check)
+  - /srv/nfs/vm-runtime-metadata  192.168.68.0/22(ro,sync,no_subtree_check)
