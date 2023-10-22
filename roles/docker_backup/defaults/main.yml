@@ -7,5 +7,8 @@ docker_backup_repository: /mnt/backup
 # docker_backup_staging_directory: folder in which volume backups are staged [/var/lib/backup]
 docker_backup_staging_directory: /var/lib/backup
 
-# docker_backup_user: optional user id to assume when reading/writing restic backup repository [current user]
-#docker_backup_user: root
+# docker_backup_uid: user id to assume when reading/writing restic backup repository [9000]
+docker_backup_uid: 9000
+
+# docker_backup_user: name of the user to create for writing restic repository files; will have uid of docker_backup_uid [None]
+#docker_backup_user: 

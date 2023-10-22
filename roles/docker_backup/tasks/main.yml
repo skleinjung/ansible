@@ -1,3 +1,14 @@
+- name: Create backup user
+  when: "{{ docker_backup_user is defined }}"
+  ansible.builtin.user:
+    create_home: false
+    group: "{{ docker_backup_user }}"
+    name: "{{ docker_backup_user }}"
+    password: "!"
+    shell: /bin/false
+    system: true
+    uid: "{{ docker_backup_uid }}"
+
 - name: Install restic via restic role
   ansible.builtin.include_role:
     name: restic
