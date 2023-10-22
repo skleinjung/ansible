@@ -15,7 +15,7 @@ fi
 
 VOLUME="$1"
 
-BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
+BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}/backups"
 
 BACKUP_DIR="${BACKUP_STAGING_ROOT}/${VOLUME}"
   

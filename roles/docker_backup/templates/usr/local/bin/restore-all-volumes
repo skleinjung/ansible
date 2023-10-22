@@ -3,22 +3,37 @@
 # Ensure the script exits if any command fails
 set -e
 
-STAGING_ROOT="{{ docker_backup_staging_directory }}"
+# Check if a volume name is provided for restoration
+if [ -z "$1" ]; then
+  echo "Please provide a snapshot ID name to restore. See 'restic -r /mnt/backup snapshots'."
+  echo "Usage: $0 <snapshot-id>"
+  exit 1
+fi
 
-# Iterate over each directory in $STAGING_ROOT
-for BACKUP_DIR in $STAGING_ROOT/*; do
+BACKUP_REPOSITORY="{{ docker_backup_repository }}"
+RESTORE_STAGING_ROOT="{{ docker_backup_staging_directory }}/restores"
+SNAPSHOT_DIR="${RESTORE_STAGING_ROOT}/${1}"
+
+echo "Restoring restic snapshot."
+restic \
+  -r "${BACKUP_REPOSITORY}" \
+  restore "${1}" \
+  --target "${SNAPSHOT_DIR}"
+
+# Iterate over each directory in $SNAPSHOT_DIR
+for BACKUP_DIR in $SNAPSHOT_DIR/*; do
     # Extract the volume name from the directory path
     VOLUME_NAME=$(basename $BACKUP_DIR)
 
     # Check if a Docker volume with this name exists
     if ! docker volume ls -q | grep -wq $VOLUME_NAME; then
         # If not, create it
+        echo "Creating volume: $VOLUME_NAME"
         docker volume create $VOLUME_NAME
-        echo "Created volume: $VOLUME_NAME"
     fi
 
     # Call the restore-volume script to restore this volume
-    /usr/local/bin/restore-volume $VOLUME_NAME
+    /usr/local/bin/restore-volume $VOLUME_NAME "${SNAPSHOT_DIR}/${VOLUME_NAME}"
 done
 
 echo "All backups restored successfully!"

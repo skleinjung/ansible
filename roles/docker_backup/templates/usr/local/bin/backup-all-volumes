@@ -4,7 +4,7 @@
 # backs up the staged files to a restic repository
 
 BACKUP_REPOSITORY="{{ docker_backup_repository }}"
-BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}"
+BACKUP_STAGING_ROOT="{{ docker_backup_staging_directory }}/backups"
 BACKUP_USER="{{ docker_backup_user | default('') }}"
 
 # Fetch the list of volume names
@@ -51,21 +51,21 @@ set -e
 
 if [ -z "$BACKUP_USER" ]; then
   # BACKUP_USER is empty, execute command normally
+  cd "${BACKUP_STAGING_ROOT}"
   restic \
     --password-file /etc/restic/repository-password \
     -r "${BACKUP_REPOSITORY}" \
     --verbose \
     --tag "{{ inventory_hostname}}" \
-    backup \
-    "${BACKUP_STAGING_ROOT}"
+    backup .
 else
   # BACKUP_USER is set, execute command as that user
+  cd "${BACKUP_STAGING_ROOT}"
   sudo -u "$BACKUP_USER" restic \
     --password-file /etc/restic/repository-password \
     -r "${BACKUP_REPOSITORY}" \
     --verbose \
-    backup \
-    "${BACKUP_STAGING_ROOT}"
+    backup .
 fi
 
 echo "Restic snapshot created successfully."

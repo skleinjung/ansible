@@ -4,28 +4,29 @@
 set -e
 
 # Check if a volume name is provided for restoration
-if [ -z "$1" ]; then
-  echo "Please provide a volume name to restore."
-  echo "Usage: $0 <volume-name>"
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Replaces the contents of the named volume with the files found in the source directory."
+  echo "Missing argument(s)."
+  echo "Usage: $0 <volume-name> <source-dir>"
   exit 1
 fi
 
 VOLUME="$1"
-BACKUP_DIR="{{ docker_backup_staging_directory }}/$VOLUME"
+SOURCE_DIR="$2"
 
-# Check if backup exists for the provided volume
-if [ ! -d "$BACKUP_DIR" ]; then
-  echo "Backup for $VOLUME does not exist in $BACKUP_DIR"
+# Check if the source dir exists
+if [ ! -d "$SOURCE_DIR" ]; then
+  echo "Backup for $VOLUME does not exist in $SOURCE_DIR"
   exit 2
 fi
 
 # Use docker run to start a temporary container to mount and restore the volume data with rsync
 docker run --rm \
   -v $VOLUME:/destination \
-  -v $BACKUP_DIR:/backup:ro \
-  --entrypoint="" \  # Clearing default entrypoint
+  -v $SOURCE_DIR:/backup:ro \
+  --entrypoint="" \
   instrumentisto/rsync-ssh \
   rsync -av --delete /backup/ /destination/
 
-echo "Restored $VOLUME from $BACKUP_DIR"
+echo "Restored $VOLUME from $SOURCE_DIR"
 
