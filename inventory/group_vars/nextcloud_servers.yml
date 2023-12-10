@@ -120,4 +120,4 @@ nextcloud_mail:
   smtp_host: blizzard.mxrouting.net
   smtp_port: 465
   smtp_use_tls: true
-nextcloud_proxy_host: 192.168.68.64
+nextcloud_proxy_host: 10.111.1.5
